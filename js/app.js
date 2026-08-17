@@ -116,7 +116,7 @@ function render() {
     return;
   }
 
-  const fullScreenRoute = name === 'workout';
+  const fullScreenRoute = name === 'workout' || name === 'safety' || name === 'onboarding';
   document.getElementById('nav').hidden = fullScreenRoute;
   updateHeader(profile);
 
