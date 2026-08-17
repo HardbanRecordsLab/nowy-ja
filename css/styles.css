@@ -485,6 +485,20 @@ a { color: inherit; text-decoration: none; }
 .lib-name { font-weight: 600; font-size: 0.88rem; }
 .lib-muscle { font-size: 0.75rem; }
 
+.profile-header-card { display: flex; align-items: center; gap: 14px; }
+.profile-avatar {
+  width: 56px; height: 56px; border-radius: 50%; flex-shrink: 0;
+  background: linear-gradient(135deg, var(--navy), var(--gold));
+  color: #fff; font-size: 1.4rem; font-weight: 800;
+  display: flex; align-items: center; justify-content: center;
+}
+.profile-header-info { min-width: 0; }
+.profile-stats-row { display: flex; justify-content: space-around; text-align: center; }
+.profile-stat { display: flex; flex-direction: column; gap: 2px; }
+.profile-stat strong { font-size: 1.4rem; color: var(--navy); }
+[data-theme="dark"] .profile-stat strong, [data-theme="auto"] .profile-stat strong { color: var(--gold); }
+.profile-stat span { font-size: 0.72rem; color: var(--text-muted); }
+
 .profile-list { list-style: none; padding: 0; margin: 0 0 10px; }
 .profile-list li { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid var(--border); }
 .profile-actions { display: flex; gap: 6px; align-items: center; }

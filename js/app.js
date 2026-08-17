@@ -1088,18 +1088,70 @@ function viewMore(profile) {
 function viewSettings(profile) {
   const profiles = Store.getProfiles();
   const theme = Store.getTheme();
+  const day = Store.currentDayNumber(profile);
+  const info = getDayInfo(day);
+  const streak = Store.currentStreak(profile);
+  const completedCount = profile.progress.completedDays.length;
+  const initial = (profile.name || '?').trim().charAt(0).toUpperCase() || '?';
+
   return `
   <h2 class="page-title">Profil i ustawienia</h2>
+
+  <section class="card profile-header-card">
+    <div class="profile-avatar">${esc(initial)}</div>
+    <div class="profile-header-info">
+      <h3 style="margin:0">${esc(profile.name)}</h3>
+      <p class="muted small" style="margin:2px 0 0">Dzień ${day} / 60 · ${esc(info.phaseName)}</p>
+    </div>
+  </section>
+  <section class="card">
+    <div class="profile-stats-row">
+      <div class="profile-stat"><strong>${completedCount}</strong><span>ukończone dni</span></div>
+      <div class="profile-stat"><strong>${streak}</strong><span>seria dni</span></div>
+      <div class="profile-stat"><strong>${60 - completedCount}</strong><span>pozostało</span></div>
+    </div>
+  </section>
+
   <section class="card">
     <h3>Twoje dane</h3>
     <form id="form-edit-profile" class="form">
       <label>Imię<input type="text" name="name" value="${esc(profile.name)}"></label>
       <div class="row2">
+        <label>Wiek<input type="number" name="ageYears" value="${profile.ageYears || ''}"></label>
+        <label>Data startu programu<input type="date" name="startDate" value="${profile.startDate}"></label>
+      </div>
+      <div class="row2">
         <label>Wzrost (cm)<input type="number" name="heightCm" value="${profile.heightCm || ''}"></label>
         <label>Waga (kg)<input type="number" name="weightKg" value="${profile.weightKg || ''}"></label>
       </div>
-      <label>Data startu programu<input type="date" name="startDate" value="${profile.startDate}"></label>
-      <button class="btn primary" type="submit">Zapisz</button>
+
+      <span class="onboard-field-label">Doświadczenie treningowe</span>
+      <div class="chip-group">${Object.entries(EXPERIENCE_LABELS).map(([v, l]) => chipRadio('experience', v, l, profile.experience === v)).join('')}</div>
+
+      <span class="onboard-field-label">Główny cel</span>
+      <div class="chip-group">${Object.entries(GOAL_LABELS).map(([v, l]) => chipRadio('goal', v, l, profile.goal === v)).join('')}</div>
+
+      <span class="onboard-field-label">Treningi tygodniowo</span>
+      <div class="chip-group">${[3, 4, 5, 6, 7].map(n => chipRadio('sessionsPerWeek', n, String(n), profile.sessionsPerWeek === n)).join('')}</div>
+
+      <span class="onboard-field-label">Długość treningu</span>
+      <div class="chip-group">${[20, 30, 35, 45, 60].map(n => chipRadio('sessionDurationMinutes', n, n + ' min', profile.sessionDurationMinutes === n)).join('')}</div>
+
+      <span class="onboard-field-label">Dostępny sprzęt</span>
+      <div class="chip-group">${EQUIPMENT_OPTIONS.map(o => chipCheckbox('equipment', o, (profile.equipment || []).includes(o))).join('')}</div>
+
+      <span class="onboard-field-label">Poziom trudności</span>
+      <div class="chip-group">${Object.entries(DIFFICULTY_LABELS).map(([v, l]) => chipRadio('difficultyPreference', v, l, profile.difficultyPreference === v)).join('')}</div>
+
+      <span class="onboard-field-label">Priorytetowe partie ciała</span>
+      <div class="chip-group">${FOCUS_OPTIONS.map(o => chipCheckbox('focusAreas', o, (profile.focusAreas || []).includes(o))).join('')}</div>
+
+      <span class="onboard-field-label">Ograniczenia ruchowe</span>
+      <div class="chip-group">${LIMITATION_OPTIONS.map(o => chipCheckbox('limitations', o, (profile.limitations || []).includes(o))).join('')}</div>
+
+      <label>Inne przeciwwskazania (opcjonalnie)<input type="text" name="contraindicationsNote" value="${esc(profile.contraindicationsNote || '')}"></label>
+
+      <button class="btn primary" type="submit" style="margin-top:10px">Zapisz zmiany</button>
     </form>
   </section>
 
@@ -1511,9 +1563,19 @@ document.addEventListener('submit', e => {
     const fd = new FormData(e.target);
     Store.updateProfile(profile.id, {
       name: fd.get('name')?.trim() || profile.name,
+      ageYears: fd.get('ageYears') ? Number(fd.get('ageYears')) : null,
       heightCm: fd.get('heightCm') ? Number(fd.get('heightCm')) : null,
       weightKg: fd.get('weightKg') ? Number(fd.get('weightKg')) : null,
-      startDate: fd.get('startDate')
+      startDate: fd.get('startDate'),
+      experience: fd.get('experience') || profile.experience,
+      goal: fd.get('goal') || profile.goal,
+      sessionsPerWeek: fd.get('sessionsPerWeek') ? Number(fd.get('sessionsPerWeek')) : profile.sessionsPerWeek,
+      sessionDurationMinutes: fd.get('sessionDurationMinutes') ? Number(fd.get('sessionDurationMinutes')) : profile.sessionDurationMinutes,
+      equipment: fd.getAll('equipment'),
+      difficultyPreference: fd.get('difficultyPreference') || profile.difficultyPreference,
+      focusAreas: fd.getAll('focusAreas'),
+      limitations: fd.getAll('limitations'),
+      contraindicationsNote: fd.get('contraindicationsNote')?.trim() || '',
     });
     render();
   }
