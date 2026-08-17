@@ -1,0 +1,775 @@
+[
+  {
+    "code": "A1",
+    "name": "Crunch klasyczny (krótki zakres)",
+    "group": "A",
+    "muscle": "Brzuch (mięśnie proste brzucha)",
+    "steps": [
+      "Połóż się na macie, kolana ugięte, stopy płasko na podłodze.",
+      "Dłonie lekko przy skroniach lub skrzyżowane na klatce piersiowej (nie splecione za głową).",
+      "Unieś głowę i łopatki na kilka centymetrów, napinając brzuch i wydychając powietrze.",
+      "Powoli wróć do pozycji startowej, nie opuszczaj głowy gwałtownie."
+    ],
+    "safety": "Ruch krótki i kontrolowany — nie ciągnij szyi rękami. Jeśli boli odcinek lędźwiowy, podłóż poduszkę pod kolana.",
+    "reps": {
+      "faza1": "2 serie × 10 powt.",
+      "faza2": "3 × 12",
+      "faza3": "3 × 15",
+      "faza4": "3-4 × 18-20"
+    },
+    "infographicPrompt": "Clean flat-vector fitness infographic, square format, showing a friendly plus-size adult demonstrating \"basic short-range crunch\" in 3 sequential steps (start position, mid-movement, end position), 45-degree elevated angle, minimalist home-gym background, soft blue-and-white color palette, bold sans-serif captions in Polish labeling: nazwa ćwiczenia \"Crunch klasyczny (krótki zakres)\", partia mięśniowa \"Brzuch (mięśnie proste brzucha)\", oraz jedna wskazówka bezpieczeństwa: \"Ruch krótki i kontrolowany — nie ciągnij szyi rękami. Jeśli boli odcinek lędźwiowy, podłóż poduszkę pod kolana.\". Numbered arrows indicating movement direction, dashed alignment guide lines on knees/spine, no spelling errors, high contrast, flat illustration style, no photorealism, inclusive and body-positive character design.",
+    "videoPrompt": "10-15 second instructional fitness demo video, static camera, 45-degree elevated angle, a calm plus-size adult performing \"basic short-range crunch\" with correct form on a non-slip mat in a bright home setting, slow controlled tempo with a brief pause at the top of the movement, shoulders lifted off the mat, subtle on-screen Polish captions fade in: \"Crunch klasyczny (krótki zakres)\", \"Brzuch (mięśnie proste brzucha)\", and safety cue \"Ruch krótki i kontrolowany — nie ciągnij szyi rękami. Jeśli boli odcinek lędźwiowy, podłóż poduszkę pod kolana.\", soft ambient background music, seamless loop, photorealistic, steady well-lit shot, encouraging non-judgmental tone suitable for beginners with a larger body size."
+  },
+  {
+    "code": "A2",
+    "name": "Deska (plank) — wersja na kolanach lub pełna",
+    "group": "A",
+    "muscle": "Brzuch, mięśnie głębokie (core)",
+    "steps": [
+      "Ułóż przedramiona na macie, łokcie dokładnie pod barkami.",
+      "Wersja łatwiejsza: kolana oparte o matę. Wersja trudniejsza: nogi wyprostowane, oparcie na palcach stóp.",
+      "Napnij brzuch i pośladki, utrzymuj linię prostą od głowy/kolan do bioder — nie unoś ani nie zapadaj biodrami.",
+      "Oddychaj spokojnie i utrzymaj pozycję przez zadany czas."
+    ],
+    "safety": "Ból w dolnym odcinku pleców = unieś biodra wyżej lub wróć do wersji na kolanach. Nie wstrzymuj oddechu.",
+    "reps": {
+      "faza1": "2 × 15-20 s",
+      "faza2": "3 × 20-25 s",
+      "faza3": "3 × 25-30 s",
+      "faza4": "3-4 × 30-40 s"
+    },
+    "infographicPrompt": "Clean flat-vector fitness infographic, square format, showing a friendly plus-size adult demonstrating \"modified forearm plank (knee or full version)\" in 3 sequential steps (start position, mid-movement, end position), low side angle, minimalist home-gym background, soft blue-and-white color palette, bold sans-serif captions in Polish labeling: nazwa ćwiczenia \"Deska (plank) — wersja na kolanach lub pełna\", partia mięśniowa \"Brzuch, mięśnie głębokie (core)\", oraz jedna wskazówka bezpieczeństwa: \"Ból w dolnym odcinku pleców = unieś biodra wyżej lub wróć do wersji na kolanach. Nie wstrzymuj oddechu.\". Numbered arrows indicating movement direction, dashed alignment guide lines on knees/spine, no spelling errors, high contrast, flat illustration style, no photorealism, inclusive and body-positive character design.",
+    "videoPrompt": "10-15 second instructional fitness demo video, static camera, low side angle, a calm plus-size adult performing \"modified forearm plank (knee or full version)\" with correct form on a non-slip mat in a bright home setting, slow controlled tempo with a brief pause at mid-hold, showing the straight body line from head to knees, subtle on-screen Polish captions fade in: \"Deska (plank) — wersja na kolanach lub pełna\", \"Brzuch, mięśnie głębokie (core)\", and safety cue \"Ból w dolnym odcinku pleców = unieś biodra wyżej lub wróć do wersji na kolanach. Nie wstrzymuj oddechu.\", soft ambient background music, seamless loop, photorealistic, steady well-lit shot, encouraging non-judgmental tone suitable for beginners with a larger body size."
+  },
+  {
+    "code": "A3",
+    "name": "Unoszenie kolan siedząc na krześle",
+    "group": "A",
+    "muscle": "Brzuch (dolna część)",
+    "steps": [
+      "Usiądź na krawędzi stabilnego krzesła, plecy proste, dłonie trzymają siedzisko po bokach.",
+      "Unieś jedno kolano w kierunku klatki piersiowej, napinając dolną część brzucha.",
+      "Powoli opuść stopę na podłogę i zmień nogę.",
+      "Wykonuj naprzemiennie, w kontrolowanym tempie."
+    ],
+    "safety": "Nie odchylaj się mocno do tyłu. Jeśli czujesz nacisk w biodrze, zmniejsz zakres ruchu.",
+    "reps": {
+      "faza1": "2 × 10 / stronę",
+      "faza2": "3 × 12",
+      "faza3": "3 × 15",
+      "faza4": "3 × 18"
+    },
+    "infographicPrompt": "Clean flat-vector fitness infographic, square format, showing a friendly plus-size adult demonstrating \"seated chair knee raise\" in 3 sequential steps (start position, mid-movement, end position), front-facing seated angle, minimalist home-gym background, soft blue-and-white color palette, bold sans-serif captions in Polish labeling: nazwa ćwiczenia \"Unoszenie kolan siedząc na krześle\", partia mięśniowa \"Brzuch (dolna część)\", oraz jedna wskazówka bezpieczeństwa: \"Nie odchylaj się mocno do tyłu. Jeśli czujesz nacisk w biodrze, zmniejsz zakres ruchu.\". Numbered arrows indicating movement direction, dashed alignment guide lines on knees/spine, no spelling errors, high contrast, flat illustration style, no photorealism, inclusive and body-positive character design.",
+    "videoPrompt": "10-15 second instructional fitness demo video, static camera, front-facing seated angle, a calm plus-size adult performing \"seated chair knee raise\" with correct form on a non-slip mat in a bright home setting, slow controlled tempo with a brief pause at the moment the knee reaches chest height, subtle on-screen Polish captions fade in: \"Unoszenie kolan siedząc na krześle\", \"Brzuch (dolna część)\", and safety cue \"Nie odchylaj się mocno do tyłu. Jeśli czujesz nacisk w biodrze, zmniejsz zakres ruchu.\", soft ambient background music, seamless loop, photorealistic, steady well-lit shot, encouraging non-judgmental tone suitable for beginners with a larger body size."
+  },
+  {
+    "code": "A4",
+    "name": "Dead bug (delikatna wersja)",
+    "group": "A",
+    "muscle": "Brzuch, stabilizacja odcinka lędźwiowego",
+    "steps": [
+      "Połóż się na plecach, ręce uniesione nad barkami, kolana zgięte pod kątem 90°.",
+      "Napnij brzuch tak, aby dolna część pleców delikatnie przylegała do maty.",
+      "Powoli opuść jedną piętę w kierunku podłogi, nie tracąc napięcia brzucha ani kontaktu pleców z matą.",
+      "Wróć do pozycji startowej i zmień stronę."
+    ],
+    "safety": "Jeśli plecy odrywają się od maty, zmniejsz zakres ruchu. Ruch ma być bardzo powolny i kontrolowany.",
+    "reps": {
+      "faza1": "2 × 8 / stronę",
+      "faza2": "3 × 10",
+      "faza3": "3 × 12",
+      "faza4": "3 × 15"
+    },
+    "infographicPrompt": "Clean flat-vector fitness infographic, square format, showing a friendly plus-size adult demonstrating \"gentle dead bug core stabilization\" in 3 sequential steps (start position, mid-movement, end position), top-down angle, minimalist home-gym background, soft blue-and-white color palette, bold sans-serif captions in Polish labeling: nazwa ćwiczenia \"Dead bug (delikatna wersja)\", partia mięśniowa \"Brzuch, stabilizacja odcinka lędźwiowego\", oraz jedna wskazówka bezpieczeństwa: \"Jeśli plecy odrywają się od maty, zmniejsz zakres ruchu. Ruch ma być bardzo powolny i kontrolowany.\". Numbered arrows indicating movement direction, dashed alignment guide lines on knees/spine, no spelling errors, high contrast, flat illustration style, no photorealism, inclusive and body-positive character design.",
+    "videoPrompt": "10-15 second instructional fitness demo video, static camera, top-down angle, a calm plus-size adult performing \"gentle dead bug core stabilization\" with correct form on a non-slip mat in a bright home setting, slow controlled tempo with a brief pause at the lowest point of the leg lowering, subtle on-screen Polish captions fade in: \"Dead bug (delikatna wersja)\", \"Brzuch, stabilizacja odcinka lędźwiowego\", and safety cue \"Jeśli plecy odrywają się od maty, zmniejsz zakres ruchu. Ruch ma być bardzo powolny i kontrolowany.\", soft ambient background music, seamless loop, photorealistic, steady well-lit shot, encouraging non-judgmental tone suitable for beginners with a larger body size."
+  },
+  {
+    "code": "A5",
+    "name": "Odwodzenie nogi w leżeniu bokiem",
+    "group": "A",
+    "muscle": "Biodro (mięsień pośladkowy średni), zewnętrzna strona uda",
+    "steps": [
+      "Połóż się na boku, dolna noga lekko ugięta dla stabilności, górna noga wyprostowana.",
+      "Unieś górną nogę na wysokość ok. 30-40°, trzymając biodra jedno nad drugim.",
+      "Powoli opuść nogę, nie opierając jej całkowicie o dolną nogę między powtórzeniami.",
+      "Wykonaj serię, następnie zmień stronę."
+    ],
+    "safety": "Nie przekręcaj bioder do tyłu — ruch tylko w płaszczyźnie bocznej.",
+    "reps": {
+      "faza1": "2 × 10 / stronę",
+      "faza2": "3 × 12",
+      "faza3": "3 × 15",
+      "faza4": "3 × 18"
+    },
+    "infographicPrompt": "Clean flat-vector fitness infographic, square format, showing a friendly plus-size adult demonstrating \"side-lying leg raise (hip abduction)\" in 3 sequential steps (start position, mid-movement, end position), side angle, minimalist home-gym background, soft blue-and-white color palette, bold sans-serif captions in Polish labeling: nazwa ćwiczenia \"Odwodzenie nogi w leżeniu bokiem\", partia mięśniowa \"Biodro (mięsień pośladkowy średni), zewnętrzna strona uda\", oraz jedna wskazówka bezpieczeństwa: \"Nie przekręcaj bioder do tyłu — ruch tylko w płaszczyźnie bocznej.\". Numbered arrows indicating movement direction, dashed alignment guide lines on knees/spine, no spelling errors, high contrast, flat illustration style, no photorealism, inclusive and body-positive character design.",
+    "videoPrompt": "10-15 second instructional fitness demo video, static camera, side angle, a calm plus-size adult performing \"side-lying leg raise (hip abduction)\" with correct form on a non-slip mat in a bright home setting, slow controlled tempo with a brief pause at the top of the leg lift, subtle on-screen Polish captions fade in: \"Odwodzenie nogi w leżeniu bokiem\", \"Biodro (mięsień pośladkowy średni), zewnętrzna strona uda\", and safety cue \"Nie przekręcaj bioder do tyłu — ruch tylko w płaszczyźnie bocznej.\", soft ambient background music, seamless loop, photorealistic, steady well-lit shot, encouraging non-judgmental tone suitable for beginners with a larger body size."
+  },
+  {
+    "code": "A6",
+    "name": "Krążenia biodrem stojąc",
+    "group": "A",
+    "muscle": "Biodro — mobilność",
+    "steps": [
+      "Stań w lekkim rozkroku, dłonie na biodrach lub oparte o krzesło dla równowagi.",
+      "Wykonuj powolne, kontrolowane krążenia biodrami w jedną stronę.",
+      "Po zadanej liczbie powtórzeń zmień kierunek."
+    ],
+    "safety": "Ruch łagodny, bez bólu w dolnym odcinku kręgosłupa. Przy zawrotach głowy trzymaj się oparcia.",
+    "reps": {
+      "faza1": "2 × 8 / kierunek",
+      "faza2": "2 × 10",
+      "faza3": "3 × 10",
+      "faza4": "3 × 12"
+    },
+    "infographicPrompt": "Clean flat-vector fitness infographic, square format, showing a friendly plus-size adult demonstrating \"standing hip circles (mobility)\" in 3 sequential steps (start position, mid-movement, end position), front angle, full body, minimalist home-gym background, soft blue-and-white color palette, bold sans-serif captions in Polish labeling: nazwa ćwiczenia \"Krążenia biodrem stojąc\", partia mięśniowa \"Biodro — mobilność\", oraz jedna wskazówka bezpieczeństwa: \"Ruch łagodny, bez bólu w dolnym odcinku kręgosłupa. Przy zawrotach głowy trzymaj się oparcia.\". Numbered arrows indicating movement direction, dashed alignment guide lines on knees/spine, no spelling errors, high contrast, flat illustration style, no photorealism, inclusive and body-positive character design.",
+    "videoPrompt": "10-15 second instructional fitness demo video, static camera, front angle, full body, a calm plus-size adult performing \"standing hip circles (mobility)\" with correct form on a non-slip mat in a bright home setting, slow controlled tempo with a brief pause at the widest point of the circle, subtle on-screen Polish captions fade in: \"Krążenia biodrem stojąc\", \"Biodro — mobilność\", and safety cue \"Ruch łagodny, bez bólu w dolnym odcinku kręgosłupa. Przy zawrotach głowy trzymaj się oparcia.\", soft ambient background music, seamless loop, photorealistic, steady well-lit shot, encouraging non-judgmental tone suitable for beginners with a larger body size."
+  },
+  {
+    "code": "A7",
+    "name": "Deska boczna zmodyfikowana (kolana ugięte)",
+    "group": "A",
+    "muscle": "Brzuch (mięśnie skośne)",
+    "steps": [
+      "Połóż się na boku, dolna noga ugięta w kolanie do tyłu jako podparcie, przedramię oparte dokładnie pod barkiem.",
+      "Unieś biodra od podłogi, tworząc linię prostą od głowy do kolan.",
+      "Wolną ręką możesz podeprzeć się na biodrze lub unieść w górę dla równowagi.",
+      "Utrzymaj pozycję przez zadany czas, oddychając spokojnie, następnie zmień stronę."
+    ],
+    "safety": "Jeśli bark boli, skróć czas utrzymania lub wykonaj zamiast tego ćwiczenie A2 (deska klasyczna).",
+    "reps": {
+      "faza1": "2 × 10-15 s / stronę",
+      "faza2": "3 × 15-20 s",
+      "faza3": "3 × 20-25 s",
+      "faza4": "3 × 25-30 s"
+    },
+    "infographicPrompt": "Clean flat-vector fitness infographic, square format, showing a friendly plus-size adult demonstrating \"modified side plank (bent knees)\" in 3 sequential steps (start position, mid-movement, end position), low side angle, minimalist home-gym background, soft blue-and-white color palette, bold sans-serif captions in Polish labeling: nazwa ćwiczenia \"Deska boczna zmodyfikowana (kolana ugięte)\", partia mięśniowa \"Brzuch (mięśnie skośne)\", oraz jedna wskazówka bezpieczeństwa: \"Jeśli bark boli, skróć czas utrzymania lub wykonaj zamiast tego ćwiczenie A2 (deska klasyczna).\". Numbered arrows indicating movement direction, dashed alignment guide lines on knees/spine, no spelling errors, high contrast, flat illustration style, no photorealism, inclusive and body-positive character design.",
+    "videoPrompt": "10-15 second instructional fitness demo video, static camera, low side angle, a calm plus-size adult performing \"modified side plank (bent knees)\" with correct form on a non-slip mat in a bright home setting, slow controlled tempo with a brief pause at mid-hold with hips lifted off the floor, subtle on-screen Polish captions fade in: \"Deska boczna zmodyfikowana (kolana ugięte)\", \"Brzuch (mięśnie skośne)\", and safety cue \"Jeśli bark boli, skróć czas utrzymania lub wykonaj zamiast tego ćwiczenie A2 (deska klasyczna).\", soft ambient background music, seamless loop, photorealistic, steady well-lit shot, encouraging non-judgmental tone suitable for beginners with a larger body size."
+  },
+  {
+    "code": "A8",
+    "name": "Skręty tułowia siedząc (delikatny twist)",
+    "group": "A",
+    "muscle": "Brzuch (mięśnie skośne)",
+    "steps": [
+      "Usiądź na macie lub krawędzi krzesła, plecy lekko odchylone, kolana ugięte.",
+      "Trzymając dłonie złączone przed klatką (opcjonalnie z lekkim bidonem), powoli skręć tułów w jedną stronę.",
+      "Wróć do środka i skręć w drugą stronę, w kontrolowanym tempie."
+    ],
+    "safety": "Ruch ma być powolny, bez szarpania. Przy bólu odcinka lędźwiowego zmniejsz zakres skrętu lub wykonuj z prostymi plecami na krześle.",
+    "reps": {
+      "faza1": "2 × 10 / stronę",
+      "faza2": "3 × 12",
+      "faza3": "3 × 15",
+      "faza4": "3 × 15-18"
+    },
+    "infographicPrompt": "Clean flat-vector fitness infographic, square format, showing a friendly plus-size adult demonstrating \"seated gentle torso twist (no weight or light)\" in 3 sequential steps (start position, mid-movement, end position), front angle, minimalist home-gym background, soft blue-and-white color palette, bold sans-serif captions in Polish labeling: nazwa ćwiczenia \"Skręty tułowia siedząc (delikatny twist)\", partia mięśniowa \"Brzuch (mięśnie skośne)\", oraz jedna wskazówka bezpieczeństwa: \"Ruch ma być powolny, bez szarpania. Przy bólu odcinka lędźwiowego zmniejsz zakres skrętu lub wykonuj z prostymi plecami na krześle.\". Numbered arrows indicating movement direction, dashed alignment guide lines on knees/spine, no spelling errors, high contrast, flat illustration style, no photorealism, inclusive and body-positive character design.",
+    "videoPrompt": "10-15 second instructional fitness demo video, static camera, front angle, a calm plus-size adult performing \"seated gentle torso twist (no weight or light)\" with correct form on a non-slip mat in a bright home setting, slow controlled tempo with a brief pause at the end range of the twist, subtle on-screen Polish captions fade in: \"Skręty tułowia siedząc (delikatny twist)\", \"Brzuch (mięśnie skośne)\", and safety cue \"Ruch ma być powolny, bez szarpania. Przy bólu odcinka lędźwiowego zmniejsz zakres skrętu lub wykonuj z prostymi plecami na krześle.\", soft ambient background music, seamless loop, photorealistic, steady well-lit shot, encouraging non-judgmental tone suitable for beginners with a larger body size."
+  },
+  {
+    "code": "A9",
+    "name": "Unoszenie bioder w leżeniu (delikatny reverse crunch)",
+    "group": "A",
+    "muscle": "Brzuch (dolna część)",
+    "steps": [
+      "Połóż się na plecach, ręce wzdłuż ciała, kolana ugięte i uniesione nad biodrami (łydki równoległe do podłogi).",
+      "Napinając dolny brzuch, delikatnie unieś biodra kilka centymetrów nad matę.",
+      "Powoli opuść biodra z powrotem, bez opadania z impetem."
+    ],
+    "safety": "Ruch ma być bardzo krótki — unikaj bujania nogami. Jeśli czujesz to w plecach zamiast brzucha, zmniejsz zakres.",
+    "reps": {
+      "faza1": "2 × 8",
+      "faza2": "3 × 10",
+      "faza3": "3 × 12",
+      "faza4": "3 × 15"
+    },
+    "infographicPrompt": "Clean flat-vector fitness infographic, square format, showing a friendly plus-size adult demonstrating \"gentle reverse crunch / hip lift\" in 3 sequential steps (start position, mid-movement, end position), side angle, minimalist home-gym background, soft blue-and-white color palette, bold sans-serif captions in Polish labeling: nazwa ćwiczenia \"Unoszenie bioder w leżeniu (delikatny reverse crunch)\", partia mięśniowa \"Brzuch (dolna część)\", oraz jedna wskazówka bezpieczeństwa: \"Ruch ma być bardzo krótki — unikaj bujania nogami. Jeśli czujesz to w plecach zamiast brzucha, zmniejsz zakres.\". Numbered arrows indicating movement direction, dashed alignment guide lines on knees/spine, no spelling errors, high contrast, flat illustration style, no photorealism, inclusive and body-positive character design.",
+    "videoPrompt": "10-15 second instructional fitness demo video, static camera, side angle, a calm plus-size adult performing \"gentle reverse crunch / hip lift\" with correct form on a non-slip mat in a bright home setting, slow controlled tempo with a brief pause at the top of the hip lift, subtle on-screen Polish captions fade in: \"Unoszenie bioder w leżeniu (delikatny reverse crunch)\", \"Brzuch (dolna część)\", and safety cue \"Ruch ma być bardzo krótki — unikaj bujania nogami. Jeśli czujesz to w plecach zamiast brzucha, zmniejsz zakres.\", soft ambient background music, seamless loop, photorealistic, steady well-lit shot, encouraging non-judgmental tone suitable for beginners with a larger body size."
+  },
+  {
+    "code": "B1",
+    "name": "Przysiad przy krześle (asekuracja)",
+    "group": "B",
+    "muscle": "Uda (czworogłowy), pośladki",
+    "steps": [
+      "Stań tyłem do stabilnego krzesła, stopy na szerokość bioder.",
+      "Powoli ugnij kolana i biodra, jakbyś miał usiąść, aż lekko dotkniesz siedziska.",
+      "Nie siadając całkowicie, wróć do pozycji stojącej, odpychając się piętami.",
+      "Kolana podążają w linii palców stóp, nie zapadają się do środka."
+    ],
+    "safety": "Krzesło daje kontrolę zakresu ruchu i bezpieczeństwo dla kolan. Jeśli boli kolano, zmniejsz głębokość przysiadu.",
+    "reps": {
+      "faza1": "2 × 10",
+      "faza2": "3 × 12",
+      "faza3": "3 × 15",
+      "faza4": "3-4 × 15-18"
+    },
+    "infographicPrompt": "Clean flat-vector fitness infographic, square format, showing a friendly plus-size adult demonstrating \"chair-assisted sit-to-stand squat\" in 3 sequential steps (start position, mid-movement, end position), 45-degree side angle, minimalist home-gym background, soft blue-and-white color palette, bold sans-serif captions in Polish labeling: nazwa ćwiczenia \"Przysiad przy krześle (asekuracja)\", partia mięśniowa \"Uda (czworogłowy), pośladki\", oraz jedna wskazówka bezpieczeństwa: \"Krzesło daje kontrolę zakresu ruchu i bezpieczeństwo dla kolan. Jeśli boli kolano, zmniejsz głębokość przysiadu.\". Numbered arrows indicating movement direction, dashed alignment guide lines on knees/spine, no spelling errors, high contrast, flat illustration style, no photorealism, inclusive and body-positive character design.",
+    "videoPrompt": "10-15 second instructional fitness demo video, static camera, 45-degree side angle, a calm plus-size adult performing \"chair-assisted sit-to-stand squat\" with correct form on a non-slip mat in a bright home setting, slow controlled tempo with a brief pause at just above the chair seat, subtle on-screen Polish captions fade in: \"Przysiad przy krześle (asekuracja)\", \"Uda (czworogłowy), pośladki\", and safety cue \"Krzesło daje kontrolę zakresu ruchu i bezpieczeństwo dla kolan. Jeśli boli kolano, zmniejsz głębokość przysiadu.\", soft ambient background music, seamless loop, photorealistic, steady well-lit shot, encouraging non-judgmental tone suitable for beginners with a larger body size."
+  },
+  {
+    "code": "B2",
+    "name": "Przysiad sumo",
+    "group": "B",
+    "muscle": "Uda (wewnętrzna strona), pośladki",
+    "steps": [
+      "Stań w szerokim rozkroku, palce stóp skierowane lekko na zewnątrz.",
+      "Trzymając plecy proste, ugnij kolana i biodra, opuszczając się w dół.",
+      "Wróć do pozycji startowej, napinając wewnętrzną stronę ud i pośladki."
+    ],
+    "safety": "Trzymaj się oparcia krzesła, jeśli potrzebujesz wsparcia równowagi. Nie schodź głębiej niż jest to komfortowe dla kolan.",
+    "reps": {
+      "faza1": "2 × 10",
+      "faza2": "3 × 12",
+      "faza3": "3 × 15",
+      "faza4": "3 × 15-18"
+    },
+    "infographicPrompt": "Clean flat-vector fitness infographic, square format, showing a friendly plus-size adult demonstrating \"sumo squat (wide stance)\" in 3 sequential steps (start position, mid-movement, end position), front angle, minimalist home-gym background, soft blue-and-white color palette, bold sans-serif captions in Polish labeling: nazwa ćwiczenia \"Przysiad sumo\", partia mięśniowa \"Uda (wewnętrzna strona), pośladki\", oraz jedna wskazówka bezpieczeństwa: \"Trzymaj się oparcia krzesła, jeśli potrzebujesz wsparcia równowagi. Nie schodź głębiej niż jest to komfortowe dla kolan.\". Numbered arrows indicating movement direction, dashed alignment guide lines on knees/spine, no spelling errors, high contrast, flat illustration style, no photorealism, inclusive and body-positive character design.",
+    "videoPrompt": "10-15 second instructional fitness demo video, static camera, front angle, a calm plus-size adult performing \"sumo squat (wide stance)\" with correct form on a non-slip mat in a bright home setting, slow controlled tempo with a brief pause at the lowest comfortable squat depth, subtle on-screen Polish captions fade in: \"Przysiad sumo\", \"Uda (wewnętrzna strona), pośladki\", and safety cue \"Trzymaj się oparcia krzesła, jeśli potrzebujesz wsparcia równowagi. Nie schodź głębiej niż jest to komfortowe dla kolan.\", soft ambient background music, seamless loop, photorealistic, steady well-lit shot, encouraging non-judgmental tone suitable for beginners with a larger body size."
+  },
+  {
+    "code": "B3",
+    "name": "Wykrok stacjonarny wspomagany",
+    "group": "B",
+    "muscle": "Uda, pośladki",
+    "steps": [
+      "Stań przodem do oparcia krzesła, jedną dłonią trzymaj się dla równowagi.",
+      "Zrób krok do tyłu jedną nogą, ustawiając się w pozycji wykroku.",
+      "Ugnij oba kolana do kąta komfortowego (np. 45-60°), następnie wróć do pozycji startowej.",
+      "Wykonaj serię, zmień nogę."
+    ],
+    "safety": "Nie schodź do pełnego kąta 90°, jeśli obciąża to kolano. Krótszy, kontrolowany zakres jest bezpieczniejszy.",
+    "reps": {
+      "faza1": "2 × 8 / noga",
+      "faza2": "3 × 10",
+      "faza3": "3 × 12",
+      "faza4": "3 × 12-15"
+    },
+    "infographicPrompt": "Clean flat-vector fitness infographic, square format, showing a friendly plus-size adult demonstrating \"assisted stationary lunge (chair support)\" in 3 sequential steps (start position, mid-movement, end position), side angle, minimalist home-gym background, soft blue-and-white color palette, bold sans-serif captions in Polish labeling: nazwa ćwiczenia \"Wykrok stacjonarny wspomagany\", partia mięśniowa \"Uda, pośladki\", oraz jedna wskazówka bezpieczeństwa: \"Nie schodź do pełnego kąta 90°, jeśli obciąża to kolano. Krótszy, kontrolowany zakres jest bezpieczniejszy.\". Numbered arrows indicating movement direction, dashed alignment guide lines on knees/spine, no spelling errors, high contrast, flat illustration style, no photorealism, inclusive and body-positive character design.",
+    "videoPrompt": "10-15 second instructional fitness demo video, static camera, side angle, a calm plus-size adult performing \"assisted stationary lunge (chair support)\" with correct form on a non-slip mat in a bright home setting, slow controlled tempo with a brief pause at the bottom of the lunge, subtle on-screen Polish captions fade in: \"Wykrok stacjonarny wspomagany\", \"Uda, pośladki\", and safety cue \"Nie schodź do pełnego kąta 90°, jeśli obciąża to kolano. Krótszy, kontrolowany zakres jest bezpieczniejszy.\", soft ambient background music, seamless loop, photorealistic, steady well-lit shot, encouraging non-judgmental tone suitable for beginners with a larger body size."
+  },
+  {
+    "code": "B4",
+    "name": "Mostek biodrowy (glute bridge)",
+    "group": "B",
+    "muscle": "Pośladki, dolna część pleców, brzuch",
+    "steps": [
+      "Połóż się na plecach, kolana ugięte, stopy płasko na podłodze blisko pośladków.",
+      "Napinając pośladki, unieś biodra w górę, tworząc linię prostą od kolan do barków.",
+      "Przytrzymaj chwilę na górze, następnie powoli opuść biodra."
+    ],
+    "safety": "Nie przeginaj nadmiernie odcinka lędźwiowego — unoś do wysokości komfortowej, napięcie ma być w pośladkach.",
+    "reps": {
+      "faza1": "2 × 12",
+      "faza2": "3 × 15",
+      "faza3": "3 × 18",
+      "faza4": "3-4 × 20"
+    },
+    "infographicPrompt": "Clean flat-vector fitness infographic, square format, showing a friendly plus-size adult demonstrating \"glute bridge\" in 3 sequential steps (start position, mid-movement, end position), side angle, minimalist home-gym background, soft blue-and-white color palette, bold sans-serif captions in Polish labeling: nazwa ćwiczenia \"Mostek biodrowy (glute bridge)\", partia mięśniowa \"Pośladki, dolna część pleców, brzuch\", oraz jedna wskazówka bezpieczeństwa: \"Nie przeginaj nadmiernie odcinka lędźwiowego — unoś do wysokości komfortowej, napięcie ma być w pośladkach.\". Numbered arrows indicating movement direction, dashed alignment guide lines on knees/spine, no spelling errors, high contrast, flat illustration style, no photorealism, inclusive and body-positive character design.",
+    "videoPrompt": "10-15 second instructional fitness demo video, static camera, side angle, a calm plus-size adult performing \"glute bridge\" with correct form on a non-slip mat in a bright home setting, slow controlled tempo with a brief pause at top position, hips fully raised, subtle on-screen Polish captions fade in: \"Mostek biodrowy (glute bridge)\", \"Pośladki, dolna część pleców, brzuch\", and safety cue \"Nie przeginaj nadmiernie odcinka lędźwiowego — unoś do wysokości komfortowej, napięcie ma być w pośladkach.\", soft ambient background music, seamless loop, photorealistic, steady well-lit shot, encouraging non-judgmental tone suitable for beginners with a larger body size."
+  },
+  {
+    "code": "B5",
+    "name": "Kopnięcia w tył na czworakach (donkey kicks)",
+    "group": "B",
+    "muscle": "Pośladki",
+    "steps": [
+      "Ustaw się na czworakach, dłonie pod barkami, kolana pod biodrami.",
+      "Utrzymując kolano ugięte pod kątem 90°, unieś jedną nogę w górę i do tyłu, napinając pośladek.",
+      "Powoli opuść, nie dotykając kolanem podłogi między powtórzeniami.",
+      "Wykonaj serię, zmień nogę."
+    ],
+    "safety": "Napięty brzuch chroni dolny odcinek pleców — unikaj wyginania kręgosłupa.",
+    "reps": {
+      "faza1": "2 × 10 / noga",
+      "faza2": "3 × 12",
+      "faza3": "3 × 15",
+      "faza4": "3 × 15-18"
+    },
+    "infographicPrompt": "Clean flat-vector fitness infographic, square format, showing a friendly plus-size adult demonstrating \"quadruped donkey kick\" in 3 sequential steps (start position, mid-movement, end position), side-rear angle, minimalist home-gym background, soft blue-and-white color palette, bold sans-serif captions in Polish labeling: nazwa ćwiczenia \"Kopnięcia w tył na czworakach (donkey kicks)\", partia mięśniowa \"Pośladki\", oraz jedna wskazówka bezpieczeństwa: \"Napięty brzuch chroni dolny odcinek pleców — unikaj wyginania kręgosłupa.\". Numbered arrows indicating movement direction, dashed alignment guide lines on knees/spine, no spelling errors, high contrast, flat illustration style, no photorealism, inclusive and body-positive character design.",
+    "videoPrompt": "10-15 second instructional fitness demo video, static camera, side-rear angle, a calm plus-size adult performing \"quadruped donkey kick\" with correct form on a non-slip mat in a bright home setting, slow controlled tempo with a brief pause at the top of the kick, subtle on-screen Polish captions fade in: \"Kopnięcia w tył na czworakach (donkey kicks)\", \"Pośladki\", and safety cue \"Napięty brzuch chroni dolny odcinek pleców — unikaj wyginania kręgosłupa.\", soft ambient background music, seamless loop, photorealistic, steady well-lit shot, encouraging non-judgmental tone suitable for beginners with a larger body size."
+  },
+  {
+    "code": "B6",
+    "name": "Clamshell (małżowina)",
+    "group": "B",
+    "muscle": "Pośladek średni, biodro",
+    "steps": [
+      "Połóż się na boku, kolana ugięte pod kątem ok. 45°, stopy złączone.",
+      "Trzymając stopy razem, unieś górne kolano na boki, jak otwierająca się małżowina.",
+      "Powoli wróć do pozycji startowej."
+    ],
+    "safety": "Biodra pozostają nieruchome — ruch tylko w stawie biodrowym, nie przekręcaj miednicy.",
+    "reps": {
+      "faza1": "2 × 12 / stronę",
+      "faza2": "3 × 15",
+      "faza3": "3 × 18",
+      "faza4": "3 × 20"
+    },
+    "infographicPrompt": "Clean flat-vector fitness infographic, square format, showing a friendly plus-size adult demonstrating \"clamshell hip abduction\" in 3 sequential steps (start position, mid-movement, end position), side angle, minimalist home-gym background, soft blue-and-white color palette, bold sans-serif captions in Polish labeling: nazwa ćwiczenia \"Clamshell (małżowina)\", partia mięśniowa \"Pośladek średni, biodro\", oraz jedna wskazówka bezpieczeństwa: \"Biodra pozostają nieruchome — ruch tylko w stawie biodrowym, nie przekręcaj miednicy.\". Numbered arrows indicating movement direction, dashed alignment guide lines on knees/spine, no spelling errors, high contrast, flat illustration style, no photorealism, inclusive and body-positive character design.",
+    "videoPrompt": "10-15 second instructional fitness demo video, static camera, side angle, a calm plus-size adult performing \"clamshell hip abduction\" with correct form on a non-slip mat in a bright home setting, slow controlled tempo with a brief pause at the widest point of the knee opening, subtle on-screen Polish captions fade in: \"Clamshell (małżowina)\", \"Pośladek średni, biodro\", and safety cue \"Biodra pozostają nieruchome — ruch tylko w stawie biodrowym, nie przekręcaj miednicy.\", soft ambient background music, seamless loop, photorealistic, steady well-lit shot, encouraging non-judgmental tone suitable for beginners with a larger body size."
+  },
+  {
+    "code": "B7",
+    "name": "Unoszenie na palce (calf raises)",
+    "group": "B",
+    "muscle": "Łydki, pomocniczo uda",
+    "steps": [
+      "Stań prosto, trzymając się lekko oparcia krzesła dla równowagi.",
+      "Powoli unieś się na palce obu stóp najwyżej, jak potrafisz.",
+      "Przytrzymaj chwilę, następnie powoli opuść pięty na podłogę."
+    ],
+    "safety": "Ruch powolny i kontrolowany — unikaj odbijania się.",
+    "reps": {
+      "faza1": "2 × 15",
+      "faza2": "3 × 15",
+      "faza3": "3 × 20",
+      "faza4": "3 × 25"
+    },
+    "infographicPrompt": "Clean flat-vector fitness infographic, square format, showing a friendly plus-size adult demonstrating \"standing calf raise (chair-supported)\" in 3 sequential steps (start position, mid-movement, end position), side angle, minimalist home-gym background, soft blue-and-white color palette, bold sans-serif captions in Polish labeling: nazwa ćwiczenia \"Unoszenie na palce (calf raises)\", partia mięśniowa \"Łydki, pomocniczo uda\", oraz jedna wskazówka bezpieczeństwa: \"Ruch powolny i kontrolowany — unikaj odbijania się.\". Numbered arrows indicating movement direction, dashed alignment guide lines on knees/spine, no spelling errors, high contrast, flat illustration style, no photorealism, inclusive and body-positive character design.",
+    "videoPrompt": "10-15 second instructional fitness demo video, static camera, side angle, a calm plus-size adult performing \"standing calf raise (chair-supported)\" with correct form on a non-slip mat in a bright home setting, slow controlled tempo with a brief pause at the highest point on toes, subtle on-screen Polish captions fade in: \"Unoszenie na palce (calf raises)\", \"Łydki, pomocniczo uda\", and safety cue \"Ruch powolny i kontrolowany — unikaj odbijania się.\", soft ambient background music, seamless loop, photorealistic, steady well-lit shot, encouraging non-judgmental tone suitable for beginners with a larger body size."
+  },
+  {
+    "code": "B8",
+    "name": "Step-up na niski stopień",
+    "group": "B",
+    "muscle": "Uda, pośladki",
+    "steps": [
+      "Stań przed niskim, stabilnym stopniem/schodkiem (np. najniższy stopień schodów).",
+      "Postaw jedną stopę na stopniu i przenieś na nią ciężar ciała, prostując nogę.",
+      "Delikatnie dołącz drugą nogę lub dotknij stopnia, następnie cofnij się do pozycji startowej.",
+      "Wykonaj serię, zmień nogę wiodącą."
+    ],
+    "safety": "Trzymaj się poręczy lub ściany dla równowagi. Wybierz niski, stabilny stopień — nie ryzykuj utraty równowagi.",
+    "reps": {
+      "faza1": "2 × 8 / noga",
+      "faza2": "3 × 10",
+      "faza3": "3 × 12",
+      "faza4": "3 × 12-15"
+    },
+    "infographicPrompt": "Clean flat-vector fitness infographic, square format, showing a friendly plus-size adult demonstrating \"low step-up onto a stair or sturdy platform\" in 3 sequential steps (start position, mid-movement, end position), side angle, minimalist home-gym background, soft blue-and-white color palette, bold sans-serif captions in Polish labeling: nazwa ćwiczenia \"Step-up na niski stopień\", partia mięśniowa \"Uda, pośladki\", oraz jedna wskazówka bezpieczeństwa: \"Trzymaj się poręczy lub ściany dla równowagi. Wybierz niski, stabilny stopień — nie ryzykuj utraty równowagi.\". Numbered arrows indicating movement direction, dashed alignment guide lines on knees/spine, no spelling errors, high contrast, flat illustration style, no photorealism, inclusive and body-positive character design.",
+    "videoPrompt": "10-15 second instructional fitness demo video, static camera, side angle, a calm plus-size adult performing \"low step-up onto a stair or sturdy platform\" with correct form on a non-slip mat in a bright home setting, slow controlled tempo with a brief pause at standing fully on top of the step, subtle on-screen Polish captions fade in: \"Step-up na niski stopień\", \"Uda, pośladki\", and safety cue \"Trzymaj się poręczy lub ściany dla równowagi. Wybierz niski, stabilny stopień — nie ryzykuj utraty równowagi.\", soft ambient background music, seamless loop, photorealistic, steady well-lit shot, encouraging non-judgmental tone suitable for beginners with a larger body size."
+  },
+  {
+    "code": "B9",
+    "name": "Przysiad izometryczny przy ścianie (skrócony)",
+    "group": "B",
+    "muscle": "Uda (izometryczne wzmocnienie)",
+    "steps": [
+      "Oprzyj plecy o ścianę, stopy wysunięte do przodu na odległość pozwalającą na płytkie ugięcie kolan.",
+      "Powoli zsuń się w dół do kąta komfortowego (niekoniecznie 90°), tak by kolana nie wychodziły za linię palców stóp.",
+      "Utrzymaj pozycję przez zadany czas, następnie powoli wróć do pozycji stojącej."
+    ],
+    "safety": "Zacznij od płytkiego kąta i krótkiego czasu — pogłębiaj tylko wtedy, gdy nie odczuwasz bólu kolana.",
+    "reps": {
+      "faza1": "2 × 10-15 s",
+      "faza2": "3 × 15-20 s",
+      "faza3": "3 × 20-25 s",
+      "faza4": "3 × 25-30 s"
+    },
+    "infographicPrompt": "Clean flat-vector fitness infographic, square format, showing a friendly plus-size adult demonstrating \"modified wall sit (shallow angle, short hold)\" in 3 sequential steps (start position, mid-movement, end position), side angle, minimalist home-gym background, soft blue-and-white color palette, bold sans-serif captions in Polish labeling: nazwa ćwiczenia \"Przysiad izometryczny przy ścianie (skrócony)\", partia mięśniowa \"Uda (izometryczne wzmocnienie)\", oraz jedna wskazówka bezpieczeństwa: \"Zacznij od płytkiego kąta i krótkiego czasu — pogłębiaj tylko wtedy, gdy nie odczuwasz bólu kolana.\". Numbered arrows indicating movement direction, dashed alignment guide lines on knees/spine, no spelling errors, high contrast, flat illustration style, no photorealism, inclusive and body-positive character design.",
+    "videoPrompt": "10-15 second instructional fitness demo video, static camera, side angle, a calm plus-size adult performing \"modified wall sit (shallow angle, short hold)\" with correct form on a non-slip mat in a bright home setting, slow controlled tempo with a brief pause at mid-hold at the chosen squat angle, subtle on-screen Polish captions fade in: \"Przysiad izometryczny przy ścianie (skrócony)\", \"Uda (izometryczne wzmocnienie)\", and safety cue \"Zacznij od płytkiego kąta i krótkiego czasu — pogłębiaj tylko wtedy, gdy nie odczuwasz bólu kolana.\", soft ambient background music, seamless loop, photorealistic, steady well-lit shot, encouraging non-judgmental tone suitable for beginners with a larger body size."
+  },
+  {
+    "code": "B10",
+    "name": "Marsz boczny (side steps, opcjonalnie z taśmą)",
+    "group": "B",
+    "muscle": "Biodro, pośladek średni, uda",
+    "steps": [
+      "Stań w lekkim, płytkim przysiadzie, opcjonalnie z opaską oporową powyżej kolan.",
+      "Zrób krok w bok jedną nogą, następnie dołącz drugą, utrzymując napięcie w biodrach.",
+      "Wykonaj zadaną liczbę kroków w jedną stronę, następnie w drugą."
+    ],
+    "safety": "Utrzymuj kolana w linii ze stopami, tułów stabilny. Bez opaski ćwiczenie jest łagodniejsze.",
+    "reps": {
+      "faza1": "2 × 8 kroków / stronę",
+      "faza2": "3 × 10",
+      "faza3": "3 × 12",
+      "faza4": "3 × 15"
+    },
+    "infographicPrompt": "Clean flat-vector fitness infographic, square format, showing a friendly plus-size adult demonstrating \"lateral side steps (with optional mini-band)\" in 3 sequential steps (start position, mid-movement, end position), front angle, minimalist home-gym background, soft blue-and-white color palette, bold sans-serif captions in Polish labeling: nazwa ćwiczenia \"Marsz boczny (side steps, opcjonalnie z taśmą)\", partia mięśniowa \"Biodro, pośladek średni, uda\", oraz jedna wskazówka bezpieczeństwa: \"Utrzymuj kolana w linii ze stopami, tułów stabilny. Bez opaski ćwiczenie jest łagodniejsze.\". Numbered arrows indicating movement direction, dashed alignment guide lines on knees/spine, no spelling errors, high contrast, flat illustration style, no photorealism, inclusive and body-positive character design.",
+    "videoPrompt": "10-15 second instructional fitness demo video, static camera, front angle, a calm plus-size adult performing \"lateral side steps (with optional mini-band)\" with correct form on a non-slip mat in a bright home setting, slow controlled tempo with a brief pause at mid-step with knees bent, subtle on-screen Polish captions fade in: \"Marsz boczny (side steps, opcjonalnie z taśmą)\", \"Biodro, pośladek średni, uda\", and safety cue \"Utrzymuj kolana w linii ze stopami, tułów stabilny. Bez opaski ćwiczenie jest łagodniejsze.\", soft ambient background music, seamless loop, photorealistic, steady well-lit shot, encouraging non-judgmental tone suitable for beginners with a larger body size."
+  },
+  {
+    "code": "B11",
+    "name": "Mostek jednonóż (wspomagany)",
+    "group": "B",
+    "muscle": "Pośladki",
+    "steps": [
+      "Połóż się na plecach, kolana ugięte, stopy płasko na podłodze.",
+      "Unieś jedną stopę lekko nad podłogę, wyprostowując nogę (wersja łatwiejsza: tylko unieś palce stopy, pięta zostaje na podłodze).",
+      "Napinając pośladek nogi podpierającej, unieś biodra w górę.",
+      "Powoli opuść i powtórz, następnie zmień nogę."
+    ],
+    "safety": "To trudniejsza wersja jednonóż — jeśli czujesz obciążenie w plecach, wróć do standardowego mostka (B4).",
+    "reps": {
+      "faza1": "2 × 6 / noga",
+      "faza2": "3 × 8",
+      "faza3": "3 × 10",
+      "faza4": "3 × 12"
+    },
+    "infographicPrompt": "Clean flat-vector fitness infographic, square format, showing a friendly plus-size adult demonstrating \"assisted single-leg glute bridge\" in 3 sequential steps (start position, mid-movement, end position), side angle, minimalist home-gym background, soft blue-and-white color palette, bold sans-serif captions in Polish labeling: nazwa ćwiczenia \"Mostek jednonóż (wspomagany)\", partia mięśniowa \"Pośladki\", oraz jedna wskazówka bezpieczeństwa: \"To trudniejsza wersja jednonóż — jeśli czujesz obciążenie w plecach, wróć do standardowego mostka (B4).\". Numbered arrows indicating movement direction, dashed alignment guide lines on knees/spine, no spelling errors, high contrast, flat illustration style, no photorealism, inclusive and body-positive character design.",
+    "videoPrompt": "10-15 second instructional fitness demo video, static camera, side angle, a calm plus-size adult performing \"assisted single-leg glute bridge\" with correct form on a non-slip mat in a bright home setting, slow controlled tempo with a brief pause at top position, hips raised while balancing on one leg, subtle on-screen Polish captions fade in: \"Mostek jednonóż (wspomagany)\", \"Pośladki\", and safety cue \"To trudniejsza wersja jednonóż — jeśli czujesz obciążenie w plecach, wróć do standardowego mostka (B4).\", soft ambient background music, seamless loop, photorealistic, steady well-lit shot, encouraging non-judgmental tone suitable for beginners with a larger body size."
+  },
+  {
+    "code": "B12",
+    "name": "Kopnięcie do tyłu stojąc (przy krześle)",
+    "group": "B",
+    "muscle": "Pośladki",
+    "steps": [
+      "Stań przodem do oparcia krzesła, trzymając się dla równowagi.",
+      "Napinając pośladek, wyprostowaną nogą wykonaj kopnięcie do tyłu, nie odchylając mocno tułowia do przodu.",
+      "Powoli wróć do pozycji startowej, nie stawiając stopy na podłodze między powtórzeniami.",
+      "Wykonaj serię, zmień nogę."
+    ],
+    "safety": "Ruch kontrolowany, biodra skierowane do przodu przez cały czas — nie skręcaj tułowia.",
+    "reps": {
+      "faza1": "2 × 10 / noga",
+      "faza2": "3 × 12",
+      "faza3": "3 × 15",
+      "faza4": "3 × 15-18"
+    },
+    "infographicPrompt": "Clean flat-vector fitness infographic, square format, showing a friendly plus-size adult demonstrating \"standing glute kickback (chair-supported)\" in 3 sequential steps (start position, mid-movement, end position), side angle, minimalist home-gym background, soft blue-and-white color palette, bold sans-serif captions in Polish labeling: nazwa ćwiczenia \"Kopnięcie do tyłu stojąc (przy krześle)\", partia mięśniowa \"Pośladki\", oraz jedna wskazówka bezpieczeństwa: \"Ruch kontrolowany, biodra skierowane do przodu przez cały czas — nie skręcaj tułowia.\". Numbered arrows indicating movement direction, dashed alignment guide lines on knees/spine, no spelling errors, high contrast, flat illustration style, no photorealism, inclusive and body-positive character design.",
+    "videoPrompt": "10-15 second instructional fitness demo video, static camera, side angle, a calm plus-size adult performing \"standing glute kickback (chair-supported)\" with correct form on a non-slip mat in a bright home setting, slow controlled tempo with a brief pause at the top of the kickback, subtle on-screen Polish captions fade in: \"Kopnięcie do tyłu stojąc (przy krześle)\", \"Pośladki\", and safety cue \"Ruch kontrolowany, biodra skierowane do przodu przez cały czas — nie skręcaj tułowia.\", soft ambient background music, seamless loop, photorealistic, steady well-lit shot, encouraging non-judgmental tone suitable for beginners with a larger body size."
+  },
+  {
+    "code": "C1",
+    "name": "Pompki od ściany (wall push-up)",
+    "group": "C",
+    "muscle": "Klatka piersiowa, ramiona (triceps), barki",
+    "steps": [
+      "Stań przed ścianą w odległości nieco większej niż długość ramienia, dłonie oparte na ścianie na wysokości barków.",
+      "Ugnij łokcie, zbliżając klatkę piersiową do ściany, trzymając ciało w linii prostej.",
+      "Odepchnij się z powrotem do pozycji startowej."
+    ],
+    "safety": "Im dalej stopy od ściany, tym trudniejsza wersja — zacznij bliżej dla łatwiejszego wariantu.",
+    "reps": {
+      "faza1": "2 × 8-10",
+      "faza2": "3 × 10-12",
+      "faza3": "3 × 12-15",
+      "faza4": "3-4 × 15"
+    },
+    "infographicPrompt": "Clean flat-vector fitness infographic, square format, showing a friendly plus-size adult demonstrating \"wall push-up\" in 3 sequential steps (start position, mid-movement, end position), side angle, minimalist home-gym background, soft blue-and-white color palette, bold sans-serif captions in Polish labeling: nazwa ćwiczenia \"Pompki od ściany (wall push-up)\", partia mięśniowa \"Klatka piersiowa, ramiona (triceps), barki\", oraz jedna wskazówka bezpieczeństwa: \"Im dalej stopy od ściany, tym trudniejsza wersja — zacznij bliżej dla łatwiejszego wariantu.\". Numbered arrows indicating movement direction, dashed alignment guide lines on knees/spine, no spelling errors, high contrast, flat illustration style, no photorealism, inclusive and body-positive character design.",
+    "videoPrompt": "10-15 second instructional fitness demo video, static camera, side angle, a calm plus-size adult performing \"wall push-up\" with correct form on a non-slip mat in a bright home setting, slow controlled tempo with a brief pause at the closest point to the wall, subtle on-screen Polish captions fade in: \"Pompki od ściany (wall push-up)\", \"Klatka piersiowa, ramiona (triceps), barki\", and safety cue \"Im dalej stopy od ściany, tym trudniejsza wersja — zacznij bliżej dla łatwiejszego wariantu.\", soft ambient background music, seamless loop, photorealistic, steady well-lit shot, encouraging non-judgmental tone suitable for beginners with a larger body size."
+  },
+  {
+    "code": "C2",
+    "name": "Pompki od blatu/krzesła (incline push-up)",
+    "group": "C",
+    "muscle": "Klatka piersiowa, ramiona, barki",
+    "steps": [
+      "Oprzyj dłonie na stabilnym, ciężkim blacie lub oparciu krzesła (upewnij się, że się nie przesunie), nieco szerzej niż barki.",
+      "Ustaw ciało w linii prostej od głowy do pięt, cofnij stopy.",
+      "Ugnij łokcie, opuszczając klatkę piersiową w kierunku podparcia, następnie wypchnij się do góry."
+    ],
+    "safety": "Im wyżej podparcie, tym łatwiejsza wersja — dostosuj wysokość do swojego poziomu.",
+    "reps": {
+      "faza1": "2 × 8-10",
+      "faza2": "3 × 10-12",
+      "faza3": "3 × 12-15",
+      "faza4": "3-4 × 15"
+    },
+    "infographicPrompt": "Clean flat-vector fitness infographic, square format, showing a friendly plus-size adult demonstrating \"incline push-up on sturdy chair or counter\" in 3 sequential steps (start position, mid-movement, end position), 45-degree side angle, minimalist home-gym background, soft blue-and-white color palette, bold sans-serif captions in Polish labeling: nazwa ćwiczenia \"Pompki od blatu/krzesła (incline push-up)\", partia mięśniowa \"Klatka piersiowa, ramiona, barki\", oraz jedna wskazówka bezpieczeństwa: \"Im wyżej podparcie, tym łatwiejsza wersja — dostosuj wysokość do swojego poziomu.\". Numbered arrows indicating movement direction, dashed alignment guide lines on knees/spine, no spelling errors, high contrast, flat illustration style, no photorealism, inclusive and body-positive character design.",
+    "videoPrompt": "10-15 second instructional fitness demo video, static camera, 45-degree side angle, a calm plus-size adult performing \"incline push-up on sturdy chair or counter\" with correct form on a non-slip mat in a bright home setting, slow controlled tempo with a brief pause at the lowest point near the support, subtle on-screen Polish captions fade in: \"Pompki od blatu/krzesła (incline push-up)\", \"Klatka piersiowa, ramiona, barki\", and safety cue \"Im wyżej podparcie, tym łatwiejsza wersja — dostosuj wysokość do swojego poziomu.\", soft ambient background music, seamless loop, photorealistic, steady well-lit shot, encouraging non-judgmental tone suitable for beginners with a larger body size."
+  },
+  {
+    "code": "C3",
+    "name": "Izometryczny ucisk dłoni przed klatką",
+    "group": "C",
+    "muscle": "Klatka piersiowa",
+    "steps": [
+      "Złącz dłonie przed klatką piersiową na wysokości mostka, łokcie uniesione na boki.",
+      "Mocno dociśnij dłonie do siebie, napinając mięśnie klatki piersiowej.",
+      "Przytrzymaj napięcie, następnie rozluźnij."
+    ],
+    "safety": "Ćwiczenie bezpieczne dla stawów — kontroluj oddech, nie wstrzymuj go podczas napięcia.",
+    "reps": {
+      "faza1": "2 × 10 (przytrzymanie 5 s)",
+      "faza2": "3 × 12",
+      "faza3": "3 × 15",
+      "faza4": "3 × 15-20"
+    },
+    "infographicPrompt": "Clean flat-vector fitness infographic, square format, showing a friendly plus-size adult demonstrating \"isometric chest press / palm squeeze\" in 3 sequential steps (start position, mid-movement, end position), front angle, minimalist home-gym background, soft blue-and-white color palette, bold sans-serif captions in Polish labeling: nazwa ćwiczenia \"Izometryczny ucisk dłoni przed klatką\", partia mięśniowa \"Klatka piersiowa\", oraz jedna wskazówka bezpieczeństwa: \"Ćwiczenie bezpieczne dla stawów — kontroluj oddech, nie wstrzymuj go podczas napięcia.\". Numbered arrows indicating movement direction, dashed alignment guide lines on knees/spine, no spelling errors, high contrast, flat illustration style, no photorealism, inclusive and body-positive character design.",
+    "videoPrompt": "10-15 second instructional fitness demo video, static camera, front angle, a calm plus-size adult performing \"isometric chest press / palm squeeze\" with correct form on a non-slip mat in a bright home setting, slow controlled tempo with a brief pause at the peak squeeze, subtle on-screen Polish captions fade in: \"Izometryczny ucisk dłoni przed klatką\", \"Klatka piersiowa\", and safety cue \"Ćwiczenie bezpieczne dla stawów — kontroluj oddech, nie wstrzymuj go podczas napięcia.\", soft ambient background music, seamless loop, photorealistic, steady well-lit shot, encouraging non-judgmental tone suitable for beginners with a larger body size."
+  },
+  {
+    "code": "C4",
+    "name": "Uginanie ramion z bidonami (bicep curl)",
+    "group": "C",
+    "muscle": "Ramiona (biceps)",
+    "steps": [
+      "Stań lub usiądź, w każdej dłoni trzymaj bidon z wodą lub lekką hantelkę, ręce wzdłuż tułowia.",
+      "Uginaj łokcie, unosząc dłonie w kierunku barków, łokcie blisko tułowia.",
+      "Powoli opuść ręce do pozycji startowej."
+    ],
+    "safety": "Nie huśtaj tułowiem, aby \"pomóc\" ruchowi — wybierz taki ciężar, przy którym utrzymasz kontrolę.",
+    "reps": {
+      "faza1": "2 × 10-12",
+      "faza2": "3 × 12-15",
+      "faza3": "3 × 15",
+      "faza4": "3 × 15-20"
+    },
+    "infographicPrompt": "Clean flat-vector fitness infographic, square format, showing a friendly plus-size adult demonstrating \"dumbbell / water-bottle bicep curl\" in 3 sequential steps (start position, mid-movement, end position), front angle, minimalist home-gym background, soft blue-and-white color palette, bold sans-serif captions in Polish labeling: nazwa ćwiczenia \"Uginanie ramion z bidonami (bicep curl)\", partia mięśniowa \"Ramiona (biceps)\", oraz jedna wskazówka bezpieczeństwa: \"Nie huśtaj tułowiem, aby \"pomóc\" ruchowi — wybierz taki ciężar, przy którym utrzymasz kontrolę.\". Numbered arrows indicating movement direction, dashed alignment guide lines on knees/spine, no spelling errors, high contrast, flat illustration style, no photorealism, inclusive and body-positive character design.",
+    "videoPrompt": "10-15 second instructional fitness demo video, static camera, front angle, a calm plus-size adult performing \"dumbbell / water-bottle bicep curl\" with correct form on a non-slip mat in a bright home setting, slow controlled tempo with a brief pause at the top of the curl, subtle on-screen Polish captions fade in: \"Uginanie ramion z bidonami (bicep curl)\", \"Ramiona (biceps)\", and safety cue \"Nie huśtaj tułowiem, aby \"pomóc\" ruchowi — wybierz taki ciężar, przy którym utrzymasz kontrolę.\", soft ambient background music, seamless loop, photorealistic, steady well-lit shot, encouraging non-judgmental tone suitable for beginners with a larger body size."
+  },
+  {
+    "code": "C5",
+    "name": "Wyprost ramion nad głową (triceps)",
+    "group": "C",
+    "muscle": "Ramiona (triceps)",
+    "steps": [
+      "Usiądź lub stań, trzymaj jeden bidon obiema dłońmi nad głową, ręce wyprostowane.",
+      "Ugnij łokcie, opuszczając bidon za głowę, łokcie skierowane do przodu.",
+      "Wyprostuj ręce, wracając do pozycji startowej."
+    ],
+    "safety": "Ruch powolny, łokcie pozostają blisko głowy — unikaj nadmiernego rozstawiania.",
+    "reps": {
+      "faza1": "2 × 10",
+      "faza2": "3 × 12",
+      "faza3": "3 × 15",
+      "faza4": "3 × 15-18"
+    },
+    "infographicPrompt": "Clean flat-vector fitness infographic, square format, showing a friendly plus-size adult demonstrating \"overhead triceps extension with water bottle\" in 3 sequential steps (start position, mid-movement, end position), side angle, minimalist home-gym background, soft blue-and-white color palette, bold sans-serif captions in Polish labeling: nazwa ćwiczenia \"Wyprost ramion nad głową (triceps)\", partia mięśniowa \"Ramiona (triceps)\", oraz jedna wskazówka bezpieczeństwa: \"Ruch powolny, łokcie pozostają blisko głowy — unikaj nadmiernego rozstawiania.\". Numbered arrows indicating movement direction, dashed alignment guide lines on knees/spine, no spelling errors, high contrast, flat illustration style, no photorealism, inclusive and body-positive character design.",
+    "videoPrompt": "10-15 second instructional fitness demo video, static camera, side angle, a calm plus-size adult performing \"overhead triceps extension with water bottle\" with correct form on a non-slip mat in a bright home setting, slow controlled tempo with a brief pause at the lowest point behind the head, subtle on-screen Polish captions fade in: \"Wyprost ramion nad głową (triceps)\", \"Ramiona (triceps)\", and safety cue \"Ruch powolny, łokcie pozostają blisko głowy — unikaj nadmiernego rozstawiania.\", soft ambient background music, seamless loop, photorealistic, steady well-lit shot, encouraging non-judgmental tone suitable for beginners with a larger body size."
+  },
+  {
+    "code": "C6",
+    "name": "Triceps dips na krześle (zmodyfikowane)",
+    "group": "C",
+    "muscle": "Ramiona (triceps), barki",
+    "steps": [
+      "Usiądź na krawędzi stabilnego krzesła, dłonie oparte przy biodrach, palce skierowane do przodu.",
+      "Przesuń biodra lekko przed krzesło, nogi ugięte, stopy płasko na podłodze.",
+      "Ugnij łokcie tylko nieznacznie (krótki zakres), opuszczając biodra, następnie wypchnij się z powrotem."
+    ],
+    "safety": "Zakres ruchu ma być mały i kontrolowany — nadmierne opuszczanie obciąża barki. Przerwij, jeśli poczujesz ból w barku.",
+    "reps": {
+      "faza1": "2 × 8",
+      "faza2": "3 × 10",
+      "faza3": "3 × 12",
+      "faza4": "3 × 15"
+    },
+    "infographicPrompt": "Clean flat-vector fitness infographic, square format, showing a friendly plus-size adult demonstrating \"modified chair triceps dip (bent knees, short range)\" in 3 sequential steps (start position, mid-movement, end position), side angle, minimalist home-gym background, soft blue-and-white color palette, bold sans-serif captions in Polish labeling: nazwa ćwiczenia \"Triceps dips na krześle (zmodyfikowane)\", partia mięśniowa \"Ramiona (triceps), barki\", oraz jedna wskazówka bezpieczeństwa: \"Zakres ruchu ma być mały i kontrolowany — nadmierne opuszczanie obciąża barki. Przerwij, jeśli poczujesz ból w barku.\". Numbered arrows indicating movement direction, dashed alignment guide lines on knees/spine, no spelling errors, high contrast, flat illustration style, no photorealism, inclusive and body-positive character design.",
+    "videoPrompt": "10-15 second instructional fitness demo video, static camera, side angle, a calm plus-size adult performing \"modified chair triceps dip (bent knees, short range)\" with correct form on a non-slip mat in a bright home setting, slow controlled tempo with a brief pause at the lowest safe dip point, subtle on-screen Polish captions fade in: \"Triceps dips na krześle (zmodyfikowane)\", \"Ramiona (triceps), barki\", and safety cue \"Zakres ruchu ma być mały i kontrolowany — nadmierne opuszczanie obciąża barki. Przerwij, jeśli poczujesz ból w barku.\", soft ambient background music, seamless loop, photorealistic, steady well-lit shot, encouraging non-judgmental tone suitable for beginners with a larger body size."
+  },
+  {
+    "code": "C7",
+    "name": "Wznosy ramion bokiem (lateral raise)",
+    "group": "C",
+    "muscle": "Barki, ramiona",
+    "steps": [
+      "Stań w lekkim rozkroku, w każdej dłoni trzymaj lekki bidon/hantelkę, ręce wzdłuż tułowia.",
+      "Unieś ręce na boki do wysokości barków, lekko ugięte w łokciach.",
+      "Powoli opuść ręce do pozycji startowej."
+    ],
+    "safety": "Używaj lekkiego obciążenia — to ćwiczenie izolowane, nie huśtaj ramion.",
+    "reps": {
+      "faza1": "2 × 10",
+      "faza2": "3 × 12",
+      "faza3": "3 × 15",
+      "faza4": "3 × 15-20"
+    },
+    "infographicPrompt": "Clean flat-vector fitness infographic, square format, showing a friendly plus-size adult demonstrating \"light lateral raise with water bottles\" in 3 sequential steps (start position, mid-movement, end position), front angle, minimalist home-gym background, soft blue-and-white color palette, bold sans-serif captions in Polish labeling: nazwa ćwiczenia \"Wznosy ramion bokiem (lateral raise)\", partia mięśniowa \"Barki, ramiona\", oraz jedna wskazówka bezpieczeństwa: \"Używaj lekkiego obciążenia — to ćwiczenie izolowane, nie huśtaj ramion.\". Numbered arrows indicating movement direction, dashed alignment guide lines on knees/spine, no spelling errors, high contrast, flat illustration style, no photorealism, inclusive and body-positive character design.",
+    "videoPrompt": "10-15 second instructional fitness demo video, static camera, front angle, a calm plus-size adult performing \"light lateral raise with water bottles\" with correct form on a non-slip mat in a bright home setting, slow controlled tempo with a brief pause at arms at shoulder height, subtle on-screen Polish captions fade in: \"Wznosy ramion bokiem (lateral raise)\", \"Barki, ramiona\", and safety cue \"Używaj lekkiego obciążenia — to ćwiczenie izolowane, nie huśtaj ramion.\", soft ambient background music, seamless loop, photorealistic, steady well-lit shot, encouraging non-judgmental tone suitable for beginners with a larger body size."
+  },
+  {
+    "code": "C8",
+    "name": "Rozpiętki z bidonami leżąc (chest fly)",
+    "group": "C",
+    "muscle": "Klatka piersiowa",
+    "steps": [
+      "Połóż się na plecach (na macie), kolana ugięte, w każdej dłoni trzymaj bidon z wodą.",
+      "Unieś ręce nad klatkę piersiową, lekko ugięte w łokciach.",
+      "Powoli rozłóż ręce na boki aż do wysokości podłogi/maty, czując rozciągnięcie w klatce piersiowej.",
+      "Ściągnij ręce z powrotem nad klatkę, napinając mięśnie klatki."
+    ],
+    "safety": "Nie opuszczaj rąk zbyt nisko ani gwałtownie — kontroluj tempo przez cały ruch.",
+    "reps": {
+      "faza1": "2 × 10",
+      "faza2": "3 × 12",
+      "faza3": "3 × 15",
+      "faza4": "3 × 15-18"
+    },
+    "infographicPrompt": "Clean flat-vector fitness infographic, square format, showing a friendly plus-size adult demonstrating \"floor chest fly with water bottles\" in 3 sequential steps (start position, mid-movement, end position), top-down angle, minimalist home-gym background, soft blue-and-white color palette, bold sans-serif captions in Polish labeling: nazwa ćwiczenia \"Rozpiętki z bidonami leżąc (chest fly)\", partia mięśniowa \"Klatka piersiowa\", oraz jedna wskazówka bezpieczeństwa: \"Nie opuszczaj rąk zbyt nisko ani gwałtownie — kontroluj tempo przez cały ruch.\". Numbered arrows indicating movement direction, dashed alignment guide lines on knees/spine, no spelling errors, high contrast, flat illustration style, no photorealism, inclusive and body-positive character design.",
+    "videoPrompt": "10-15 second instructional fitness demo video, static camera, top-down angle, a calm plus-size adult performing \"floor chest fly with water bottles\" with correct form on a non-slip mat in a bright home setting, slow controlled tempo with a brief pause at arms extended to the sides at the bottom of the fly, subtle on-screen Polish captions fade in: \"Rozpiętki z bidonami leżąc (chest fly)\", \"Klatka piersiowa\", and safety cue \"Nie opuszczaj rąk zbyt nisko ani gwałtownie — kontroluj tempo przez cały ruch.\", soft ambient background music, seamless loop, photorealistic, steady well-lit shot, encouraging non-judgmental tone suitable for beginners with a larger body size."
+  },
+  {
+    "code": "C9",
+    "name": "Wyciskanie bidonów leżąc (floor press)",
+    "group": "C",
+    "muscle": "Klatka piersiowa, ramiona (triceps)",
+    "steps": [
+      "Połóż się na plecach, kolana ugięte, trzymaj bidony przy barkach, łokcie oparte o podłogę.",
+      "Wypchnij bidony w górę nad klatkę piersiową, prostując ręce (bez blokowania łokci).",
+      "Powoli opuść ręce z powrotem do pozycji startowej."
+    ],
+    "safety": "Łokcie schodzą tylko do poziomu podłogi — to naturalny ogranicznik zakresu, chroniący barki.",
+    "reps": {
+      "faza1": "2 × 10",
+      "faza2": "3 × 12",
+      "faza3": "3 × 15",
+      "faza4": "3 × 15-18"
+    },
+    "infographicPrompt": "Clean flat-vector fitness infographic, square format, showing a friendly plus-size adult demonstrating \"floor chest press with water bottles\" in 3 sequential steps (start position, mid-movement, end position), side angle, minimalist home-gym background, soft blue-and-white color palette, bold sans-serif captions in Polish labeling: nazwa ćwiczenia \"Wyciskanie bidonów leżąc (floor press)\", partia mięśniowa \"Klatka piersiowa, ramiona (triceps)\", oraz jedna wskazówka bezpieczeństwa: \"Łokcie schodzą tylko do poziomu podłogi — to naturalny ogranicznik zakresu, chroniący barki.\". Numbered arrows indicating movement direction, dashed alignment guide lines on knees/spine, no spelling errors, high contrast, flat illustration style, no photorealism, inclusive and body-positive character design.",
+    "videoPrompt": "10-15 second instructional fitness demo video, static camera, side angle, a calm plus-size adult performing \"floor chest press with water bottles\" with correct form on a non-slip mat in a bright home setting, slow controlled tempo with a brief pause at arms fully extended above the chest, subtle on-screen Polish captions fade in: \"Wyciskanie bidonów leżąc (floor press)\", \"Klatka piersiowa, ramiona (triceps)\", and safety cue \"Łokcie schodzą tylko do poziomu podłogi — to naturalny ogranicznik zakresu, chroniący barki.\", soft ambient background music, seamless loop, photorealistic, steady well-lit shot, encouraging non-judgmental tone suitable for beginners with a larger body size."
+  },
+  {
+    "code": "C10",
+    "name": "Uginanie młotkowe (hammer curl)",
+    "group": "C",
+    "muscle": "Ramiona (biceps, przedramię)",
+    "steps": [
+      "Stań lub usiądź, trzymaj bidony w dłoniach z kciukami skierowanymi do góry (chwyt młotkowy).",
+      "Uginaj łokcie, unosząc bidony w kierunku barków, łokcie blisko tułowia.",
+      "Powoli opuść ręce do pozycji startowej."
+    ],
+    "safety": "Nie huśtaj tułowiem — wykonuj ruch wyłącznie w stawie łokciowym.",
+    "reps": {
+      "faza1": "2 × 10",
+      "faza2": "3 × 12",
+      "faza3": "3 × 15",
+      "faza4": "3 × 15-18"
+    },
+    "infographicPrompt": "Clean flat-vector fitness infographic, square format, showing a friendly plus-size adult demonstrating \"hammer curl with water bottles (neutral grip)\" in 3 sequential steps (start position, mid-movement, end position), front angle, minimalist home-gym background, soft blue-and-white color palette, bold sans-serif captions in Polish labeling: nazwa ćwiczenia \"Uginanie młotkowe (hammer curl)\", partia mięśniowa \"Ramiona (biceps, przedramię)\", oraz jedna wskazówka bezpieczeństwa: \"Nie huśtaj tułowiem — wykonuj ruch wyłącznie w stawie łokciowym.\". Numbered arrows indicating movement direction, dashed alignment guide lines on knees/spine, no spelling errors, high contrast, flat illustration style, no photorealism, inclusive and body-positive character design.",
+    "videoPrompt": "10-15 second instructional fitness demo video, static camera, front angle, a calm plus-size adult performing \"hammer curl with water bottles (neutral grip)\" with correct form on a non-slip mat in a bright home setting, slow controlled tempo with a brief pause at top of the curl, bottles near shoulders, subtle on-screen Polish captions fade in: \"Uginanie młotkowe (hammer curl)\", \"Ramiona (biceps, przedramię)\", and safety cue \"Nie huśtaj tułowiem — wykonuj ruch wyłącznie w stawie łokciowym.\", soft ambient background music, seamless loop, photorealistic, steady well-lit shot, encouraging non-judgmental tone suitable for beginners with a larger body size."
+  },
+  {
+    "code": "C11",
+    "name": "Rozciąganie taśmy przed klatką (band pull-apart)",
+    "group": "C",
+    "muscle": "Barki, górna część pleców (postawa)",
+    "steps": [
+      "Trzymaj taśmę oporową oburącz przed klatką piersiową, ręce wyprostowane, chwyt na szerokość barków.",
+      "Rozciągnij taśmę, rozkładając ręce na boki, ściągając łopatki do siebie.",
+      "Powoli wróć do pozycji startowej, kontrolując powrót taśmy."
+    ],
+    "safety": "Bez taśmy możesz wykonać sam ruch ściągania łopatek (bez oporu) — to wciąż korzystne dla postawy.",
+    "reps": {
+      "faza1": "2 × 12",
+      "faza2": "3 × 15",
+      "faza3": "3 × 18",
+      "faza4": "3 × 20"
+    },
+    "infographicPrompt": "Clean flat-vector fitness infographic, square format, showing a friendly plus-size adult demonstrating \"resistance band pull-apart\" in 3 sequential steps (start position, mid-movement, end position), front angle, minimalist home-gym background, soft blue-and-white color palette, bold sans-serif captions in Polish labeling: nazwa ćwiczenia \"Rozciąganie taśmy przed klatką (band pull-apart)\", partia mięśniowa \"Barki, górna część pleców (postawa)\", oraz jedna wskazówka bezpieczeństwa: \"Bez taśmy możesz wykonać sam ruch ściągania łopatek (bez oporu) — to wciąż korzystne dla postawy.\". Numbered arrows indicating movement direction, dashed alignment guide lines on knees/spine, no spelling errors, high contrast, flat illustration style, no photorealism, inclusive and body-positive character design.",
+    "videoPrompt": "10-15 second instructional fitness demo video, static camera, front angle, a calm plus-size adult performing \"resistance band pull-apart\" with correct form on a non-slip mat in a bright home setting, slow controlled tempo with a brief pause at arms fully spread with shoulder blades squeezed together, subtle on-screen Polish captions fade in: \"Rozciąganie taśmy przed klatką (band pull-apart)\", \"Barki, górna część pleców (postawa)\", and safety cue \"Bez taśmy możesz wykonać sam ruch ściągania łopatek (bez oporu) — to wciąż korzystne dla postawy.\", soft ambient background music, seamless loop, photorealistic, steady well-lit shot, encouraging non-judgmental tone suitable for beginners with a larger body size."
+  },
+  {
+    "code": "C12",
+    "name": "Uginanie i krążenia nadgarstków",
+    "group": "C",
+    "muscle": "Przedramiona",
+    "steps": [
+      "Usiądź, przedramię oparte o udo, dłoń z lekkim bidonem zwisa za kolanem.",
+      "Uginaj nadgarstek w górę i w dół w kontrolowanym tempie.",
+      "Po serii wykonaj kilka swobodnych krążeń nadgarstkiem w obie strony."
+    ],
+    "safety": "Używaj bardzo lekkiego obciążenia — to drobne stawy, ruch ma być łagodny.",
+    "reps": {
+      "faza1": "2 × 10",
+      "faza2": "2 × 12",
+      "faza3": "3 × 12",
+      "faza4": "3 × 15"
+    },
+    "infographicPrompt": "Clean flat-vector fitness infographic, square format, showing a friendly plus-size adult demonstrating \"wrist curls and circles with a light water bottle\" in 3 sequential steps (start position, mid-movement, end position), close-up side angle, minimalist home-gym background, soft blue-and-white color palette, bold sans-serif captions in Polish labeling: nazwa ćwiczenia \"Uginanie i krążenia nadgarstków\", partia mięśniowa \"Przedramiona\", oraz jedna wskazówka bezpieczeństwa: \"Używaj bardzo lekkiego obciążenia — to drobne stawy, ruch ma być łagodny.\". Numbered arrows indicating movement direction, dashed alignment guide lines on knees/spine, no spelling errors, high contrast, flat illustration style, no photorealism, inclusive and body-positive character design.",
+    "videoPrompt": "10-15 second instructional fitness demo video, static camera, close-up side angle, a calm plus-size adult performing \"wrist curls and circles with a light water bottle\" with correct form on a non-slip mat in a bright home setting, slow controlled tempo with a brief pause at the top of the wrist curl, subtle on-screen Polish captions fade in: \"Uginanie i krążenia nadgarstków\", \"Przedramiona\", and safety cue \"Używaj bardzo lekkiego obciążenia — to drobne stawy, ruch ma być łagodny.\", soft ambient background music, seamless loop, photorealistic, steady well-lit shot, encouraging non-judgmental tone suitable for beginners with a larger body size."
+  },
+  {
+    "code": "D1",
+    "name": "Marsz w miejscu (low impact)",
+    "group": "D",
+    "muscle": "Cardio, całe ciało",
+    "steps": [
+      "Stań prosto, zacznij maszerować w miejscu, unosząc kolana do wysokości komfortowej.",
+      "Naturalnie poruszaj ramionami w rytm kroków.",
+      "Utrzymuj stałe, spokojne tempo przez określony czas."
+    ],
+    "safety": "Jeśli odczuwasz duszność, zwolnij tempo. Ćwicz w obuwiu ze wsparciem.",
+    "reps": {
+      "faza1": "5 min",
+      "faza2": "8 min",
+      "faza3": "10 min",
+      "faza4": "12-15 min"
+    },
+    "infographicPrompt": "Clean flat-vector fitness infographic, square format, showing a friendly plus-size adult demonstrating \"low-impact marching in place with arm swings\" in 3 sequential steps (start position, mid-movement, end position), front full-body angle, minimalist home-gym background, soft blue-and-white color palette, bold sans-serif captions in Polish labeling: nazwa ćwiczenia \"Marsz w miejscu (low impact)\", partia mięśniowa \"Cardio, całe ciało\", oraz jedna wskazówka bezpieczeństwa: \"Jeśli odczuwasz duszność, zwolnij tempo. Ćwicz w obuwiu ze wsparciem.\". Numbered arrows indicating movement direction, dashed alignment guide lines on knees/spine, no spelling errors, high contrast, flat illustration style, no photorealism, inclusive and body-positive character design.",
+    "videoPrompt": "10-15 second instructional fitness demo video, static camera, front full-body angle, a calm plus-size adult performing \"low-impact marching in place with arm swings\" with correct form on a non-slip mat in a bright home setting, slow controlled tempo with a brief pause at peak knee lift, subtle on-screen Polish captions fade in: \"Marsz w miejscu (low impact)\", \"Cardio, całe ciało\", and safety cue \"Jeśli odczuwasz duszność, zwolnij tempo. Ćwicz w obuwiu ze wsparciem.\", soft ambient background music, seamless loop, photorealistic, steady well-lit shot, encouraging non-judgmental tone suitable for beginners with a larger body size."
+  },
+  {
+    "code": "D2",
+    "name": "Rozciąganie całego ciała",
+    "group": "D",
+    "muscle": "Mobilność, regeneracja",
+    "steps": [
+      "Wykonaj sekwencję łagodnych rozciągań: karku, ramion, klatki piersiowej, ud (przód/tył), łydek i bioder.",
+      "Każdą pozycję przytrzymaj 20-30 sekund, oddychając spokojnie.",
+      "Nie wykonuj ruchów sprężynujących ani gwałtownych."
+    ],
+    "safety": "Rozciągaj do uczucia delikatnego napięcia, nigdy do bólu.",
+    "reps": {
+      "faza1": "8-10 min",
+      "faza2": "8-10 min",
+      "faza3": "10 min",
+      "faza4": "10-12 min"
+    },
+    "infographicPrompt": "Clean flat-vector fitness infographic, square format, showing a friendly plus-size adult demonstrating \"full-body cooldown stretch routine\" in 3 sequential steps (start position, mid-movement, end position), wide front angle, minimalist home-gym background, soft blue-and-white color palette, bold sans-serif captions in Polish labeling: nazwa ćwiczenia \"Rozciąganie całego ciała\", partia mięśniowa \"Mobilność, regeneracja\", oraz jedna wskazówka bezpieczeństwa: \"Rozciągaj do uczucia delikatnego napięcia, nigdy do bólu.\". Numbered arrows indicating movement direction, dashed alignment guide lines on knees/spine, no spelling errors, high contrast, flat illustration style, no photorealism, inclusive and body-positive character design.",
+    "videoPrompt": "10-15 second instructional fitness demo video, static camera, wide front angle, a calm plus-size adult performing \"full-body cooldown stretch routine\" with correct form on a non-slip mat in a bright home setting, slow controlled tempo with a brief pause at each stretch hold, subtle on-screen Polish captions fade in: \"Rozciąganie całego ciała\", \"Mobilność, regeneracja\", and safety cue \"Rozciągaj do uczucia delikatnego napięcia, nigdy do bólu.\", soft ambient background music, seamless loop, photorealistic, steady well-lit shot, encouraging non-judgmental tone suitable for beginners with a larger body size."
+  },
+  {
+    "code": "D3",
+    "name": "Krążenia stawów (mobility flow)",
+    "group": "D",
+    "muscle": "Mobilność całego ciała",
+    "steps": [
+      "Wykonaj powolne krążenia głową, następnie barkami, biodrami i na koniec stawami skokowymi.",
+      "Po każdej partii wykonaj 8-10 powtórzeń w obie strony.",
+      "Ruch płynny, bez szarpania."
+    ],
+    "safety": "Zatrzymaj się przy zawrotach głowy podczas krążeń szyją. Wykonuj ruch w pełnym, ale komfortowym zakresie.",
+    "reps": {
+      "faza1": "5 min",
+      "faza2": "5 min",
+      "faza3": "6 min",
+      "faza4": "6-8 min"
+    },
+    "infographicPrompt": "Clean flat-vector fitness infographic, square format, showing a friendly plus-size adult demonstrating \"joint mobility flow (neck, shoulders, hips, ankles)\" in 3 sequential steps (start position, mid-movement, end position), front angle, minimalist home-gym background, soft blue-and-white color palette, bold sans-serif captions in Polish labeling: nazwa ćwiczenia \"Krążenia stawów (mobility flow)\", partia mięśniowa \"Mobilność całego ciała\", oraz jedna wskazówka bezpieczeństwa: \"Zatrzymaj się przy zawrotach głowy podczas krążeń szyją. Wykonuj ruch w pełnym, ale komfortowym zakresie.\". Numbered arrows indicating movement direction, dashed alignment guide lines on knees/spine, no spelling errors, high contrast, flat illustration style, no photorealism, inclusive and body-positive character design.",
+    "videoPrompt": "10-15 second instructional fitness demo video, static camera, front angle, a calm plus-size adult performing \"joint mobility flow (neck, shoulders, hips, ankles)\" with correct form on a non-slip mat in a bright home setting, slow controlled tempo with a brief pause at mid-circle of each joint movement, subtle on-screen Polish captions fade in: \"Krążenia stawów (mobility flow)\", \"Mobilność całego ciała\", and safety cue \"Zatrzymaj się przy zawrotach głowy podczas krążeń szyją. Wykonuj ruch w pełnym, ale komfortowym zakresie.\", soft ambient background music, seamless loop, photorealistic, steady well-lit shot, encouraging non-judgmental tone suitable for beginners with a larger body size."
+  },
+  {
+    "code": "D4",
+    "name": "Przenoszenie ciężaru na boki (step touch)",
+    "group": "D",
+    "muscle": "Cardio, całe ciało",
+    "steps": [
+      "Stań w lekkim rozkroku, przenieś ciężar ciała na jedną nogę, dostawiając drugą stopę.",
+      "Wróć w drugą stronę, naturalnie poruszając ramionami.",
+      "Utrzymuj spokojne, rytmiczne tempo przez zadany czas."
+    ],
+    "safety": "Stopy pozostają blisko podłoża — bez skoków. Jeśli czujesz zadyszkę, zwolnij tempo.",
+    "reps": {
+      "faza1": "3 min",
+      "faza2": "5 min",
+      "faza3": "6 min",
+      "faza4": "8 min"
+    },
+    "infographicPrompt": "Clean flat-vector fitness infographic, square format, showing a friendly plus-size adult demonstrating \"low-impact step touch (lateral weight shift)\" in 3 sequential steps (start position, mid-movement, end position), front full-body angle, minimalist home-gym background, soft blue-and-white color palette, bold sans-serif captions in Polish labeling: nazwa ćwiczenia \"Przenoszenie ciężaru na boki (step touch)\", partia mięśniowa \"Cardio, całe ciało\", oraz jedna wskazówka bezpieczeństwa: \"Stopy pozostają blisko podłoża — bez skoków. Jeśli czujesz zadyszkę, zwolnij tempo.\". Numbered arrows indicating movement direction, dashed alignment guide lines on knees/spine, no spelling errors, high contrast, flat illustration style, no photorealism, inclusive and body-positive character design.",
+    "videoPrompt": "10-15 second instructional fitness demo video, static camera, front full-body angle, a calm plus-size adult performing \"low-impact step touch (lateral weight shift)\" with correct form on a non-slip mat in a bright home setting, slow controlled tempo with a brief pause at the widest point of the lateral shift, subtle on-screen Polish captions fade in: \"Przenoszenie ciężaru na boki (step touch)\", \"Cardio, całe ciało\", and safety cue \"Stopy pozostają blisko podłoża — bez skoków. Jeśli czujesz zadyszkę, zwolnij tempo.\", soft ambient background music, seamless loop, photorealistic, steady well-lit shot, encouraging non-judgmental tone suitable for beginners with a larger body size."
+  },
+  {
+    "code": "D5",
+    "name": "Rotacje klatki piersiowej (mobilność górnych pleców)",
+    "group": "D",
+    "muscle": "Mobilność górnej części pleców i barków",
+    "steps": [
+      "Usiądź lub uklęknij, dłonie skrzyżowane na klatce piersiowej lub za głową.",
+      "Powoli skręć górną część tułowia w jedną stronę, śledząc ruch wzrokiem.",
+      "Wróć do środka i skręć w drugą stronę, w płynnym, kontrolowanym tempie."
+    ],
+    "safety": "Biodra pozostają skierowane do przodu — ruch tylko w górnym odcinku kręgosłupa.",
+    "reps": {
+      "faza1": "2 × 8 / stronę",
+      "faza2": "2 × 10",
+      "faza3": "3 × 10",
+      "faza4": "3 × 12"
+    },
+    "infographicPrompt": "Clean flat-vector fitness infographic, square format, showing a friendly plus-size adult demonstrating \"seated or kneeling thoracic rotation mobility\" in 3 sequential steps (start position, mid-movement, end position), side angle, minimalist home-gym background, soft blue-and-white color palette, bold sans-serif captions in Polish labeling: nazwa ćwiczenia \"Rotacje klatki piersiowej (mobilność górnych pleców)\", partia mięśniowa \"Mobilność górnej części pleców i barków\", oraz jedna wskazówka bezpieczeństwa: \"Biodra pozostają skierowane do przodu — ruch tylko w górnym odcinku kręgosłupa.\". Numbered arrows indicating movement direction, dashed alignment guide lines on knees/spine, no spelling errors, high contrast, flat illustration style, no photorealism, inclusive and body-positive character design.",
+    "videoPrompt": "10-15 second instructional fitness demo video, static camera, side angle, a calm plus-size adult performing \"seated or kneeling thoracic rotation mobility\" with correct form on a non-slip mat in a bright home setting, slow controlled tempo with a brief pause at the end range of the rotation, subtle on-screen Polish captions fade in: \"Rotacje klatki piersiowej (mobilność górnych pleców)\", \"Mobilność górnej części pleców i barków\", and safety cue \"Biodra pozostają skierowane do przodu — ruch tylko w górnym odcinku kręgosłupa.\", soft ambient background music, seamless loop, photorealistic, steady well-lit shot, encouraging non-judgmental tone suitable for beginners with a larger body size."
+  }
+]

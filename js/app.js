@@ -1,0 +1,1309 @@
+'use strict';
+
+let EXERCISES = [];
+let exByCode = {};
+let activeWorkoutRunner = null;
+let activeWorkoutDay = null;
+
+function esc(s) {
+  return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+}
+
+function fmtDate(d) {
+  return new Date(d + 'T00:00:00').toLocaleDateString('pl-PL', { day: 'numeric', month: 'long', year: 'numeric' });
+}
+
+// ---------- Routing ----------
+function currentRoute() {
+  const hash = location.hash.replace(/^#/, '') || '/today';
+  const parts = hash.split('/').filter(Boolean);
+  return { name: parts[0] || 'today', arg: parts[1] };
+}
+
+function navigate(route) { location.hash = route; }
+
+window.addEventListener('hashchange', render);
+
+// ---------- Boot ----------
+async function boot() {
+  applyTheme(Store.getTheme());
+  try {
+    const res = await fetch('data/exercises.json');
+    EXERCISES = await res.json();
+    exByCode = Object.fromEntries(EXERCISES.map(e => [e.code, e]));
+  } catch (err) {
+    document.getElementById('app').innerHTML = `<div class="empty-state"><p>Nie udało się wczytać danych ćwiczeń.</p><p class="muted">Uruchom aplikację przez serwer HTTP (nie plik://).</p></div>`;
+    return;
+  }
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('sw.js').catch(() => {});
+  }
+  checkReminder();
+  document.addEventListener('visibilitychange', () => { if (!document.hidden) checkReminder(); });
+  render();
+}
+
+// Przeglądarka nie może "obudzić" zamkniętej appki jak natywny alarm — to najlepszy
+// możliwy odpowiednik dla PWA: sprawdzamy przy każdym otwarciu/powrocie do apki.
+function checkReminder() {
+  const profile = Store.getActiveProfile();
+  if (!profile) return;
+  const r = Store.getReminderSettings();
+  if (!r.enabled) return;
+
+  const today = new Date().toISOString().slice(0, 10);
+  if (r.lastNotifiedDate === today) return;
+
+  const now = new Date();
+  const targetMinutes = r.hour * 60 + r.minute;
+  const nowMinutes = now.getHours() * 60 + now.getMinutes();
+  if (nowMinutes < targetMinutes) return;
+
+  const day = Store.currentDayNumber(profile);
+  if (profile.progress.completedDays.includes(day)) return;
+
+  const info = getDayInfo(day);
+  const text = info.rest ? 'Jutro/dziś dzień odpoczynku — pamiętaj o regeneracji.' : `Dzisiaj masz dzień ${day}: ${info.typeName}.`;
+
+  if ('Notification' in window && Notification.permission === 'granted') {
+    try { new Notification('Nowy Ja', { body: text, icon: 'icons/icon-192.png' }); } catch {}
+  } else {
+    showReminderBanner(text);
+  }
+  Store.setReminderSettings({ ...r, lastNotifiedDate: today });
+}
+
+function showReminderBanner(text) {
+  if (document.getElementById('reminder-banner')) return;
+  const el = document.createElement('div');
+  el.id = 'reminder-banner';
+  el.className = 'reminder-banner';
+  el.innerHTML = `<span>⏰ ${esc(text)}</span><button type="button" aria-label="Zamknij">✕</button>`;
+  el.querySelector('button').addEventListener('click', () => el.remove());
+  document.body.appendChild(el);
+  setTimeout(() => el.remove(), 12000);
+}
+
+function applyTheme(theme) {
+  document.documentElement.dataset.theme = theme;
+}
+
+// ---------- Render root ----------
+function render() {
+  const profile = Store.getActiveProfile();
+  const root = document.getElementById('app');
+  const { name, arg } = currentRoute();
+
+  // Stop any running workout timer when navigating away from the workout screen —
+  // otherwise its interval keeps ticking in the background pointlessly.
+  if (activeWorkoutRunner && !(name === 'workout' && Number(arg) === activeWorkoutDay)) {
+    Voice.stop();
+    activeWorkoutRunner.stop();
+    activeWorkoutRunner = null;
+    activeWorkoutDay = null;
+  }
+
+  if (!profile && name !== 'onboarding') {
+    root.innerHTML = viewOnboarding();
+    document.getElementById('nav').hidden = true;
+    bindOnboarding();
+    return;
+  }
+  if (profile && !profile.safetyConsentAcceptedAt && name !== 'onboarding' && name !== 'safety') {
+    root.innerHTML = viewSafety();
+    document.getElementById('nav').hidden = true;
+    bindSafety();
+    return;
+  }
+
+  const fullScreenRoute = name === 'workout';
+  document.getElementById('nav').hidden = fullScreenRoute;
+  updateHeader(profile);
+
+  let html = '';
+  switch (name) {
+    case 'today': html = viewToday(profile); break;
+    case 'day': html = viewDay(profile, parseInt(arg, 10)); break;
+    case 'workout': html = viewWorkoutShell(); break;
+    case 'exercise': html = viewExercise(profile, arg); break;
+    case 'schedule': html = viewSchedule(profile); break;
+    case 'library': html = viewLibrary(); break;
+    case 'progress': html = viewProgress(profile); break;
+    case 'info': html = viewInfo(); break;
+    case 'more': html = viewMore(profile); break;
+    case 'settings': html = viewSettings(profile); break;
+    case 'onboarding': html = viewOnboarding(); break;
+    case 'safety': html = viewSafety(); break;
+    default: html = viewToday(profile);
+  }
+  root.innerHTML = html;
+  root.scrollTop = 0;
+  window.scrollTo(0, 0);
+  highlightNav(name);
+  bindDynamic(name, profile, arg);
+}
+
+function updateHeader(profile) {
+  const el = document.getElementById('active-profile-name');
+  if (el) el.textContent = profile ? profile.name : '';
+}
+
+function highlightNav(name) {
+  document.querySelectorAll('#nav a').forEach(a => {
+    a.classList.toggle('active', a.dataset.route === name);
+  });
+}
+
+// ---------- Onboarding ----------
+const ONBOARD_STEPS = 6;
+const EQUIPMENT_OPTIONS = ['Mata', 'Krzesło', 'Butelki wody / hantle', 'Taśma oporowa', 'Stopień / schody', 'Ściana'];
+const FOCUS_OPTIONS = ['Brzuch', 'Uda', 'Biodra', 'Klatka piersiowa', 'Ramiona', 'Pośladki'];
+const LIMITATION_OPTIONS = ['Kolana', 'Biodra', 'Kręgosłup / plecy', 'Barki', 'Nadgarstki', 'Brak ograniczeń'];
+const EXPERIENCE_LABELS = { beginner: 'Początkujący', intermediate: 'Średniozaawansowany', advanced: 'Zaawansowany' };
+const GOAL_LABELS = { weight_loss: 'Redukcja wagi', muscle_tone: 'Ujędrnienie', mobility: 'Mobilność', general_health: 'Ogólna kondycja', endurance: 'Wytrzymałość' };
+const DIFFICULTY_LABELS = { easier: 'Łatwiej', standard: 'Standardowo', harder: 'Trudniej' };
+
+function chipRadio(name, value, label, checked) {
+  const id = `f-${name}-${value}`.replace(/[^a-zA-Z0-9_-]/g, '');
+  return `<span class="chip-choice"><input type="radio" id="${id}" name="${name}" value="${esc(value)}" ${checked ? 'checked' : ''}><label for="${id}">${esc(label)}</label></span>`;
+}
+
+function chipCheckbox(name, value, checked) {
+  const id = `f-${name}-${value}`.replace(/[^a-zA-Z0-9_-]/g, '');
+  return `<span class="chip-choice"><input type="checkbox" id="${id}" name="${name}" value="${esc(value)}" ${checked ? 'checked' : ''}><label for="${id}">${esc(value)}</label></span>`;
+}
+
+function viewOnboarding() {
+  return `
+  <div class="onboard">
+    <h1>Nowy Ja</h1>
+    <p class="tagline">Twój 60-dniowy plan treningowy w domu — dopasowany do Ciebie.</p>
+    <form id="form-onboard" class="card form" data-step="0" novalidate>
+      <div class="onboard-step-label">Krok <span id="onboard-step-num">1</span> z ${ONBOARD_STEPS}</div>
+
+      <div class="onboard-step" data-step="0">
+        <label>Jak Cię nazwać?<input type="text" name="name" placeholder="np. Ania" autocomplete="off"></label>
+        <label>Wiek<input type="number" name="ageYears" min="10" max="100" placeholder="np. 34"></label>
+      </div>
+
+      <div class="onboard-step" data-step="1" hidden>
+        <p class="muted small">Program zostanie opisany w kontekście Twoich parametrów. To dane ogólne, nie medyczne.</p>
+        <label>Wzrost (cm)<input type="number" name="heightCm" min="100" max="230" placeholder="np. 165"></label>
+        <label>Waga (kg)<input type="number" name="weightKg" min="30" max="300" placeholder="np. 80"></label>
+      </div>
+
+      <div class="onboard-step" data-step="2" hidden>
+        <span class="onboard-field-label">Doświadczenie treningowe</span>
+        <div class="chip-group">${Object.entries(EXPERIENCE_LABELS).map(([v, l]) => chipRadio('experience', v, l, v === 'beginner')).join('')}</div>
+        <span class="onboard-field-label">Główny cel</span>
+        <div class="chip-group">${Object.entries(GOAL_LABELS).map(([v, l]) => chipRadio('goal', v, l, v === 'general_health')).join('')}</div>
+      </div>
+
+      <div class="onboard-step" data-step="3" hidden>
+        <span class="onboard-field-label">Treningi tygodniowo</span>
+        <div class="chip-group">${[3, 4, 5, 6, 7].map(n => chipRadio('sessionsPerWeek', n, String(n), n === 6)).join('')}</div>
+        <span class="onboard-field-label">Długość treningu</span>
+        <div class="chip-group">${[20, 30, 35, 45, 60].map(n => chipRadio('sessionDurationMinutes', n, n + ' min', n === 35)).join('')}</div>
+        <span class="onboard-field-label">Dostępny sprzęt</span>
+        <div class="chip-group">${EQUIPMENT_OPTIONS.map(o => chipCheckbox('equipment', o, false)).join('')}</div>
+      </div>
+
+      <div class="onboard-step" data-step="4" hidden>
+        <span class="onboard-field-label">Poziom trudności</span>
+        <div class="chip-group">${Object.entries(DIFFICULTY_LABELS).map(([v, l]) => chipRadio('difficultyPreference', v, l, v === 'standard')).join('')}</div>
+        <span class="onboard-field-label">Priorytetowe partie ciała</span>
+        <div class="chip-group">${FOCUS_OPTIONS.map(o => chipCheckbox('focusAreas', o, false)).join('')}</div>
+        <span class="onboard-field-label">Ograniczenia ruchowe</span>
+        <div class="chip-group">${LIMITATION_OPTIONS.map(o => chipCheckbox('limitations', o, false)).join('')}</div>
+        <label>Inne przeciwwskazania (opcjonalnie)<input type="text" name="contraindicationsNote" placeholder="opcjonalnie"></label>
+      </div>
+
+      <div class="onboard-step" data-step="5" hidden>
+        <span class="onboard-field-label">Data startu programu</span>
+        <input type="date" name="startDate" value="${new Date().toISOString().slice(0, 10)}">
+        <p class="muted small" style="margin-top:14px">Ten program ma charakter ogólny i edukacyjny — nie zastępuje porady medycznej. Przed pierwszym treningiem poprosimy Cię o potwierdzenie bezpieczeństwa.</p>
+      </div>
+
+      <div class="onboard-nav">
+        <button type="button" class="btn ghost" data-action="onboard-back" id="onboard-back-btn" hidden>Wstecz</button>
+        <button type="button" class="btn primary" data-action="onboard-next" id="onboard-next-btn">Dalej</button>
+        <button type="submit" class="btn primary" id="onboard-submit-btn" hidden>Rozpocznij</button>
+      </div>
+      <p class="muted small" style="margin-top:10px">Twoje dane zostają wyłącznie na tym urządzeniu.</p>
+    </form>
+  </div>`;
+}
+
+function showOnboardStep(form, index) {
+  const clamped = Math.max(0, Math.min(ONBOARD_STEPS - 1, index));
+  form.dataset.step = String(clamped);
+  form.querySelectorAll('.onboard-step').forEach(el => { el.hidden = Number(el.dataset.step) !== clamped; });
+  const numEl = document.getElementById('onboard-step-num');
+  if (numEl) numEl.textContent = String(clamped + 1);
+  const backBtn = document.getElementById('onboard-back-btn');
+  const nextBtn = document.getElementById('onboard-next-btn');
+  const submitBtn = document.getElementById('onboard-submit-btn');
+  if (backBtn) backBtn.hidden = clamped === 0;
+  const isLast = clamped === ONBOARD_STEPS - 1;
+  if (nextBtn) nextBtn.hidden = isLast;
+  if (submitBtn) submitBtn.hidden = !isLast;
+}
+
+function bindOnboarding() {
+  const form = document.getElementById('form-onboard');
+  if (!form) return;
+  showOnboardStep(form, 0);
+
+  form.addEventListener('submit', e => {
+    e.preventDefault();
+    const fd = new FormData(form);
+    const profile = Store.createProfile({
+      name: fd.get('name')?.trim(),
+      ageYears: fd.get('ageYears') ? Number(fd.get('ageYears')) : null,
+      heightCm: fd.get('heightCm') ? Number(fd.get('heightCm')) : null,
+      weightKg: fd.get('weightKg') ? Number(fd.get('weightKg')) : null,
+      experience: fd.get('experience') || 'beginner',
+      goal: fd.get('goal') || 'general_health',
+      sessionsPerWeek: fd.get('sessionsPerWeek') ? Number(fd.get('sessionsPerWeek')) : 6,
+      sessionDurationMinutes: fd.get('sessionDurationMinutes') ? Number(fd.get('sessionDurationMinutes')) : 35,
+      equipment: fd.getAll('equipment'),
+      difficultyPreference: fd.get('difficultyPreference') || 'standard',
+      focusAreas: fd.getAll('focusAreas'),
+      limitations: fd.getAll('limitations'),
+      contraindicationsNote: fd.get('contraindicationsNote')?.trim() || '',
+      startDate: fd.get('startDate')
+    });
+    navigate('/safety');
+    render();
+  });
+}
+
+// ---------- Safety consent ----------
+function viewSafety() {
+  return `
+  <div class="onboard">
+    <h1>Zanim zaczniesz</h1>
+    <div class="card">
+      <p>${esc(PROGRAM_INTRO)}</p>
+      <div class="consent-box">
+        <p>${esc(SAFETY_NOTE)}</p>
+      </div>
+      <label style="display:flex;align-items:center;gap:10px;font-weight:600;">
+        <input type="checkbox" id="safety-checkbox" style="width:20px;height:20px;">
+        Przeczytałam/em i rozumiem powyższe informacje
+      </label>
+      <button class="btn primary big" id="safety-accept-btn" disabled>Potwierdzam i przechodzę do programu</button>
+    </div>
+  </div>`;
+}
+
+function bindSafety() {
+  const checkbox = document.getElementById('safety-checkbox');
+  const btn = document.getElementById('safety-accept-btn');
+  if (!checkbox || !btn) return;
+  checkbox.addEventListener('change', () => { btn.disabled = !checkbox.checked; });
+  btn.addEventListener('click', () => {
+    const profile = Store.getActiveProfile();
+    Store.acceptSafetyConsent(profile.id);
+    navigate('/today');
+    render();
+  });
+}
+
+// ---------- Today ----------
+function viewToday(profile) {
+  const day = Store.currentDayNumber(profile);
+  const info = getDayInfo(day);
+  const done = profile.progress.completedDays.includes(day);
+  const completedCount = profile.progress.completedDays.length;
+  const pct = Math.round((completedCount / 60) * 100);
+  const streak = Store.currentStreak(profile);
+  const lastSession = Store.getLastSession(profile);
+
+  return `
+  <section class="hero card">
+    <div class="hero-top">
+      <span class="pill">${esc(info.phaseName)}</span>
+      <span class="pill pill-outline">Dzień ${day} / 60</span>
+    </div>
+    <p class="muted" style="margin:0 0 2px">Cześć, ${esc(profile.name)} 👋</p>
+    <h2>${esc(dayTypeLabel(info))}</h2>
+    <p class="muted">${esc(info.muscles)}</p>
+    ${done ? '<p class="done-badge">✓ Ukończono dzisiejszy trening</p>' : ''}
+    <a class="btn primary big" href="#/${done ? 'day' : 'workout'}/${day}">${done ? 'Zobacz trening' : (info.rest ? 'Zobacz dzień odpoczynku' : 'Rozpocznij trening')}</a>
+  </section>
+
+  <section class="card progress-mini">
+    <div class="progress-mini-row">
+      <div class="progress-bar"><div class="progress-bar-fill" style="width:${pct}%"></div></div>
+      <span>${completedCount}/60 dni · ${pct}%</span>
+    </div>
+    <p class="muted small" style="margin:6px 0 0">Seria: ${streak} dni · Faza ${info.phase}</p>
+    <a href="#/progress" class="link">Zobacz postępy →</a>
+  </section>
+
+  <section class="card">
+    <h3 style="margin-top:0">🤖 AI Coach</h3>
+    <p class="muted" style="margin-bottom:0">${esc(coachTip(info, streak))}</p>
+  </section>
+
+  ${lastSession ? `<section class="card">
+    <h3 style="margin-top:0">Ostatni trening</h3>
+    <p class="muted" style="margin-bottom:0">Dzień ${lastSession.day} · ${fmtSeconds(lastSession.durationSeconds || 0)} · trudność ${lastSession.difficulty}/5 · samopoczucie ${lastSession.feeling}/5${lastSession.pain && lastSession.pain !== 'none' ? ' · zgłoszono: ' + painLabel(lastSession.pain) : ''}</p>
+  </section>` : ''}
+
+  <section class="quick-links">
+    <a class="quick-link" href="#/schedule"><span class="qi">📅</span>Harmonogram</a>
+    <a class="quick-link" href="#/library"><span class="qi">📚</span>Biblioteka ćwiczeń</a>
+    <a class="quick-link" href="#/info"><span class="qi">🛡️</span>Bezpieczeństwo</a>
+  </section>`;
+}
+
+function coachTip(info, streak) {
+  if (info.rest) return 'Dziś dzień odpoczynku — regeneracja jest równie ważna jak trening.';
+  if (streak >= 3) return `Świetna passa: ${streak} dni z rzędu! Tak trzymaj, ale pamiętaj o dniach R.`;
+  if (info.circuit) return 'Dziś obwód stacyjny — pilnuj przerw między stacjami, to część planu, nie strata czasu.';
+  return 'Skup się dziś na technice, nie na tempie — to ona chroni Twoje stawy.';
+}
+
+function painLabel(p) {
+  return { none: 'brak', mild: 'lekki dyskomfort', pain: 'ból' }[p] || p;
+}
+
+function dayTypeLabel(info) {
+  if (info.rest) return 'R — Odpoczynek';
+  return `${info.type} — ${info.typeName}`;
+}
+
+// ---------- Day detail ----------
+function viewDay(profile, day) {
+  if (!day || day < 1 || day > 60) return `<div class="empty-state"><p>Nieprawidłowy dzień.</p><a class="link" href="#/schedule">Wróć do harmonogramu</a></div>`;
+  const info = getDayInfo(day);
+  const done = profile.progress.completedDays.includes(day);
+  const checked = new Set(Store.getExerciseChecks(profile, day));
+
+  let body = '';
+  if (info.rest) {
+    body = `
+    <div class="card rest-card">
+      <p>Dzień odpoczynku jest częścią programu — regeneracja mięśni i stawów. Możesz wykonać lekki spacer lub rozciąganie, jeśli masz na to ochotę.</p>
+    </div>`;
+  } else if (info.circuit) {
+    body = `
+    <div class="card">
+      <p>${esc(CIRCUIT_INFO)}</p>
+      <p><strong>Liczba rund w tej fazie: ${esc(info.rounds)}</strong></p>
+      <div class="timer-row">
+        <button class="chip" data-action="start-timer" data-seconds="25" data-label="Przerwa między stacjami">⏱ 25s (stacje)</button>
+        <button class="chip" data-action="start-timer" data-seconds="75" data-label="Przerwa między rundami">⏱ 75s (rundy)</button>
+      </div>
+    </div>
+    <ol class="exercise-list">
+      ${info.stations.map((code, idx) => exerciseRow(code, day, checked, idx + 1)).join('')}
+    </ol>`;
+  } else {
+    body = `<ol class="exercise-list">
+      ${info.exercises.map((code, idx) => exerciseRow(code, day, checked, idx + 1)).join('')}
+    </ol>`;
+  }
+
+  return `
+  <a class="link back" href="#/schedule">← Harmonogram</a>
+  <section class="card">
+    <div class="hero-top">
+      <span class="pill">${esc(info.phaseName)}</span>
+      <span class="pill pill-outline">Dzień ${day} / 60</span>
+    </div>
+    <h2>${esc(dayTypeLabel(info))}</h2>
+    <p class="muted">${esc(info.muscles)}</p>
+    ${!info.rest ? `<a class="btn primary big" href="#/workout/${day}">${done ? 'Powtórz w trybie treningu' : 'Rozpocznij trening (tryb prowadzony)'}</a>` : ''}
+  </section>
+
+  ${!info.rest ? `<details class="card details-warmup">
+    <summary>Rozgrzewka i schłodzenie (przypomnienie)</summary>
+    <p class="muted small">Przed treningiem (5-8 min):</p>
+    <ul class="tight">${WARMUP.map(w => `<li>${esc(w)}</li>`).join('')}</ul>
+    <p class="muted small">Po treningu: ${esc(COOLDOWN)}</p>
+  </details>` : ''}
+
+  ${body}
+
+  <button class="btn ${done ? 'secondary' : 'primary'} big sticky-bottom" data-action="toggle-day" data-day="${day}">
+    ${done ? '✓ Dzień ukończony — cofnij' : 'Oznacz dzień jako ukończony'}
+  </button>`;
+}
+
+function exerciseRow(code, day, checkedSet, idx) {
+  const ex = exByCode[code];
+  if (!ex) return '';
+  const isChecked = checkedSet.has(code);
+  const reps = ex.reps ? currentPhaseReps(ex, phaseForDay(day).id) : '';
+  return `
+  <li class="exercise-row ${isChecked ? 'checked' : ''}">
+    <label class="check">
+      <input type="checkbox" data-action="toggle-ex" data-day="${day}" data-code="${code}" ${isChecked ? 'checked' : ''}>
+      <span class="checkmark"></span>
+    </label>
+    <a class="exercise-row-body" href="#/exercise/${code}">
+      <span class="ex-num">${idx}</span>
+      <span class="ex-info">
+        <span class="ex-name">${esc(code)} — ${esc(ex.name)}</span>
+        <span class="ex-reps muted">${esc(reps)}</span>
+      </span>
+      <span class="chev">›</span>
+    </a>
+  </li>`;
+}
+
+function currentPhaseReps(ex, phaseId) {
+  return ex.reps['faza' + phaseId] || '';
+}
+
+// ---------- Workout ("Trening teraz") ----------
+function viewWorkoutShell() {
+  return `<div class="workout-root"><div id="workout-body"><p class="muted">Ładowanie…</p></div></div>`;
+}
+
+function initWorkout(profile, day) {
+  if (activeWorkoutRunner && activeWorkoutDay === day) {
+    renderWorkoutBody(activeWorkoutRunner);
+    return;
+  }
+  const dayInfo = getDayInfo(day);
+  const steps = buildWorkoutSteps(dayInfo, exByCode);
+  const phaseDef = PHASES.find(p => p.id === dayInfo.phase) || PHASES[0];
+  const restSeconds = firstIntFrom(phaseDef.restBetween, 45);
+
+  activeWorkoutDay = day;
+  const startedAt = Date.now();
+  activeWorkoutRunner = new WorkoutRunner({
+    dayInfo,
+    steps,
+    restSeconds,
+    onLogSet: (code, setsCompleted, setsTarget, skipped) => {
+      // logged into session summary at completion time; per-set granularity not persisted separately in PWA
+    },
+    onStateChange: () => renderWorkoutBody(activeWorkoutRunner, day, profile),
+  });
+  activeWorkoutRunner._day = day;
+  activeWorkoutRunner.begin();
+  renderWorkoutBody(activeWorkoutRunner, day, profile);
+}
+
+function firstIntFrom(text, fallback) {
+  const m = String(text || '').match(/\d+/);
+  return m ? parseInt(m[0], 10) : fallback;
+}
+
+function renderWorkoutBody(runner, day, profile) {
+  const body = document.getElementById('workout-body');
+  if (!body) return;
+  const s = runner.state;
+  const dayInfo = runner.dayInfo;
+  day = day || activeWorkoutDay;
+
+  announceWorkout(runner);
+
+  let inner = '';
+  if (dayInfo.rest || s.stage === STAGE.FEEDBACK) {
+    inner = workoutFeedbackHtml(runner);
+  } else if (s.stage === STAGE.DONE) {
+    inner = `<div class="workout-center"><h2>Trening ukończony! 🎉</h2></div>`;
+  } else {
+    inner = workoutActiveHtml(runner);
+  }
+
+  body.innerHTML = `
+    <div class="workout-header">
+      <button type="button" class="icon-btn" data-action="workout-exit" aria-label="Zakończ">✕</button>
+      <span class="muted">${esc(dayInfo.typeName)}</span>
+      <button type="button" class="icon-btn" data-action="workout-toggle-voice" aria-label="Lektor">${Voice.isEnabled() ? '🔊' : '🔇'}</button>
+    </div>
+    ${inner}`;
+}
+
+// Wypowiada nazwę ćwiczenia, odliczanie 3-2-1, komunikaty odpoczynku i motywacyjne —
+// tylko przy zmianie etapu/kroku, żeby nie powtarzać tego samego co 250ms.
+function announceWorkout(runner) {
+  const s = runner.state;
+  const step = runner.currentStep;
+  const stageOrStepChanged = runner._voiceStage !== s.stage || runner._voiceStepIndex !== s.stepIndex;
+
+  if (stageOrStepChanged) {
+    if (s.stage === STAGE.ACTIVE && step) {
+      const reps = currentPhaseReps(step.exercise, runner.dayInfo.phase);
+      Voice.speak(`${step.exercise.name}. ${reps}.`);
+    } else if ([STAGE.SET_REST, STAGE.STATION_REST, STAGE.ROUND_REST].includes(s.stage)) {
+      const phrase = Math.random() < 0.5 ? Voice.randomMotivation() : '';
+      Voice.speak(`${restLabel(s.stage)}. ${phrase}`.trim());
+    } else if (s.stage === STAGE.FEEDBACK) {
+      Voice.speak(runner.dayInfo.rest ? 'Dziś dzień odpoczynku. Odpocznij dobrze.' : 'Trening ukończony. Brawo, jesteś coraz silniejszy!');
+    }
+    runner._voiceStage = s.stage;
+    runner._voiceStepIndex = s.stepIndex;
+    runner._voiceSecond = null;
+  }
+
+  if (s.stage === STAGE.COUNTDOWN && s.remainingSeconds > 0 && s.remainingSeconds <= 3 && s.remainingSeconds !== runner._voiceSecond) {
+    Voice.speak(String(s.remainingSeconds));
+    runner._voiceSecond = s.remainingSeconds;
+  }
+}
+
+function workoutActiveHtml(runner) {
+  const s = runner.state;
+  const step = runner.currentStep;
+  if (!step) return '';
+  const ex = step.exercise;
+
+  let headerLine, subLine = '';
+  if (step.stationIndex) {
+    headerLine = `STACJA ${step.stationIndex} / ${step.totalStations}`;
+    subLine = `RUNDA ${step.round} / ${step.totalRounds}`;
+  } else {
+    headerLine = `ĆWICZENIE ${s.stepIndex + 1} / ${runner.steps.length}`;
+  }
+
+  let centerHtml = '';
+  if (s.stage === STAGE.COUNTDOWN) {
+    centerHtml = bigTimer(Math.max(0, s.remainingSeconds));
+  } else if (s.stage === STAGE.SET_REST || s.stage === STAGE.STATION_REST || s.stage === STAGE.ROUND_REST) {
+    centerHtml = `<p class="workout-rest-label">${restLabel(s.stage)}</p>${bigTimer(fmtSeconds(s.remainingSeconds))}`;
+  } else if (s.stage === STAGE.ACTIVE) {
+    centerHtml = s.isTimed ? bigTimer(fmtSeconds(s.remainingSeconds)) : `<p class="workout-reps">${esc(currentPhaseReps(ex, runner.dayInfo.phase))}</p>`;
+  }
+
+  const setsLine = !runner.isCircuit ? `<p class="workout-set-label">SERIA ${s.currentSet} / ${s.totalSets}</p>` : '';
+
+  return `
+  <div class="workout-center">
+    <p class="workout-step-label">${headerLine}</p>
+    ${subLine ? `<p class="muted">${subLine}</p>` : ''}
+    <h2 class="workout-exercise-name">${esc(ex.name.toUpperCase())}</h2>
+    ${centerHtml}
+    ${setsLine}
+  </div>
+  <div class="workout-controls">
+    ${s.stage === STAGE.ACTIVE ? `
+      <div class="btn-row">
+        <button class="btn ghost" style="flex:1" data-action="workout-pause">${s.isPaused ? 'WZNÓW' : 'PAUZA'}</button>
+        <button class="btn primary" style="flex:1" data-action="workout-done">GOTOWE</button>
+      </div>` : ''}
+    <div class="btn-row">
+      <button class="btn ghost" style="flex:1" data-action="workout-skip">POMIŃ</button>
+      <button class="btn ghost" style="flex:1" data-action="workout-swap" data-code="${ex.code}">ZAMIEŃ</button>
+    </div>
+  </div>`;
+}
+
+function bigTimer(text) {
+  return `<div class="workout-timer">${esc(String(text))}</div>`;
+}
+
+function restLabel(stage) {
+  return { SET_REST: 'ODPOCZYNEK', STATION_REST: 'PRZERWA MIĘDZY STACJAMI', ROUND_REST: 'PRZERWA MIĘDZY RUNDAMI' }[stage] || 'ODPOCZYNEK';
+}
+
+function workoutFeedbackHtml(runner) {
+  if (runner.dayInfo.rest) {
+    return `<div class="workout-center"><h2>Dzień odpoczynku</h2><p class="muted">To też jest część programu.</p>
+      <button class="btn primary big" data-action="workout-finish-rest">Zamknij</button></div>`;
+  }
+  const f = runner.state.feedback;
+  return `
+  <div class="workout-center" style="text-align:left;width:100%">
+    <h2 style="text-align:center">TRENING UKOŃCZONY</h2>
+    <p class="onboard-field-label">Jak trudny był trening?</p>
+    <input type="range" min="1" max="5" value="${f.difficulty}" data-action="workout-feedback-difficulty" style="width:100%">
+    <p class="muted small">${f.difficulty} / 5</p>
+    <p class="onboard-field-label">Jak się czujesz?</p>
+    <input type="range" min="1" max="5" value="${f.feeling}" data-action="workout-feedback-feeling" style="width:100%">
+    <p class="muted small">${f.feeling} / 5</p>
+    <p class="onboard-field-label">Czy pojawił się ból?</p>
+    <div class="chip-row">
+      <button class="chip ${f.pain === 'none' ? 'active' : ''}" data-action="workout-feedback-pain" data-pain="none">Nie</button>
+      <button class="chip ${f.pain === 'mild' ? 'active' : ''}" data-action="workout-feedback-pain" data-pain="mild">Lekki dyskomfort</button>
+      <button class="chip ${f.pain === 'pain' ? 'active' : ''}" data-action="workout-feedback-pain" data-pain="pain">Ból</button>
+    </div>
+    <button class="btn primary big" data-action="workout-submit-feedback" style="margin-top:16px">Zapisz i zakończ</button>
+  </div>`;
+}
+
+function exitWorkout() {
+  Voice.stop();
+  if (activeWorkoutRunner) { activeWorkoutRunner.stop(); activeWorkoutRunner = null; activeWorkoutDay = null; }
+  navigate('/today');
+  render();
+}
+
+// ---------- Exercise detail ----------
+function viewExercise(profile, code) {
+  const ex = exByCode[code];
+  if (!ex) return `<div class="empty-state"><p>Nie znaleziono ćwiczenia.</p><a class="link" href="#/library">Wróć do biblioteki</a></div>`;
+
+  const repsRows = [1, 2, 3, 4].map(p => `<tr><td>Faza ${p}</td><td>${esc(ex.reps['faza' + p])}</td></tr>`).join('');
+
+  return `
+  <a class="link back" href="#/library">← Biblioteka ćwiczeń</a>
+  <section class="card">
+    <span class="pill">${esc(groupLabel(ex.group))}</span>
+    <h2>${esc(ex.code)} — ${esc(ex.name)}</h2>
+    <p class="muted">${esc(ex.muscle)}</p>
+  </section>
+
+  <section class="card media-card">
+    <h3>Infografika</h3>
+    <div class="media-slot" id="media-image-${ex.code}" data-code="${ex.code}" data-kind="image">
+      <div class="media-placeholder">Brak infografiki</div>
+    </div>
+    <div class="media-actions">
+      <button class="btn small" data-action="upload-media" data-code="${ex.code}" data-kind="image">Dodaj / zmień zdjęcie</button>
+      <button class="btn small ghost" data-action="remove-media" data-code="${ex.code}" data-kind="image">Usuń</button>
+    </div>
+  </section>
+
+  <section class="card media-card">
+    <h3>Wideo instruktażowe</h3>
+    <div class="media-slot" id="media-video-${ex.code}" data-code="${ex.code}" data-kind="video">
+      <div class="media-placeholder">Brak wideo</div>
+    </div>
+    <div class="media-actions">
+      <button class="btn small" data-action="upload-media" data-code="${ex.code}" data-kind="video">Dodaj / zmień wideo</button>
+      <button class="btn small ghost" data-action="remove-media" data-code="${ex.code}" data-kind="video">Usuń</button>
+    </div>
+  </section>
+
+  <section class="card">
+    <h3>Wykonanie</h3>
+    <ol>${ex.steps.map(s => `<li>${esc(s)}</li>`).join('')}</ol>
+  </section>
+
+  <section class="card safety-card">
+    <h3>Bezpieczeństwo</h3>
+    <p>${esc(ex.safety)}</p>
+  </section>
+
+  <section class="card">
+    <h3>Serie × powtórzenia wg fazy</h3>
+    <table class="reps-table"><tbody>${repsRows}</tbody></table>
+  </section>
+
+  <section class="card">
+    <h3>Stoper</h3>
+    <div class="timer-row">
+      ${[15, 20, 30, 45, 60, 90].map(s => `<button class="chip" data-action="start-timer" data-seconds="${s}" data-label="${esc(ex.name)}">⏱ ${s}s</button>`).join('')}
+    </div>
+  </section>
+
+  <details class="card">
+    <summary>Prompty AI (do wygenerowania infografiki / wideo)</summary>
+    <p class="muted small">Wklej w ChatGPT/DALL·E, Midjourney (obraz) lub Sora, Runway, Kling (wideo).</p>
+    <div class="prompt-block">
+      <div class="prompt-head"><strong>Infografika</strong><button class="btn tiny" data-action="copy-prompt" data-code="${ex.code}" data-kind="infographicPrompt">Kopiuj</button></div>
+      <pre class="prompt-text">${esc(ex.infographicPrompt)}</pre>
+    </div>
+    <div class="prompt-block">
+      <div class="prompt-head"><strong>Wideo</strong><button class="btn tiny" data-action="copy-prompt" data-code="${ex.code}" data-kind="videoPrompt">Kopiuj</button></div>
+      <pre class="prompt-text">${esc(ex.videoPrompt)}</pre>
+    </div>
+  </details>`;
+}
+
+function groupLabel(g) {
+  return { A: 'Brzuch + Biodra', B: 'Uda + Pośladki', C: 'Klatka + Ramiona', D: 'Aktywność / mobilność' }[g] || g;
+}
+
+async function loadMediaInto(code) {
+  for (const kind of ['image', 'video']) {
+    const slot = document.getElementById(`media-${kind}-${code}`);
+    if (!slot) continue;
+    const url = await MediaStore.getURL(code, kind);
+    if (url) {
+      slot.innerHTML = kind === 'image'
+        ? `<img src="${url}" alt="Infografika ${esc(code)}">`
+        : `<video src="${url}" controls playsinline></video>`;
+    } else {
+      const localPath = `assets/exercises/${code}.${kind === 'image' ? 'png' : 'mp4'}`;
+      slot.innerHTML = kind === 'image'
+        ? `<img src="${localPath}" alt="Infografika ${esc(code)}" onerror="this.parentElement.innerHTML='<div class=\\'media-placeholder\\'>Brak infografiki — użyj promptu AI poniżej</div>'">`
+        : `<video src="${localPath}" controls playsinline onerror="this.parentElement.innerHTML='<div class=\\'media-placeholder\\'>Brak wideo — użyj promptu AI poniżej</div>'"></video>`;
+    }
+  }
+}
+
+// ---------- Schedule ----------
+function viewSchedule(profile) {
+  const completed = new Set(profile.progress.completedDays);
+  const groups = PHASES.map(ph => {
+    const rows = [];
+    for (let d = ph.range[0]; d <= ph.range[1]; d++) {
+      const info = getDayInfo(d);
+      const isDone = completed.has(d);
+      rows.push(`
+      <a class="schedule-row ${isDone ? 'done' : ''}" href="#/day/${d}">
+        <span class="sched-day">${d}</span>
+        <span class="sched-type type-${info.type}">${info.type}</span>
+        <span class="sched-label">${esc(dayTypeLabel(info))}</span>
+        ${isDone ? '<span class="sched-check">✓</span>' : ''}
+      </a>`);
+    }
+    return `<details class="card" ${ph.id === phaseForDay(Store.currentDayNumber(profile)).id ? 'open' : ''}>
+      <summary>${esc(ph.name)} <span class="muted">(dni ${ph.range[0]}-${ph.range[1]})</span></summary>
+      <div class="schedule-list">${rows.join('')}</div>
+    </details>`;
+  });
+  return `<h2 class="page-title">Harmonogram 60 dni</h2>${groups.join('')}`;
+}
+
+// ---------- Library ----------
+function viewLibrary() {
+  return `
+  <h2 class="page-title">Biblioteka ćwiczeń</h2>
+  <div class="lib-filters">
+    <input type="search" id="lib-search" placeholder="Szukaj ćwiczenia lub partii...">
+    <div class="chip-row" id="lib-chips">
+      <button class="chip active" data-group="all">Wszystkie</button>
+      <button class="chip" data-group="A">Brzuch/Biodra</button>
+      <button class="chip" data-group="B">Uda/Pośladki</button>
+      <button class="chip" data-group="C">Klatka/Ramiona</button>
+      <button class="chip" data-group="D">Mobilność</button>
+    </div>
+  </div>
+  <div id="lib-results" class="lib-grid">${libraryCards(EXERCISES)}</div>`;
+}
+
+function libraryCards(list) {
+  if (!list.length) return `<p class="empty-state muted">Brak wyników.</p>`;
+  return list.map(ex => `
+    <a class="lib-card" href="#/exercise/${ex.code}">
+      <span class="lib-code group-${ex.group}">${ex.code}</span>
+      <span class="lib-name">${esc(ex.name)}</span>
+      <span class="lib-muscle muted">${esc(ex.muscle)}</span>
+    </a>`).join('');
+}
+
+function filterLibrary() {
+  const q = (document.getElementById('lib-search')?.value || '').toLowerCase().trim();
+  const active = document.querySelector('#lib-chips .chip.active')?.dataset.group || 'all';
+  const list = EXERCISES.filter(ex => {
+    const matchGroup = active === 'all' || ex.group === active;
+    const matchQ = !q || ex.name.toLowerCase().includes(q) || ex.muscle.toLowerCase().includes(q) || ex.code.toLowerCase().includes(q);
+    return matchGroup && matchQ;
+  });
+  document.getElementById('lib-results').innerHTML = libraryCards(list);
+}
+
+// ---------- Progress ----------
+function viewProgress(profile) {
+  const p = profile.progress;
+  const completedCount = p.completedDays.length;
+  const pct = Math.round((completedCount / 60) * 100);
+  const streak = computeStreak(p.completedDays);
+  const weightRows = [...p.weightLog].reverse().slice(0, 8);
+  const measureRows = [...p.measurements].reverse().slice(0, 8);
+  const sparkline = weightSparkline(p.weightLog);
+
+  return `
+  <h2 class="page-title">Postępy</h2>
+  <section class="card">
+    <div class="progress-bar"><div class="progress-bar-fill" style="width:${pct}%"></div></div>
+    <p>${completedCount}/60 dni ukończonych (${pct}%) · seria: ${streak} dni</p>
+  </section>
+
+  <section class="card">
+    <h3>Waga</h3>
+    ${sparkline}
+    <form id="form-weight" class="form-inline">
+      <input type="number" step="0.1" name="weight" placeholder="kg" required>
+      <input type="date" name="date" value="${new Date().toISOString().slice(0, 10)}">
+      <button class="btn small primary" type="submit">Dodaj</button>
+    </form>
+    ${weightRows.length ? `<ul class="log-list">${weightRows.map(w => `<li>${fmtDate(w.date)} — <strong>${w.weight} kg</strong></li>`).join('')}</ul>` : '<p class="muted small">Brak wpisów.</p>'}
+  </section>
+
+  <section class="card">
+    <h3>Obwody i test funkcjonalny</h3>
+    <form id="form-measure" class="form">
+      <div class="row2">
+        <label>Talia (cm)<input type="number" step="0.1" name="waist"></label>
+        <label>Biodra (cm)<input type="number" step="0.1" name="hips"></label>
+      </div>
+      <div class="row2">
+        <label>Uda (cm)<input type="number" step="0.1" name="thighs"></label>
+        <label>Ramiona (cm)<input type="number" step="0.1" name="arms"></label>
+      </div>
+      <label>Test funkcjonalny — przysiady przy krześle (B1) w 60s<input type="number" name="squats"></label>
+      <input type="date" name="date" value="${new Date().toISOString().slice(0, 10)}">
+      <button class="btn small primary" type="submit">Zapisz pomiar</button>
+    </form>
+    ${measureRows.length ? `<ul class="log-list">${measureRows.map(m => `<li>${fmtDate(m.date)} — ${measureSummary(m)}</li>`).join('')}</ul>` : '<p class="muted small">Brak wpisów.</p>'}
+  </section>`;
+}
+
+function measureSummary(m) {
+  const parts = [];
+  if (m.waist) parts.push(`talia ${m.waist}cm`);
+  if (m.hips) parts.push(`biodra ${m.hips}cm`);
+  if (m.thighs) parts.push(`uda ${m.thighs}cm`);
+  if (m.arms) parts.push(`ramiona ${m.arms}cm`);
+  if (m.squats) parts.push(`test: ${m.squats} powt.`);
+  return esc(parts.join(', ') || '—');
+}
+
+function computeStreak(days) {
+  const set = new Set(days);
+  let streak = 0;
+  let d = Math.max(...days, 0);
+  if (!d) return 0;
+  while (set.has(d)) { streak++; d--; }
+  return streak;
+}
+
+function weightSparkline(log) {
+  if (log.length < 2) return '<p class="muted small">Dodaj co najmniej 2 wpisy, aby zobaczyć wykres.</p>';
+  const sorted = [...log].sort((a, b) => new Date(a.date) - new Date(b.date));
+  const values = sorted.map(w => w.weight);
+  const min = Math.min(...values), max = Math.max(...values);
+  const range = max - min || 1;
+  const w = 300, h = 60, pad = 6;
+  const pts = values.map((v, i) => {
+    const x = pad + (i / (values.length - 1)) * (w - pad * 2);
+    const y = h - pad - ((v - min) / range) * (h - pad * 2);
+    return `${x.toFixed(1)},${y.toFixed(1)}`;
+  }).join(' ');
+  return `<svg viewBox="0 0 ${w} ${h}" class="sparkline"><polyline points="${pts}" fill="none" stroke="currentColor" stroke-width="2"/></svg>`;
+}
+
+// ---------- Info ----------
+function viewInfo() {
+  return `
+  <h2 class="page-title">Bezpieczeństwo i informacje</h2>
+  <section class="card safety-card">
+    <h3>Ważna uwaga</h3>
+    <p>${esc(SAFETY_NOTE)}</p>
+  </section>
+  <details class="card" open><summary>Sprzęt (opcjonalny)</summary><ul>${EQUIPMENT.map(e => `<li>${esc(e)}</li>`).join('')}</ul></details>
+  <details class="card"><summary>Zasady treningowe</summary><ol>${RULES.map(r => `<li>${esc(r)}</li>`).join('')}</ol></details>
+  <details class="card"><summary>Rozgrzewka i schłodzenie</summary>
+    <p class="muted small">Rozgrzewka (5-8 min):</p>
+    <ul>${WARMUP.map(w => `<li>${esc(w)}</li>`).join('')}</ul>
+    <p class="muted small">Schłodzenie:</p><p>${esc(COOLDOWN)}</p>
+  </details>
+  <details class="card"><summary>Jak śledzić postępy</summary><ul>${MONITORING.how.map(m => `<li>${esc(m)}</li>`).join('')}</ul></details>
+  <details class="card"><summary>Kiedy przerwać i iść do lekarza</summary><ul>${MONITORING.stop.map(m => `<li>${esc(m)}</li>`).join('')}</ul></details>
+  <details class="card"><summary>Uwaga o diecie</summary><p>${esc(MONITORING.diet)}</p></details>`;
+}
+
+// ---------- More / Settings ----------
+function viewMore(profile) {
+  return `
+  <h2 class="page-title">Więcej</h2>
+  <a class="card list-link" href="#/info">🛡️ Bezpieczeństwo i informacje</a>
+  <a class="card list-link" href="#/settings">⚙️ Profil i ustawienia</a>`;
+}
+
+function viewSettings(profile) {
+  const profiles = Store.getProfiles();
+  const theme = Store.getTheme();
+  return `
+  <h2 class="page-title">Profil i ustawienia</h2>
+  <section class="card">
+    <h3>Twoje dane</h3>
+    <form id="form-edit-profile" class="form">
+      <label>Imię<input type="text" name="name" value="${esc(profile.name)}"></label>
+      <div class="row2">
+        <label>Wzrost (cm)<input type="number" name="heightCm" value="${profile.heightCm || ''}"></label>
+        <label>Waga (kg)<input type="number" name="weightKg" value="${profile.weightKg || ''}"></label>
+      </div>
+      <label>Data startu programu<input type="date" name="startDate" value="${profile.startDate}"></label>
+      <button class="btn primary" type="submit">Zapisz</button>
+    </form>
+  </section>
+
+  <section class="card">
+    <h3>Profile na tym urządzeniu</h3>
+    <ul class="profile-list">
+      ${profiles.map(p => `
+        <li class="${p.id === profile.id ? 'active' : ''}">
+          <span>${esc(p.name)}</span>
+          <span class="profile-actions">
+            ${p.id !== profile.id ? `<button class="btn tiny" data-action="switch-profile" data-id="${p.id}">Wybierz</button>` : '<span class="pill">Aktywny</span>'}
+            <button class="btn tiny ghost" data-action="delete-profile" data-id="${p.id}">Usuń</button>
+          </span>
+        </li>`).join('')}
+    </ul>
+    <button class="btn secondary" data-action="add-profile">+ Nowy profil</button>
+  </section>
+
+  <section class="card">
+    <h3>Wygląd</h3>
+    <div class="chip-row">
+      <button class="chip ${theme === 'auto' ? 'active' : ''}" data-action="set-theme" data-theme="auto">Auto</button>
+      <button class="chip ${theme === 'light' ? 'active' : ''}" data-action="set-theme" data-theme="light">Jasny</button>
+      <button class="chip ${theme === 'dark' ? 'active' : ''}" data-action="set-theme" data-theme="dark">Ciemny</button>
+    </div>
+  </section>
+
+  ${viewVoiceSettings()}
+  ${viewReminderSettings()}
+
+  <section class="card">
+    <h3>Kopia danych</h3>
+    <div class="btn-row">
+      <button class="btn small" data-action="export-data">Eksportuj</button>
+      <button class="btn small" data-action="import-data">Importuj</button>
+    </div>
+  </section>
+
+  <section class="card">
+    <h3>Reset</h3>
+    <button class="btn danger small" data-action="reset-progress">Wyzeruj postępy tego profilu</button>
+  </section>`;
+}
+
+function viewVoiceSettings() {
+  const enabled = Voice.isEnabled();
+  const style = Voice.getStyle();
+  return `
+  <section class="card">
+    <h3>Lektor i motywator (głos)</h3>
+    ${Voice.supported ? '' : '<p class="muted small">Ta przeglądarka nie obsługuje syntezy mowy.</p>'}
+    <div class="progress-mini-row">
+      <span>Zapowiadanie ćwiczeń i odliczanie głosem</span>
+      <label class="switch"><input type="checkbox" data-action="toggle-voice-enabled" ${enabled ? 'checked' : ''}><span class="switch-track"></span></label>
+    </div>
+    <p class="muted small" style="margin-top:10px">Styl motywacji</p>
+    <div class="chip-row">
+      <button class="chip ${style === 'gentle' ? 'active' : ''}" data-action="set-voice-style" data-style="gentle">Łagodny</button>
+      <button class="chip ${style === 'tough' ? 'active' : ''}" data-action="set-voice-style" data-style="tough">Ostry</button>
+    </div>
+  </section>`;
+}
+
+function viewReminderSettings() {
+  const r = Store.getReminderSettings();
+  return `
+  <section class="card">
+    <h3>Przypomnienia o treningu</h3>
+    <div class="progress-mini-row">
+      <span>Codzienne przypomnienie o ${String(r.hour).padStart(2, '0')}:${String(r.minute).padStart(2, '0')}</span>
+      <label class="switch"><input type="checkbox" id="reminder-enabled" ${r.enabled ? 'checked' : ''}><span class="switch-track"></span></label>
+    </div>
+    <div class="row2" style="margin-top:10px">
+      <label>Godzina<input type="number" id="reminder-hour" min="0" max="23" value="${r.hour}"></label>
+      <label>Minuta<input type="number" id="reminder-minute" min="0" max="59" value="${r.minute}"></label>
+    </div>
+    <button class="btn small primary" data-action="save-reminder" style="margin-top:8px">Zapisz przypomnienie</button>
+    <p class="muted small" style="margin-top:8px">Przypomnienie pojawi się, gdy otworzysz aplikację po ustawionej godzinie (przeglądarka nie budzi zamkniętej appki jak natywna aplikacja).</p>
+  </section>`;
+}
+
+// ---------- Timer ----------
+let timerInterval = null;
+function startTimer(seconds, label) {
+  clearInterval(timerInterval);
+  const modal = document.getElementById('timer-modal');
+  const display = document.getElementById('timer-display');
+  const labelEl = document.getElementById('timer-label');
+  labelEl.textContent = label || '';
+  let remaining = seconds;
+  display.textContent = fmtSeconds(remaining);
+  modal.hidden = false;
+  timerInterval = setInterval(() => {
+    remaining--;
+    if (remaining <= 0) {
+      clearInterval(timerInterval);
+      display.textContent = '0:00';
+      beep();
+      if (navigator.vibrate) navigator.vibrate([200, 100, 200]);
+    } else {
+      display.textContent = fmtSeconds(remaining);
+    }
+  }, 1000);
+}
+
+function fmtSeconds(s) {
+  const m = Math.floor(s / 60);
+  const sec = s % 60;
+  return `${m}:${sec.toString().padStart(2, '0')}`;
+}
+
+function closeTimer() {
+  clearInterval(timerInterval);
+  document.getElementById('timer-modal').hidden = true;
+}
+
+function beep() {
+  try {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.connect(gain); gain.connect(ctx.destination);
+    osc.frequency.value = 880;
+    gain.gain.setValueAtTime(0.2, ctx.currentTime);
+    osc.start();
+    osc.stop(ctx.currentTime + 0.4);
+    osc.onended = () => ctx.close();
+  } catch {}
+}
+
+// ---------- Event delegation ----------
+document.addEventListener('click', async e => {
+  const target = e.target.closest('[data-action]');
+  if (!target) {
+    const chip = e.target.closest('#lib-chips .chip');
+    if (chip) {
+      document.querySelectorAll('#lib-chips .chip').forEach(c => c.classList.remove('active'));
+      chip.classList.add('active');
+      filterLibrary();
+    }
+    return;
+  }
+  const action = target.dataset.action;
+  const profile = Store.getActiveProfile();
+
+  switch (action) {
+    case 'toggle-day': {
+      const day = parseInt(target.dataset.day, 10);
+      Store.toggleDayComplete(profile.id, day);
+      render();
+      break;
+    }
+    case 'toggle-ex': break; // handled by change event
+    case 'onboard-next': {
+      const form = document.getElementById('form-onboard');
+      showOnboardStep(form, Number(form.dataset.step) + 1);
+      break;
+    }
+    case 'onboard-back': {
+      const form = document.getElementById('form-onboard');
+      showOnboardStep(form, Number(form.dataset.step) - 1);
+      break;
+    }
+    case 'workout-exit':
+      if (confirm('Zakończyć trening teraz? Postęp tej sesji nie zostanie zapisany.')) exitWorkout();
+      break;
+    case 'workout-toggle-voice':
+      Voice.setEnabled(!Voice.isEnabled());
+      if (activeWorkoutRunner) renderWorkoutBody(activeWorkoutRunner);
+      break;
+    case 'workout-pause':
+      if (activeWorkoutRunner) {
+        activeWorkoutRunner.state.isPaused ? activeWorkoutRunner.resume() : activeWorkoutRunner.pause();
+      }
+      break;
+    case 'workout-done':
+      activeWorkoutRunner?.completeSetManually();
+      break;
+    case 'workout-skip':
+      activeWorkoutRunner?.skip();
+      break;
+    case 'workout-swap': {
+      if (!activeWorkoutRunner) break;
+      const code = target.dataset.code;
+      const current = exByCode[code];
+      const alternatives = EXERCISES.filter(e => e.code !== code && e.group === current.group);
+      showSwapDialog(alternatives, alt => activeWorkoutRunner.swap(alt));
+      break;
+    }
+    case 'workout-feedback-pain':
+      activeWorkoutRunner?.updateFeedback({ pain: target.dataset.pain });
+      renderWorkoutBody(activeWorkoutRunner);
+      break;
+    case 'workout-finish-rest':
+      exitWorkout();
+      break;
+    case 'workout-submit-feedback': {
+      if (!activeWorkoutRunner) break;
+      const day = activeWorkoutDay;
+      const f = activeWorkoutRunner.state.feedback;
+      Store.recordSession(profile.id, {
+        day, durationSeconds: activeWorkoutRunner.elapsedSeconds(),
+        difficulty: f.difficulty, feeling: f.feeling, pain: f.pain,
+      });
+      exitWorkout();
+      break;
+    }
+    case 'start-timer':
+      startTimer(parseInt(target.dataset.seconds, 10), target.dataset.label);
+      break;
+    case 'close-timer':
+      closeTimer();
+      break;
+    case 'copy-prompt': {
+      const ex = exByCode[target.dataset.code];
+      const text = ex[target.dataset.kind];
+      try {
+        await navigator.clipboard.writeText(text);
+        target.textContent = 'Skopiowano!';
+        setTimeout(() => { target.textContent = 'Kopiuj'; }, 1500);
+      } catch { alert('Nie udało się skopiować. Zaznacz tekst ręcznie.'); }
+      break;
+    }
+    case 'upload-media': {
+      const input = document.createElement('input');
+      input.type = 'file';
+      input.accept = target.dataset.kind === 'image' ? 'image/*' : 'video/*';
+      input.onchange = async () => {
+        if (input.files[0]) {
+          await MediaStore.save(target.dataset.code, target.dataset.kind, input.files[0]);
+          loadMediaInto(target.dataset.code);
+        }
+      };
+      input.click();
+      break;
+    }
+    case 'remove-media':
+      await MediaStore.remove(target.dataset.code, target.dataset.kind);
+      loadMediaInto(target.dataset.code);
+      break;
+    case 'switch-profile':
+      Store.setActiveId(target.dataset.id);
+      navigate('/today');
+      render();
+      break;
+    case 'delete-profile':
+      if (confirm('Usunąć ten profil i jego postępy?')) {
+        Store.deleteProfile(target.dataset.id);
+        render();
+      }
+      break;
+    case 'add-profile':
+      document.getElementById('app').insertAdjacentHTML('afterbegin', `<div class="modal-overlay" id="add-profile-modal"><div class="modal card">${viewOnboarding()}<button class="btn ghost" data-action="close-modal">Anuluj</button></div></div>`);
+      bindOnboarding();
+      break;
+    case 'close-modal':
+      target.closest('.modal-overlay')?.remove();
+      break;
+    case 'set-theme':
+      Store.setTheme(target.dataset.theme);
+      applyTheme(target.dataset.theme);
+      render();
+      break;
+    case 'set-voice-style':
+      Voice.setStyle(target.dataset.style);
+      render();
+      break;
+    case 'save-reminder': {
+      const hour = Math.max(0, Math.min(23, Number(document.getElementById('reminder-hour').value) || 0));
+      const minute = Math.max(0, Math.min(59, Number(document.getElementById('reminder-minute').value) || 0));
+      const enabled = document.getElementById('reminder-enabled').checked;
+      if (enabled && 'Notification' in window && Notification.permission === 'default') {
+        await Notification.requestPermission();
+      }
+      Store.setReminderSettings({ ...Store.getReminderSettings(), hour, minute, enabled });
+      alert('Zapisano ustawienia przypomnienia.');
+      break;
+    }
+    case 'export-data': {
+      const blob = new Blob([Store.exportData()], { type: 'application/json' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = `forma60-backup-${new Date().toISOString().slice(0, 10)}.json`;
+      a.click();
+      break;
+    }
+    case 'import-data': {
+      const input = document.createElement('input');
+      input.type = 'file';
+      input.accept = 'application/json';
+      input.onchange = () => {
+        const reader = new FileReader();
+        reader.onload = () => {
+          try { Store.importData(reader.result); render(); alert('Zaimportowano dane.'); }
+          catch { alert('Nieprawidłowy plik.'); }
+        };
+        reader.readAsText(input.files[0]);
+      };
+      input.click();
+      break;
+    }
+    case 'reset-progress':
+      if (confirm('Na pewno wyzerować postępy tego profilu?')) {
+        Store.updateProfile(profile.id, { progress: { completedDays: [], exerciseChecks: {}, measurements: [], weightLog: [] } });
+        render();
+      }
+      break;
+  }
+});
+
+document.addEventListener('change', async e => {
+  if (e.target.dataset.action === 'toggle-ex') {
+    const day = e.target.dataset.day;
+    const code = e.target.dataset.code;
+    const profile = Store.getActiveProfile();
+    const current = new Set(Store.getExerciseChecks(profile, day));
+    if (e.target.checked) current.add(code); else current.delete(code);
+    Store.setExerciseChecks(profile.id, day, Array.from(current));
+    e.target.closest('.exercise-row')?.classList.toggle('checked', e.target.checked);
+  }
+  if (e.target.dataset.action === 'toggle-voice-enabled') {
+    Voice.setEnabled(e.target.checked);
+  }
+  if (e.target.id === 'reminder-enabled' && e.target.checked && 'Notification' in window && Notification.permission === 'default') {
+    await Notification.requestPermission();
+  }
+});
+
+document.addEventListener('input', e => {
+  if (e.target.id === 'lib-search') filterLibrary();
+  if (e.target.dataset.action === 'workout-feedback-difficulty' && activeWorkoutRunner) {
+    activeWorkoutRunner.updateFeedback({ difficulty: Number(e.target.value) });
+    renderWorkoutBody(activeWorkoutRunner);
+  }
+  if (e.target.dataset.action === 'workout-feedback-feeling' && activeWorkoutRunner) {
+    activeWorkoutRunner.updateFeedback({ feeling: Number(e.target.value) });
+    renderWorkoutBody(activeWorkoutRunner);
+  }
+});
+
+document.addEventListener('submit', e => {
+  const profile = Store.getActiveProfile();
+  if (e.target.id === 'form-edit-profile') {
+    e.preventDefault();
+    const fd = new FormData(e.target);
+    Store.updateProfile(profile.id, {
+      name: fd.get('name')?.trim() || profile.name,
+      heightCm: fd.get('heightCm') ? Number(fd.get('heightCm')) : null,
+      weightKg: fd.get('weightKg') ? Number(fd.get('weightKg')) : null,
+      startDate: fd.get('startDate')
+    });
+    render();
+  }
+  if (e.target.id === 'form-weight') {
+    e.preventDefault();
+    const fd = new FormData(e.target);
+    Store.addWeight(profile.id, Number(fd.get('weight')), fd.get('date'));
+    render();
+  }
+  if (e.target.id === 'form-measure') {
+    e.preventDefault();
+    const fd = new FormData(e.target);
+    Store.addMeasurement(profile.id, {
+      waist: fd.get('waist') ? Number(fd.get('waist')) : null,
+      hips: fd.get('hips') ? Number(fd.get('hips')) : null,
+      thighs: fd.get('thighs') ? Number(fd.get('thighs')) : null,
+      arms: fd.get('arms') ? Number(fd.get('arms')) : null,
+      squats: fd.get('squats') ? Number(fd.get('squats')) : null,
+      date: fd.get('date')
+    });
+    render();
+  }
+});
+
+function bindDynamic(routeName, profile, arg) {
+  const modal = document.getElementById('timer-modal');
+  if (modal && !modal.dataset.bound) {
+    modal.dataset.bound = '1';
+    document.getElementById('timer-close-btn').addEventListener('click', closeTimer);
+  }
+  if (routeName === 'exercise' && exByCode[arg]) {
+    loadMediaInto(arg);
+  }
+  if (routeName === 'workout') {
+    const day = parseInt(arg, 10);
+    if (day >= 1 && day <= 60) initWorkout(profile, day);
+  }
+}
+
+boot();
