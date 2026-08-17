@@ -66,7 +66,7 @@ function checkReminder() {
   const text = info.rest ? 'Jutro/dziś dzień odpoczynku — pamiętaj o regeneracji.' : `Dzisiaj masz dzień ${day}: ${info.typeName}.`;
 
   if ('Notification' in window && Notification.permission === 'granted') {
-    try { new Notification('Nowy Ja', { body: text, icon: 'icons/icon-192.png' }); } catch {}
+    try { new Notification('Nowa Ja', { body: text, icon: 'icons/icon-192.png' }); } catch {}
   } else {
     showReminderBanner(text);
   }
@@ -176,7 +176,7 @@ function chipCheckbox(name, value, checked) {
 function viewOnboarding() {
   return `
   <div class="onboard">
-    <h1>Nowy Ja</h1>
+    <h1>Nowa Ja</h1>
     <p class="tagline">Twój 60-dniowy plan treningowy w domu — dopasowany do Ciebie.</p>
     <form id="form-onboard" class="card form" data-step="0" novalidate>
       <div class="onboard-step-label">Krok <span id="onboard-step-num">1</span> z ${ONBOARD_STEPS}</div>
