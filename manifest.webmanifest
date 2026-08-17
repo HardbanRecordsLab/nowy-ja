@@ -2,7 +2,7 @@
   "name": "Nowa Ja — 60 dni formy",
   "short_name": "Nowa Ja",
   "description": "Interaktywny 60-dniowy program treningowy w domu, z infografikami i wideo instruktażowym dla każdego.",
-  "start_url": "./index.html",
+  "start_url": "./app.html",
   "scope": "./",
   "id": "/forma60/",
   "display": "standalone",
