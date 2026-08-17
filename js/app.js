@@ -636,6 +636,35 @@ function exitWorkout() {
   render();
 }
 
+function showSwapDialog(alternatives, onSelect) {
+  document.getElementById('swap-modal')?.remove();
+  const list = alternatives.length
+    ? alternatives.map(alt => `<button type="button" class="btn ghost" style="width:100%;margin-bottom:8px;text-align:left" data-swap-code="${esc(alt.code)}">${esc(alt.code + ' — ' + alt.name)}</button>`).join('')
+    : `<p class="muted small">Brak zdefiniowanych zamienników w programie źródłowym dla tej grupy.</p>`;
+
+  const overlay = document.createElement('div');
+  overlay.id = 'swap-modal';
+  overlay.className = 'modal-overlay';
+  overlay.innerHTML = `
+    <div class="modal card">
+      <h3 style="margin-top:0">Zamienniki</h3>
+      <p class="muted small">Inne ćwiczenia z tej samej grupy:</p>
+      ${list}
+      <button type="button" class="btn ghost" style="width:100%" data-action="close-swap">Anuluj</button>
+    </div>`;
+  document.body.appendChild(overlay);
+
+  overlay.querySelectorAll('[data-swap-code]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const code = btn.dataset.swapCode;
+      const ex = exByCode[code];
+      overlay.remove();
+      if (ex) onSelect(ex);
+    });
+  });
+  overlay.querySelector('[data-action="close-swap"]').addEventListener('click', () => overlay.remove());
+}
+
 // ---------- Exercise detail ----------
 function viewExercise(profile, code) {
   const ex = exByCode[code];
