@@ -24,6 +24,42 @@ function navigate(route) { location.hash = route; }
 
 window.addEventListener('hashchange', render);
 
+// ---------- Instalacja PWA ----------
+let deferredInstallPrompt = null;
+const K_INSTALL_DISMISSED = 'forma60.installDismissed';
+
+function isRunningStandalone() {
+  return window.matchMedia?.('(display-mode: standalone)').matches || window.navigator.standalone === true;
+}
+
+window.addEventListener('beforeinstallprompt', e => {
+  e.preventDefault();
+  deferredInstallPrompt = e;
+  if (!isRunningStandalone() && !localStorage.getItem(K_INSTALL_DISMISSED)) {
+    showInstallBanner();
+  }
+});
+
+window.addEventListener('appinstalled', () => {
+  deferredInstallPrompt = null;
+  document.getElementById('install-banner')?.remove();
+  localStorage.setItem(K_INSTALL_DISMISSED, '1');
+});
+
+function showInstallBanner() {
+  if (document.getElementById('install-banner') || isRunningStandalone()) return;
+  const el = document.createElement('div');
+  el.id = 'install-banner';
+  el.className = 'install-banner';
+  el.innerHTML = `
+    <span>📲 Zainstaluj Nowa Ja na ekranie głównym</span>
+    <span class="install-banner-actions">
+      <button type="button" class="btn small primary" data-action="install-accept">Zainstaluj</button>
+      <button type="button" class="icon-btn" data-action="install-dismiss" aria-label="Zamknij">✕</button>
+    </span>`;
+  document.body.appendChild(el);
+}
+
 // ---------- Boot ----------
 async function boot() {
   applyTheme(Store.getTheme());
@@ -98,6 +134,7 @@ function render() {
   // otherwise its interval keeps ticking in the background pointlessly.
   if (activeWorkoutRunner && !(name === 'workout' && Number(arg) === activeWorkoutDay)) {
     Voice.stop();
+    releaseWakeLock();
     activeWorkoutRunner.stop();
     activeWorkoutRunner = null;
     activeWorkoutDay = null;
@@ -464,11 +501,30 @@ function viewWorkoutShell() {
   return `<div class="workout-root"><div id="workout-body"><p class="muted">Ładowanie…</p></div></div>`;
 }
 
+// Nie pozwala ekranowi zgasnąć w trakcie treningu (inaczej wizualny timer/animacja by się zatrzymały).
+let wakeLockSentinel = null;
+async function requestWakeLock() {
+  if (!('wakeLock' in navigator)) return;
+  try {
+    wakeLockSentinel = await navigator.wakeLock.request('screen');
+  } catch {}
+}
+function releaseWakeLock() {
+  wakeLockSentinel?.release().catch(() => {});
+  wakeLockSentinel = null;
+}
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState === 'visible' && activeWorkoutRunner && !wakeLockSentinel) {
+    requestWakeLock();
+  }
+});
+
 function initWorkout(profile, day) {
   if (activeWorkoutRunner && activeWorkoutDay === day) {
     renderWorkoutBody(activeWorkoutRunner);
     return;
   }
+  requestWakeLock();
   const dayInfo = getDayInfo(day);
   const steps = buildWorkoutSteps(dayInfo, exByCode);
   const phaseDef = PHASES.find(p => p.id === dayInfo.phase) || PHASES[0];
@@ -575,8 +631,17 @@ function workoutActiveHtml(runner) {
 
   const setsLine = !runner.isCircuit ? `<p class="workout-set-label">SERIA ${s.currentSet} / ${s.totalSets}</p>` : '';
 
+  const profile = Store.getActiveProfile();
+  const painCount = profile ? Store.getExercisePainCount(profile, ex.code) : 0;
+  const painSuggestion = painCount >= 2 ? `
+    <div class="pain-suggestion">
+      <span>⚠️ Zgłaszałaś/eś ból przy tym ćwiczeniu (${painCount}×). Rozważ zamiennik.</span>
+      <button type="button" class="btn tiny primary" data-action="workout-swap" data-code="${ex.code}">Zamień</button>
+    </div>` : '';
+
   return `
   <div class="workout-center">
+    ${painSuggestion}
     <p class="workout-step-label">${headerLine}</p>
     ${subLine ? `<p class="muted">${subLine}</p>` : ''}
     <h2 class="workout-exercise-name">${esc(ex.name.toUpperCase())}</h2>
@@ -593,6 +658,7 @@ function workoutActiveHtml(runner) {
       <button class="btn ghost" style="flex:1" data-action="workout-skip">POMIŃ</button>
       <button class="btn ghost" style="flex:1" data-action="workout-swap" data-code="${ex.code}">ZAMIEŃ</button>
     </div>
+    <button type="button" class="pain-report-link" data-action="workout-report-pain" data-code="${ex.code}">😣 Zgłoś ból przy tym ćwiczeniu</button>
   </div>`;
 }
 
@@ -631,6 +697,7 @@ function workoutFeedbackHtml(runner) {
 
 function exitWorkout() {
   Voice.stop();
+  releaseWakeLock();
   if (activeWorkoutRunner) { activeWorkoutRunner.stop(); activeWorkoutRunner = null; activeWorkoutDay = null; }
   navigate('/today');
   render();
@@ -692,6 +759,18 @@ function viewExercise(profile, code) {
   </section>
 
   <section class="card media-card">
+    <h3>Animacja z 2-4 zdjęć (flipbook)</h3>
+    <p class="muted small">Brak prawdziwego wideo? Wgraj kilka zdjęć pozycji (start / środek / koniec ruchu) — apka zapętli je jako prostą animację.</p>
+    <div class="media-slot" id="media-frames-${ex.code}" data-code="${ex.code}" data-kind="frames">
+      <div class="media-placeholder">Brak animacji</div>
+    </div>
+    <div class="media-actions">
+      <button class="btn small" data-action="upload-frames" data-code="${ex.code}">Dodaj sekwencję zdjęć</button>
+      <button class="btn small ghost" data-action="remove-frames" data-code="${ex.code}">Usuń</button>
+    </div>
+  </section>
+
+  <section class="card media-card">
     <h3>Wideo instruktażowe</h3>
     <div class="media-slot" id="media-video-${ex.code}" data-code="${ex.code}" data-kind="video">
       <div class="media-placeholder">Brak wideo</div>
@@ -742,6 +821,8 @@ function groupLabel(g) {
   return { A: 'Brzuch + Biodra', B: 'Uda + Pośladki', C: 'Klatka + Ramiona', D: 'Aktywność / mobilność' }[g] || g;
 }
 
+const activeFlipbookIntervals = {};
+
 async function loadMediaInto(code) {
   for (const kind of ['image', 'video']) {
     const slot = document.getElementById(`media-${kind}-${code}`);
@@ -756,6 +837,23 @@ async function loadMediaInto(code) {
       slot.innerHTML = kind === 'image'
         ? `<img src="${localPath}" alt="Infografika ${esc(code)}" onerror="this.parentElement.innerHTML='<div class=\\'media-placeholder\\'>Brak infografiki — użyj promptu AI poniżej</div>'">`
         : `<video src="${localPath}" controls playsinline onerror="this.parentElement.innerHTML='<div class=\\'media-placeholder\\'>Brak wideo — użyj promptu AI poniżej</div>'"></video>`;
+    }
+  }
+
+  const framesSlot = document.getElementById(`media-frames-${code}`);
+  if (framesSlot) {
+    clearInterval(activeFlipbookIntervals[code]);
+    const urls = await MediaStore.getFrameURLs(code);
+    if (urls && urls.length) {
+      framesSlot.innerHTML = `<img id="flipbook-img-${esc(code)}" src="${urls[0]}" alt="Animacja ${esc(code)}">`;
+      let i = 0;
+      const imgEl = document.getElementById(`flipbook-img-${code}`);
+      activeFlipbookIntervals[code] = setInterval(() => {
+        i = (i + 1) % urls.length;
+        if (imgEl.isConnected) imgEl.src = urls[i]; else clearInterval(activeFlipbookIntervals[code]);
+      }, 700);
+    } else {
+      framesSlot.innerHTML = `<div class="media-placeholder">Brak animacji</div>`;
     }
   }
 }
@@ -866,7 +964,63 @@ function viewProgress(profile) {
       <button class="btn small primary" type="submit">Zapisz pomiar</button>
     </form>
     ${measureRows.length ? `<ul class="log-list">${measureRows.map(m => `<li>${fmtDate(m.date)} — ${measureSummary(m)}</li>`).join('')}</ul>` : '<p class="muted small">Brak wpisów.</p>'}
+  </section>
+
+  <section class="card">
+    <h3>Zdjęcia sylwetki</h3>
+    <p class="muted small">Rób zdjęcie co 2 tygodnie, w tym samym oświetleniu i pozycji — najlepiej porówna je suwak poniżej.</p>
+    <button type="button" class="btn small primary" data-action="add-photo">+ Dodaj zdjęcie</button>
+    <div id="photo-compare" style="margin-top:12px"></div>
+    <div id="photo-grid" class="photo-grid" style="margin-top:12px"><p class="muted small">Ładowanie…</p></div>
   </section>`;
+}
+
+async function loadPhotosInto(profile) {
+  const grid = document.getElementById('photo-grid');
+  const compareBox = document.getElementById('photo-compare');
+  if (!grid) return;
+  const photos = await MediaStore.getPhotos(profile.id);
+
+  if (!photos.length) {
+    grid.innerHTML = '<p class="muted small">Brak zdjęć. Dodaj pierwsze, żeby zacząć śledzić zmiany.</p>';
+    if (compareBox) compareBox.innerHTML = '';
+    return;
+  }
+
+  const withUrls = await Promise.all(photos.map(async p => ({ ...p, url: await MediaStore.getPhotoURL(p) })));
+
+  grid.innerHTML = withUrls.map(p => `
+    <div class="photo-thumb">
+      <img src="${p.url}" alt="Zdjęcie ${esc(p.date)}">
+      <span class="photo-thumb-date">${esc(fmtDate(p.date))}</span>
+      <button type="button" class="photo-thumb-remove" data-action="remove-photo" data-id="${p.id}" aria-label="Usuń">✕</button>
+    </div>`).join('');
+
+  if (compareBox) {
+    if (withUrls.length >= 2) {
+      const before = withUrls[0];
+      const after = withUrls[withUrls.length - 1];
+      compareBox.innerHTML = `
+        <p class="muted small">Porównanie: ${esc(fmtDate(before.date))} → ${esc(fmtDate(after.date))}</p>
+        <div class="compare-slider" id="compare-slider">
+          <img src="${after.url}" alt="Po" class="compare-img-back">
+          <div class="compare-img-front-wrap" id="compare-front-wrap"><img src="${before.url}" alt="Przed" class="compare-img-front"></div>
+          <div class="compare-handle" id="compare-handle"></div>
+        </div>
+        <input type="range" id="compare-range" min="0" max="100" value="50" style="width:100%;margin-top:8px">`;
+      const range = document.getElementById('compare-range');
+      const frontWrap = document.getElementById('compare-front-wrap');
+      const handle = document.getElementById('compare-handle');
+      const update = () => {
+        frontWrap.style.width = range.value + '%';
+        handle.style.left = range.value + '%';
+      };
+      range.addEventListener('input', update);
+      update();
+    } else {
+      compareBox.innerHTML = '<p class="muted small">Dodaj co najmniej 2 zdjęcia, aby zobaczyć porównanie przed/po.</p>';
+    }
+  }
 }
 
 function measureSummary(m) {
@@ -1116,6 +1270,17 @@ document.addEventListener('click', async e => {
       Voice.setEnabled(!Voice.isEnabled());
       if (activeWorkoutRunner) renderWorkoutBody(activeWorkoutRunner);
       break;
+    case 'install-accept':
+      document.getElementById('install-banner')?.remove();
+      if (deferredInstallPrompt) {
+        deferredInstallPrompt.prompt();
+        deferredInstallPrompt.userChoice.finally(() => { deferredInstallPrompt = null; });
+      }
+      break;
+    case 'install-dismiss':
+      document.getElementById('install-banner')?.remove();
+      localStorage.setItem(K_INSTALL_DISMISSED, '1');
+      break;
     case 'workout-pause':
       if (activeWorkoutRunner) {
         activeWorkoutRunner.state.isPaused ? activeWorkoutRunner.resume() : activeWorkoutRunner.pause();
@@ -1127,6 +1292,17 @@ document.addEventListener('click', async e => {
     case 'workout-skip':
       activeWorkoutRunner?.skip();
       break;
+    case 'workout-report-pain': {
+      if (!profile) break;
+      const count = Store.logExercisePain(profile.id, target.dataset.code);
+      if (count >= 2 && activeWorkoutRunner) {
+        renderWorkoutBody(activeWorkoutRunner); // re-render to surface the swap suggestion banner
+      } else {
+        target.textContent = '✓ Zgłoszono, dziękujemy';
+        target.disabled = true;
+      }
+      break;
+    }
     case 'workout-swap': {
       if (!activeWorkoutRunner) break;
       const code = target.dataset.code;
@@ -1185,6 +1361,48 @@ document.addEventListener('click', async e => {
     case 'remove-media':
       await MediaStore.remove(target.dataset.code, target.dataset.kind);
       loadMediaInto(target.dataset.code);
+      break;
+    case 'upload-frames': {
+      const input = document.createElement('input');
+      input.type = 'file';
+      input.accept = 'image/*';
+      input.multiple = true;
+      input.onchange = async () => {
+        const files = Array.from(input.files || []).slice(0, 4);
+        if (files.length >= 2) {
+          await MediaStore.saveFrames(target.dataset.code, files);
+          loadMediaInto(target.dataset.code);
+        } else if (files.length === 1) {
+          alert('Wybierz co najmniej 2 zdjęcia (start i koniec ruchu), żeby powstała animacja.');
+        }
+      };
+      input.click();
+      break;
+    }
+    case 'remove-frames':
+      await MediaStore.removeFrames(target.dataset.code);
+      loadMediaInto(target.dataset.code);
+      break;
+    case 'add-photo': {
+      if (!profile) break;
+      const input = document.createElement('input');
+      input.type = 'file';
+      input.accept = 'image/*';
+      input.capture = 'environment';
+      input.onchange = async () => {
+        if (input.files[0]) {
+          await MediaStore.addPhoto(profile.id, new Date().toISOString().slice(0, 10), input.files[0]);
+          loadPhotosInto(profile);
+        }
+      };
+      input.click();
+      break;
+    }
+    case 'remove-photo':
+      if (confirm('Usunąć to zdjęcie?')) {
+        await MediaStore.removePhoto(target.dataset.id);
+        if (profile) loadPhotosInto(profile);
+      }
       break;
     case 'switch-profile':
       Store.setActiveId(target.dataset.id);
@@ -1338,6 +1556,9 @@ function bindDynamic(routeName, profile, arg) {
   }
   if (routeName === 'onboarding') {
     bindOnboarding();
+  }
+  if (routeName === 'progress' && profile) {
+    loadPhotosInto(profile);
   }
 }
 

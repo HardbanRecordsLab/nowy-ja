@@ -146,6 +146,22 @@ const Store = (() => {
     return streak;
   }
 
+  // Personalizacja: liczymy ile razy ból zgłoszono przy danym ćwiczeniu, żeby po 2. razie
+  // zaproponować zamiennik — prosta reguła zamiast pełnego "Personalization Engine".
+  function logExercisePain(profileId, exerciseCode) {
+    const profiles = getProfiles();
+    const p = profiles.find(x => x.id === profileId);
+    if (!p) return;
+    if (!p.progress.exercisePain) p.progress.exercisePain = {};
+    p.progress.exercisePain[exerciseCode] = (p.progress.exercisePain[exerciseCode] || 0) + 1;
+    saveProfiles(profiles);
+    return p.progress.exercisePain[exerciseCode];
+  }
+
+  function getExercisePainCount(profile, exerciseCode) {
+    return (profile.progress.exercisePain && profile.progress.exercisePain[exerciseCode]) || 0;
+  }
+
   const K_REMINDER = 'forma60.reminder';
   function getReminderSettings() {
     try { return JSON.parse(localStorage.getItem(K_REMINDER)) || { enabled: false, hour: 18, minute: 0, lastNotifiedDate: null }; }
@@ -174,6 +190,7 @@ const Store = (() => {
     createProfile, updateProfile, deleteProfile, acceptSafetyConsent,
     currentDayNumber, toggleDayComplete, setExerciseChecks, getExerciseChecks,
     addMeasurement, addWeight, recordSession, getLastSession, currentStreak,
+    logExercisePain, getExercisePainCount,
     getReminderSettings, setReminderSettings,
     getTheme, setTheme, exportData, importData
   };
