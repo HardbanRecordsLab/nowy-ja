@@ -1304,6 +1304,12 @@ function bindDynamic(routeName, profile, arg) {
     const day = parseInt(arg, 10);
     if (day >= 1 && day <= 60) initWorkout(profile, day);
   }
+  if (routeName === 'safety') {
+    bindSafety();
+  }
+  if (routeName === 'onboarding') {
+    bindOnboarding();
+  }
 }
 
 boot();

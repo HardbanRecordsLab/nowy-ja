@@ -1,4 +1,4 @@
-const CACHE = 'forma60-v4';
+const CACHE = 'forma60-v5';
 const CORE = [
   './',
   './index.html',
