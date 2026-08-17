@@ -1,2 +1,5 @@
 .vercel/
 cwiczenia/
+
+.vercel
+.env*
