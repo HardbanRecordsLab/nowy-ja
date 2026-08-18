@@ -5,6 +5,10 @@ let exByCode = {};
 let activeWorkoutRunner = null;
 let activeWorkoutDay = null;
 
+Music.onTrackChange(() => {
+  if (activeWorkoutRunner) renderWorkoutBody(activeWorkoutRunner);
+});
+
 function esc(s) {
   return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 }
@@ -639,6 +643,7 @@ function initWorkout(profile, day) {
   activeWorkoutRunner._equipmentFlag = hasConstraint('equipment');
   activeWorkoutRunner._painParts = workoutConstraints.filter(c => c.type === 'pain').map(c => c.part);
   activeWorkoutRunner.begin();
+  Music.startForWorkout();
   renderWorkoutBody(activeWorkoutRunner, day, profile);
 }
 
@@ -669,8 +674,12 @@ function renderWorkoutBody(runner, day, profile) {
     <div class="workout-header">
       <button type="button" class="icon-btn" data-action="workout-exit" aria-label="Zakończ">✕</button>
       <span class="muted">${esc(dayInfo.typeName)}</span>
-      <button type="button" class="icon-btn" data-action="workout-toggle-voice" aria-label="Lektor">${Voice.isEnabled() ? '🔊' : '🔇'}</button>
+      <div class="workout-header-actions">
+        <button type="button" class="icon-btn" data-action="workout-toggle-voice" aria-label="Lektor">${Voice.isEnabled() ? '🔊' : '🔇'}</button>
+        <button type="button" class="icon-btn" data-action="workout-toggle-music" aria-label="Muzyka">${Music.isEnabled() ? '🎵' : '🔕'}</button>
+      </div>
     </div>
+    ${Music.isEnabled() && Music.isPlaying() ? `<p class="muted small workout-track-label" data-action="workout-next-track">🎧 ${esc(Music.currentTitle())} · zmień ›</p>` : ''}
     ${inner}`;
 }
 
@@ -823,6 +832,7 @@ function workoutFeedbackHtml(runner) {
 
 function exitWorkout() {
   Voice.stop();
+  Music.stop();
   releaseWakeLock();
   if (activeWorkoutRunner) { activeWorkoutRunner.stop(); activeWorkoutRunner = null; activeWorkoutDay = null; }
   navigate('/today');
@@ -1407,6 +1417,7 @@ function viewSettings(profile) {
   </section>
 
   ${viewVoiceSettings()}
+  ${viewMusicSettings()}
   ${viewReminderSettings()}
 
   <section class="card">
@@ -1439,6 +1450,22 @@ function viewVoiceSettings() {
       <button class="chip ${style === 'gentle' ? 'active' : ''}" data-action="set-voice-style" data-style="gentle">Łagodny</button>
       <button class="chip ${style === 'tough' ? 'active' : ''}" data-action="set-voice-style" data-style="tough">Ostry</button>
     </div>
+  </section>`;
+}
+
+function viewMusicSettings() {
+  const enabled = Music.isEnabled();
+  const volume = Music.getVolume();
+  return `
+  <section class="card">
+    <h3>Muzyka motywacyjna</h3>
+    <p class="muted small">Gra w tle podczas treningu (losowa playlista, 25 utworów). Nie zastępuje lektora — możesz mieć oba naraz.</p>
+    <div class="progress-mini-row">
+      <span>Odtwarzaj muzykę podczas treningu</span>
+      <label class="switch"><input type="checkbox" data-action="toggle-music-enabled" ${enabled ? 'checked' : ''}><span class="switch-track"></span></label>
+    </div>
+    <p class="muted small" style="margin-top:10px">Głośność</p>
+    <input type="range" min="0" max="1" step="0.05" value="${volume}" data-action="set-music-volume">
   </section>`;
 }
 
@@ -1599,6 +1626,13 @@ document.addEventListener('click', async e => {
     case 'workout-toggle-voice':
       Voice.setEnabled(!Voice.isEnabled());
       if (activeWorkoutRunner) renderWorkoutBody(activeWorkoutRunner);
+      break;
+    case 'workout-toggle-music':
+      Music.setEnabled(!Music.isEnabled());
+      if (activeWorkoutRunner) renderWorkoutBody(activeWorkoutRunner);
+      break;
+    case 'workout-next-track':
+      Music.next();
       break;
     case 'install-accept':
       document.getElementById('install-banner')?.remove();
@@ -1820,6 +1854,10 @@ document.addEventListener('change', async e => {
   if (e.target.dataset.action === 'toggle-voice-enabled') {
     Voice.setEnabled(e.target.checked);
   }
+  if (e.target.dataset.action === 'toggle-music-enabled') {
+    Music.setEnabled(e.target.checked);
+    if (activeWorkoutRunner) renderWorkoutBody(activeWorkoutRunner);
+  }
   if (e.target.id === 'reminder-enabled' && e.target.checked && 'Notification' in window && Notification.permission === 'default') {
     await Notification.requestPermission();
   }
@@ -1834,6 +1872,9 @@ document.addEventListener('input', e => {
   if (e.target.dataset.action === 'workout-feedback-feeling' && activeWorkoutRunner) {
     activeWorkoutRunner.updateFeedback({ feeling: Number(e.target.value) });
     renderWorkoutBody(activeWorkoutRunner);
+  }
+  if (e.target.dataset.action === 'set-music-volume') {
+    Music.setVolume(Number(e.target.value));
   }
 });
 

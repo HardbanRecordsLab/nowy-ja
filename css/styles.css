@@ -254,7 +254,9 @@ a { color: inherit; text-decoration: none; }
 /* Workout ("Trening teraz") full-screen mode */
 .workout-root { display: flex; flex-direction: column; min-height: calc(100vh - 56px - env(safe-area-inset-top)); padding: 6px 4px 20px; }
 .workout-header { display: flex; align-items: center; justify-content: space-between; padding: 6px 4px 12px; }
+.workout-header-actions { display: flex; gap: 8px; }
 .icon-btn { background: var(--surface); border: 1px solid var(--border); border-radius: 999px; width: 40px; height: 40px; font-size: 1.1rem; cursor: pointer; color: var(--text); }
+.workout-track-label { text-align: center; margin: -4px 0 6px; cursor: pointer; }
 .workout-center { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 20px 10px; }
 .workout-step-label { font-weight: 800; font-size: 1.1rem; letter-spacing: 0.5px; margin: 0; }
 .workout-exercise-name { margin: 10px 0 20px; font-size: 1.6rem; }
