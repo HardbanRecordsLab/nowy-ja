@@ -1319,7 +1319,9 @@ function viewMore(profile) {
   return `
   <h2 class="page-title">Więcej</h2>
   <a class="card list-link" href="#/info">🛡️ Bezpieczeństwo i informacje</a>
-  <a class="card list-link" href="#/settings">⚙️ Profil i ustawienia</a>`;
+  <a class="card list-link" href="#/settings">⚙️ Profil i ustawienia</a>
+  <a class="card list-link" href="polityka-prywatnosci.html">🔒 Polityka prywatności</a>
+  <a class="card list-link" href="regulamin.html">📄 Regulamin</a>`;
 }
 
 function viewSettings(profile) {
