@@ -1163,6 +1163,8 @@ function viewProgress(profile) {
     <p>${completedCount}/60 dni ukończonych (${pct}%) · seria: ${streak} dni</p>
   </section>
 
+  ${viewWeeklySummary(profile)}
+
   <section class="card">
     <h3 style="margin-top:0">Odznaki (${earnedCount}/${badges.length})</h3>
     <div class="badge-grid">
@@ -1173,6 +1175,8 @@ function viewProgress(profile) {
         </div>`).join('')}
     </div>
   </section>
+
+  ${viewSessionHistory(profile)}
 
   <section class="card">
     <h3>Waga</h3>
@@ -1210,6 +1214,63 @@ function viewProgress(profile) {
     <div id="photo-compare" style="margin-top:12px"></div>
     <div id="photo-grid" class="photo-grid" style="margin-top:12px"><p class="muted small">Ładowanie…</p></div>
   </section>`;
+}
+
+function viewWeeklySummary(profile) {
+  const sessions = profile.progress.sessions || [];
+  const weekAgo = Date.now() - 7 * 24 * 60 * 60 * 1000;
+  const thisWeek = sessions.filter(s => s.completedAt >= weekAgo);
+
+  if (!thisWeek.length) {
+    return `
+    <section class="card">
+      <h3 style="margin-top:0">Ten tydzień</h3>
+      <p class="muted small">Brak ukończonych treningów w ostatnich 7 dniach. Każdy trening się liczy — zacznij dziś.</p>
+    </section>`;
+  }
+
+  const avgDifficulty = thisWeek.reduce((s, x) => s + (x.difficulty || 3), 0) / thisWeek.length;
+  const avgFeeling = thisWeek.reduce((s, x) => s + (x.feeling || 3), 0) / thisWeek.length;
+  const painCount = thisWeek.filter(s => s.pain && s.pain !== 'none').length;
+  const totalMinutes = Math.round(thisWeek.reduce((s, x) => s + (x.durationSeconds || 0), 0) / 60);
+
+  return `
+  <section class="card">
+    <h3 style="margin-top:0">Ten tydzień</h3>
+    <div class="week-summary-grid">
+      <div class="week-summary-stat"><strong>${thisWeek.length}</strong><span>${thisWeek.length === 1 ? 'trening' : 'treningi'}</span></div>
+      <div class="week-summary-stat"><strong>${totalMinutes}</strong><span>minut łącznie</span></div>
+      <div class="week-summary-stat"><strong>${avgDifficulty.toFixed(1)}</strong><span>śr. trudność /5</span></div>
+      <div class="week-summary-stat"><strong>${avgFeeling.toFixed(1)}</strong><span>śr. samopoczucie /5</span></div>
+    </div>
+    ${painCount ? `<p class="muted small" style="margin-top:10px">⚠️ Zgłoszono dyskomfort/ból w ${painCount} ${painCount === 1 ? 'treningu' : 'treningach'} w tym tygodniu.</p>` : ''}
+  </section>`;
+}
+
+function viewSessionHistory(profile) {
+  const sessions = [...(profile.progress.sessions || [])].reverse();
+  if (!sessions.length) {
+    return `
+    <section class="card">
+      <h3 style="margin-top:0">Historia treningów</h3>
+      <p class="muted small">Brak zapisanych sesji — pojawią się tutaj po pierwszym ukończonym treningu.</p>
+    </section>`;
+  }
+  return `
+  <section class="card">
+    <h3 style="margin-top:0">Historia treningów (${sessions.length})</h3>
+    <ul class="log-list">
+      ${sessions.map(s => `
+        <li>
+          <strong>Dzień ${s.day}</strong> · ${esc(fmtTimestamp(s.completedAt))} · ${fmtSeconds(s.durationSeconds || 0)}
+          · trudność ${s.difficulty}/5 · samopoczucie ${s.feeling}/5${s.pain && s.pain !== 'none' ? ` · ${esc(painLabel(s.pain))}` : ''}
+        </li>`).join('')}
+    </ul>
+  </section>`;
+}
+
+function fmtTimestamp(ms) {
+  return new Date(ms).toLocaleDateString('pl-PL', { day: 'numeric', month: 'short', year: 'numeric' });
 }
 
 async function loadPhotosInto(profile) {
