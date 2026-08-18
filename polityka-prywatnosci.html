@@ -36,7 +36,7 @@
     <ul>
       <li><strong>Nie ma konta ani rejestracji.</strong> Nie zbieramy loginu, hasła ani adresu e-mail przy korzystaniu z aplikacji.</li>
       <li><strong>Twoje dane zostają wyłącznie na Twoim urządzeniu</strong> — w pamięci przeglądarki (localStorage i IndexedDB). Nie wysyłamy ich na żaden serwer i nie mamy do nich dostępu.</li>
-      <li><strong>Brak reklam, brak plików cookies śledzących, brak analityki i trackerów firm trzecich.</strong></li>
+      <li><strong>Brak reklam i brak plików cookies śledzących.</strong> Używamy wyłącznie Vercel Web Analytics — bezplikowego (bez cookies) narzędzia zbierającego zagregowane, anonimowe statystyki odwiedzin (patrz punkt 5).</li>
       <li>W każdej chwili możesz wyeksportować, zaimportować lub trwale usunąć swoje dane bezpośrednio w aplikacji (Więcej → Profil i ustawienia).</li>
     </ul>
   </section>
@@ -67,6 +67,7 @@
   <section class="card">
     <h2>5. Hosting i dane techniczne</h2>
     <p>Aplikacja jest hostowana na infrastrukturze <strong>Vercel Inc.</strong> Jak każdy serwis internetowy, dostawca hostingu może w ramach standardowego działania CDN przetwarzać podstawowe dane techniczne żądań (adres IP, znacznik czasu, typ przeglądarki) na potrzeby bezpieczeństwa i utrzymania usługi — nie mamy do tych logów bezpośredniego dostępu jako dane osobowe naszych użytkowników, ponieważ aplikacja nie posiada żadnego własnego backendu ani bazy danych. Szczegóły: <a href="https://vercel.com/legal/privacy-policy" target="_blank" rel="noopener">polityka prywatności Vercel</a>.</p>
+    <p>Korzystamy też z <strong>Vercel Web Analytics</strong> — narzędzia analitycznego działającego bez plików cookies i bez identyfikatorów pozwalających rozpoznać konkretną osobę. Zbiera ono wyłącznie zagregowane statystyki ruchu w aplikacji (liczba odwiedzin, przybliżony kraj, typ urządzenia, strona odsyłająca), których nie da się powiązać z danymi profilu czy treningów wpisanymi w aplikacji — te, jak opisano wyżej, w ogóle do nas nie trafiają. Szczegóły: <a href="https://vercel.com/docs/analytics/privacy-policy" target="_blank" rel="noopener">polityka prywatności Vercel Web Analytics</a>.</p>
   </section>
 
   <section class="card">
@@ -95,5 +96,9 @@
     <p>Możemy okazjonalnie aktualizować tę politykę, np. wraz z rozwojem aplikacji. Data ostatniej aktualizacji znajduje się na górze strony. Istotne zmiany będą sygnalizowane w samej aplikacji.</p>
   </section>
 </div>
+<script>
+  window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
+</script>
+<script defer src="/_vercel/insights/script.js"></script>
 </body>
 </html>
