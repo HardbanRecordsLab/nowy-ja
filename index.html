@@ -10,7 +10,7 @@
 <meta name="author" content="Nowa Ja">
 <meta name="robots" content="index, follow">
 <link rel="canonical" href="https://nowa-ja.vercel.app/">
-<meta name="theme-color" content="#1F4E79">
+<meta name="theme-color" content="#3F6B17">
 <link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png">
 <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
@@ -67,36 +67,39 @@ if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
    with color-scheme — see note below).
    ============================================================ */
 :root {
-  --navy: #1F4E79;
-  --gold: #C9A227;
+  /* Sampled directly from logo.png: forest green (the "after" silhouette +
+     "Ja" wordmark) replaces navy, coral-red (the "before" silhouette + arrow)
+     replaces gold — same roles, colors now actually come from the app's logo. */
+  --navy: #3F6B17;
+  --gold: #E8636E;
   --bg: #EAF1F8;
   --surface: #FFFFFF;
   --border: #D7E3F0;
   --text: #14232F;
   --text-muted: #4F6373;
-  /* Darkened gold for gold-colored TEXT on light surfaces (footer wordmark,
-     phase chips) — plain --gold on --bg/--surface fails WCAG AA (~2.1:1).
-     #8A6E12 (a common "darken gold" pick) only reaches ~4.27:1 on --bg,
-     still short of the 4.5:1 text threshold — measured/verified at 5.26:1.
-     Gold-on-navy contexts (panels, buttons) keep the vivid --gold. */
-  --gold-ink: #7A6010;
+  /* Darkened coral for coral-colored TEXT on light surfaces (footer wordmark,
+     phase chips) — plain --gold on --bg/--surface only reaches ~2.9:1, short
+     of the 4.5:1 text threshold — this darker shade measures 5.05:1.
+     Gold/coral-on-navy contexts (panels, buttons) keep the vivid --gold. */
+  --gold-ink: #B5394A;
 
   --radius: 16px;
   --radius-lg: 26px;
-  --shadow: 0 2px 10px rgba(31, 78, 121, 0.10);
+  --shadow: 0 2px 10px rgba(63, 107, 23, 0.10);
   --shadow-lg: 0 24px 48px -14px rgba(20, 35, 47, 0.30);
 
-  /* Fixed deep-navy brand panel (hero / final CTA / showcase).
-     Deliberately NOT redefined under prefers-color-scheme: dark —
-     "deep navy dominant" is the brand's constant, and swapping it to
-     the app's lighter dark-mode --navy (#4D8FC7) would drop hero text
-     contrast below WCAG AA. Panel ink colors are fixed to match. */
-  --panel-a: #1F4E79;
-  --panel-b: #11263C;
+  /* Fixed near-black brand panel (hero / final CTA / showcase) — the same
+     near-black as logo.png's own card background (sampled #0A0F17), not
+     navy blue anymore. Deliberately NOT redefined under prefers-color-scheme:
+     dark — "near-black dominant" is the brand's constant, matching the logo
+     regardless of theme. Panel ink colors are fixed to match; near-black only
+     improves contrast for the light panel-ink text vs. the old navy. */
+  --panel-a: #141B24;
+  --panel-b: #0A0F17;
   --panel-ink: #EAF1F8;
   --panel-ink-muted: #B7CBDE;
-  --panel-bezel-a: #143252;
-  --panel-bezel-b: #091729;
+  --panel-bezel-a: #1C2530;
+  --panel-bezel-b: #05080C;
 
   color-scheme: light dark;
 }
@@ -111,11 +114,11 @@ if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
     --border: #223244;
     --text: #EAF1F8;
     --text-muted: #9DB1C2;
-    --navy: #4D8FC7;
+    --navy: #9AC94A;
     --shadow: 0 2px 10px rgba(0, 0, 0, 0.35);
     --shadow-lg: 0 24px 54px -12px rgba(0, 0, 0, 0.55);
-    /* Vivid gold already clears AA on dark surfaces — no need to darken it. */
-    --gold-ink: #C9A227;
+    /* Vivid coral already clears AA on dark surfaces — no need to darken it. */
+    --gold-ink: #E8636E;
   }
 }
 
@@ -248,12 +251,12 @@ section { position: relative; }
    HEADER + HERO — fixed deep-navy brand panel
    ============================================================ */
 .panel {
-  background: radial-gradient(120% 160% at 15% -10%, #2c5f8f 0%, transparent 55%),
+  background: radial-gradient(120% 160% at 15% -10%, #263540 0%, transparent 55%),
               linear-gradient(160deg, var(--panel-a) 0%, var(--panel-b) 100%);
   color: var(--panel-ink);
 }
 .panel-dark {
-  background: linear-gradient(160deg, var(--panel-b) 0%, #0A1826 100%);
+  background: linear-gradient(160deg, var(--panel-b) 0%, #05080C 100%);
   color: var(--panel-ink);
 }
 
@@ -299,10 +302,10 @@ section { position: relative; }
   width: 620px;
   height: 620px;
   border-radius: 50%;
-  /* A saturated gold radial over deep navy averages toward a murky
-     olive-grey rather than reading as warm light. Lighten the gold toward
-     cream and drop the alpha so it blends as a soft glow, not a stain. */
-  background: radial-gradient(circle, rgba(255, 221, 150, 0.20), transparent 70%);
+  /* A saturated coral radial over near-black averages toward a murky
+     brown-grey rather than reading as warm light. Lighten the coral toward
+     a soft rose and drop the alpha so it blends as a glow, not a stain. */
+  background: radial-gradient(circle, rgba(255, 170, 165, 0.20), transparent 70%);
   filter: blur(10px);
   top: -220px;
   right: -200px;
