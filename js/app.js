@@ -109,6 +109,19 @@ function checkReminder() {
   Store.setReminderSettings({ ...r, lastNotifiedDate: today });
 }
 
+function showBadgeToast(badges) {
+  const el = document.createElement('div');
+  el.className = 'badge-toast';
+  el.innerHTML = badges.map(b => `
+    <div class="badge-toast-row">
+      <span class="badge-toast-icon">${b.icon}</span>
+      <span><strong>Nowa odznaka!</strong><br>${esc(b.name)}</span>
+    </div>`).join('');
+  document.body.appendChild(el);
+  setTimeout(() => el.classList.add('show'), 20);
+  setTimeout(() => { el.classList.remove('show'); setTimeout(() => el.remove(), 400); }, 5000);
+}
+
 function showReminderBanner(text) {
   if (document.getElementById('reminder-banner')) return;
   const el = document.createElement('div');
@@ -379,6 +392,9 @@ function viewToday(profile) {
     <a href="#/progress" class="link">Zobacz postępy →</a>
   </section>
 
+  ${viewReadinessCard(profile)}
+  ${viewDifficultySuggestion(profile)}
+
   <section class="card">
     <h3 style="margin-top:0">🤖 AI Coach</h3>
     <p class="muted" style="margin-bottom:0">${esc(coachTip(info, streak))}</p>
@@ -393,6 +409,36 @@ function viewToday(profile) {
     <a class="quick-link" href="#/schedule"><span class="qi">📅</span>Harmonogram</a>
     <a class="quick-link" href="#/library"><span class="qi">📚</span>Biblioteka ćwiczeń</a>
     <a class="quick-link" href="#/info"><span class="qi">🛡️</span>Bezpieczeństwo</a>
+  </section>`;
+}
+
+function viewReadinessCard(profile) {
+  const score = Store.computeReadiness(profile);
+  const manual = Store.getReadinessInput(profile);
+  const color = score >= 70 ? 'var(--success)' : score >= 45 ? 'var(--gold)' : 'var(--danger)';
+  return `
+  <section class="card">
+    <div class="progress-mini-row">
+      <h3 style="margin:0">Gotowość do treningu</h3>
+      <span style="font-weight:800;font-size:1.4rem;color:${color}">${score}</span>
+    </div>
+    <p class="muted small" style="margin:4px 0 10px">Orientacyjny wskaźnik na podstawie ostatnich treningów i Twojego dzisiejszego samopoczucia — to nie diagnoza medyczna.</p>
+    <p class="muted small" style="margin-bottom:2px">Jak spałaś/eś?</p>
+    <div class="chip-row">${[1, 2, 3, 4, 5].map(n => `<button type="button" class="chip" data-action="set-readiness-sleep" data-value="${n}" style="${manual && manual.sleep === n ? 'background:var(--navy);color:#fff' : ''}">${n}</button>`).join('')}</div>
+    <p class="muted small" style="margin:8px 0 2px">Poziom zakwasów / zmęczenia?</p>
+    <div class="chip-row">${[1, 2, 3, 4, 5].map(n => `<button type="button" class="chip" data-action="set-readiness-soreness" data-value="${n}" style="${manual && manual.soreness === n ? 'background:var(--navy);color:#fff' : ''}">${n}</button>`).join('')}</div>
+  </section>`;
+}
+
+function viewDifficultySuggestion(profile) {
+  const s = Store.computeDifficultySuggestion(profile);
+  if (!s) return '';
+  const label = s.direction === 'easier' ? 'Łatwiej' : 'Trudniej';
+  return `
+  <section class="card" style="border-left:4px solid var(--gold)">
+    <h3 style="margin-top:0">💡 Sugestia dostosowania</h3>
+    <p class="muted" style="margin-bottom:10px">${esc(s.reason)}</p>
+    <button type="button" class="btn small primary" data-action="apply-difficulty-suggestion" data-direction="${s.direction}">Ustaw poziom: ${label}</button>
   </section>`;
 }
 
@@ -413,6 +459,44 @@ function dayTypeLabel(info) {
 }
 
 // ---------- Day detail ----------
+// ---------- "Dostosuj dzisiejszy trening" (szybkie ograniczenia + wolny tekst) ----------
+let workoutConstraints = [];
+
+function hasConstraint(type, part) {
+  return workoutConstraints.some(c => c.type === type && (!part || c.part === part));
+}
+
+function toggleConstraint(type, part) {
+  const idx = workoutConstraints.findIndex(c => c.type === type && (!part || c.part === part));
+  if (idx >= 0) workoutConstraints.splice(idx, 1);
+  else workoutConstraints.push(part ? { type, part } : { type });
+}
+
+const PAIN_PARTS = ['Kolana', 'Biodra', 'Kręgosłup / plecy', 'Barki', 'Nadgarstki'];
+
+function viewConstraintPanel() {
+  return `
+  <details class="card constraint-panel" ${workoutConstraints.length ? 'open' : ''}>
+    <summary>Dostosuj dzisiejszy trening${workoutConstraints.length ? ` <span class="pill">${workoutConstraints.length}</span>` : ''}</summary>
+    <p class="muted small">Zaznacz, jeśli coś dziś inaczej — trening dopasuje się automatycznie.</p>
+    <div class="chip-row">
+      <button type="button" class="chip ${hasConstraint('time') ? 'active' : ''}" data-action="toggle-constraint" data-type="time">⏱️ Mało czasu</button>
+      <button type="button" class="chip ${hasConstraint('equipment') ? 'active' : ''}" data-action="toggle-constraint" data-type="equipment">🚫 Brak sprzętu</button>
+    </div>
+    <p class="muted small" style="margin-top:10px">Boli Cię coś konkretnego?</p>
+    <div class="chip-row">
+      ${PAIN_PARTS.map(p => `<button type="button" class="chip ${hasConstraint('pain', p) ? 'active' : ''}" data-action="toggle-constraint" data-type="pain" data-part="${esc(p)}">${esc(p)}</button>`).join('')}
+    </div>
+    <p class="muted small" style="margin-top:10px">Albo po prostu napisz, co się dzieje:</p>
+    <div class="form-inline" style="align-items:flex-start">
+      <input type="text" id="constraint-text-input" placeholder="np. mam dziś tylko 20 minut">
+      <button type="button" class="btn small primary" data-action="apply-constraint-text">Zastosuj</button>
+    </div>
+    <p class="muted small" style="margin-top:2px">Rozpoznaję kilka typowych sytuacji po polsku — to reguły, nie prawdziwa rozmowa z AI.</p>
+    ${workoutConstraints.length ? `<button type="button" class="btn tiny ghost" data-action="clear-constraints" style="margin-top:6px">Wyczyść wszystko</button>` : ''}
+  </details>`;
+}
+
 function viewDay(profile, day) {
   if (!day || day < 1 || day > 60) return `<div class="empty-state"><p>Nieprawidłowy dzień.</p><a class="link" href="#/schedule">Wróć do harmonogramu</a></div>`;
   const info = getDayInfo(day);
@@ -455,6 +539,8 @@ function viewDay(profile, day) {
     <p class="muted">${esc(info.muscles)}</p>
     ${!info.rest ? `<a class="btn primary big" href="#/workout/${day}">${done ? 'Powtórz w trybie treningu' : 'Rozpocznij trening (tryb prowadzony)'}</a>` : ''}
   </section>
+
+  ${!info.rest ? viewConstraintPanel() : ''}
 
   ${!info.rest ? `<details class="card details-warmup">
     <summary>Rozgrzewka i schłodzenie (przypomnienie)</summary>
@@ -525,23 +611,33 @@ function initWorkout(profile, day) {
     return;
   }
   requestWakeLock();
-  const dayInfo = getDayInfo(day);
+  let dayInfo = getDayInfo(day);
+  const isTimeConstrained = hasConstraint('time');
+  if (isTimeConstrained && dayInfo.circuit) {
+    const rounds = firstIntFrom(dayInfo.rounds, 2);
+    dayInfo = { ...dayInfo, rounds: String(Math.max(1, rounds - 1)) };
+  }
   const steps = buildWorkoutSteps(dayInfo, exByCode);
   const phaseDef = PHASES.find(p => p.id === dayInfo.phase) || PHASES[0];
   const restSeconds = firstIntFrom(phaseDef.restBetween, 45);
 
   activeWorkoutDay = day;
   const startedAt = Date.now();
+  const results = {}; // code -> {setsCompleted, setsTarget, skipped} — last write per exercise wins
   activeWorkoutRunner = new WorkoutRunner({
     dayInfo,
     steps,
     restSeconds,
+    setsReduction: isTimeConstrained ? 1 : 0,
     onLogSet: (code, setsCompleted, setsTarget, skipped) => {
-      // logged into session summary at completion time; per-set granularity not persisted separately in PWA
+      results[code] = { code, setsCompleted, setsTarget, skipped: !!skipped };
     },
     onStateChange: () => renderWorkoutBody(activeWorkoutRunner, day, profile),
   });
   activeWorkoutRunner._day = day;
+  activeWorkoutRunner._results = results;
+  activeWorkoutRunner._equipmentFlag = hasConstraint('equipment');
+  activeWorkoutRunner._painParts = workoutConstraints.filter(c => c.type === 'pain').map(c => c.part);
   activeWorkoutRunner.begin();
   renderWorkoutBody(activeWorkoutRunner, day, profile);
 }
@@ -606,6 +702,33 @@ function announceWorkout(runner) {
   }
 }
 
+const PAIN_PART_TO_GROUPS = {
+  'Kolana': ['B'],
+  'Biodra': ['A', 'B'],
+  'Kręgosłup / plecy': ['A'],
+  'Barki': ['C'],
+  'Nadgarstki': ['C'],
+};
+
+function constraintSuggestionFor(runner, ex) {
+  if (runner._equipmentFlag && /bidon|hantl|taśm/i.test(ex.name + ' ' + ex.steps.join(' '))) {
+    return `
+    <div class="pain-suggestion">
+      <span>🚫 To ćwiczenie zwykle wykorzystuje sprzęt (bidony/hantle/taśmę), którego dziś nie masz.</span>
+      <button type="button" class="btn tiny primary" data-action="workout-swap" data-code="${ex.code}">Zamień</button>
+    </div>`;
+  }
+  const parts = (runner._painParts || []).filter(p => (PAIN_PART_TO_GROUPS[p] || []).includes(ex.group));
+  if (parts.length) {
+    return `
+    <div class="pain-suggestion">
+      <span>😣 Zgłosiłaś/eś dziś: ${esc(parts.join(', '))}. To ćwiczenie może obciążać tę okolicę.</span>
+      <button type="button" class="btn tiny primary" data-action="workout-swap" data-code="${ex.code}">Zamień</button>
+    </div>`;
+  }
+  return '';
+}
+
 function workoutActiveHtml(runner) {
   const s = runner.state;
   const step = runner.currentStep;
@@ -639,9 +762,12 @@ function workoutActiveHtml(runner) {
       <button type="button" class="btn tiny primary" data-action="workout-swap" data-code="${ex.code}">Zamień</button>
     </div>` : '';
 
+  const constraintSuggestion = constraintSuggestionFor(runner, ex);
+
   return `
   <div class="workout-center">
     ${painSuggestion}
+    ${constraintSuggestion}
     <p class="workout-step-label">${headerLine}</p>
     ${subLine ? `<p class="muted">${subLine}</p>` : ''}
     <h2 class="workout-exercise-name">${esc(ex.name.toUpperCase())}</h2>
@@ -859,8 +985,21 @@ async function loadMediaInto(code) {
 }
 
 // ---------- Schedule ----------
+let scheduleViewMode = 'list';
+let calendarMonthOffset = 0;
+
 function viewSchedule(profile) {
   const completed = new Set(profile.progress.completedDays);
+  const toggle = `
+  <div class="chip-row" style="margin-bottom:12px">
+    <button type="button" class="chip ${scheduleViewMode === 'list' ? 'active' : ''}" data-action="set-schedule-view" data-mode="list">Lista</button>
+    <button type="button" class="chip ${scheduleViewMode === 'calendar' ? 'active' : ''}" data-action="set-schedule-view" data-mode="calendar">Kalendarz</button>
+  </div>`;
+
+  if (scheduleViewMode === 'calendar') {
+    return `<h2 class="page-title">Harmonogram 60 dni</h2>${toggle}${viewCalendarMonth(profile)}`;
+  }
+
   const groups = PHASES.map(ph => {
     const rows = [];
     for (let d = ph.range[0]; d <= ph.range[1]; d++) {
@@ -879,7 +1018,69 @@ function viewSchedule(profile) {
       <div class="schedule-list">${rows.join('')}</div>
     </details>`;
   });
-  return `<h2 class="page-title">Harmonogram 60 dni</h2>${groups.join('')}`;
+  return `<h2 class="page-title">Harmonogram 60 dni</h2>${toggle}${groups.join('')}`;
+}
+
+function viewCalendarMonth(profile) {
+  const completed = new Set(profile.progress.completedDays);
+  const start = new Date(profile.startDate + 'T00:00:00');
+
+  const base = new Date();
+  base.setDate(1);
+  base.setMonth(base.getMonth() + calendarMonthOffset);
+  const year = base.getFullYear();
+  const month = base.getMonth();
+
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
+  let startWeekday = new Date(year, month, 1).getDay();
+  startWeekday = (startWeekday + 6) % 7; // 0=Pn..6=Nd
+
+  const monthLabel = base.toLocaleDateString('pl-PL', { month: 'long', year: 'numeric' });
+  const todayStr = new Date().toISOString().slice(0, 10);
+  const startOfToday = new Date(); startOfToday.setHours(0, 0, 0, 0);
+
+  let cells = '';
+  for (let i = 0; i < startWeekday; i++) cells += `<div class="cal-cell empty"></div>`;
+
+  for (let d = 1; d <= daysInMonth; d++) {
+    const cellDate = new Date(year, month, d);
+    const cellDateStr = cellDate.toISOString().slice(0, 10);
+    const programDay = Math.floor((cellDate - start) / 86400000) + 1;
+    const inProgram = programDay >= 1 && programDay <= 60;
+
+    if (!inProgram) { cells += `<div class="cal-cell outside"><span class="cal-daynum">${d}</span></div>`; continue; }
+
+    const info = getDayInfo(programDay);
+    let statusClass, dot;
+    if (completed.has(programDay)) { statusClass = 'cal-done'; dot = '🟢'; }
+    else if (cellDateStr === todayStr) { statusClass = 'cal-today'; dot = '🔵'; }
+    else if (cellDate < startOfToday) { statusClass = info.rest ? 'cal-future' : 'cal-missed'; dot = info.rest ? '⚪' : '🔴'; }
+    else { statusClass = 'cal-future'; dot = '⚪'; }
+
+    cells += `<a class="cal-cell ${statusClass}" href="#/day/${programDay}">
+      <span class="cal-daynum">${d}</span>
+      <span class="cal-dot">${dot}</span>
+    </a>`;
+  }
+
+  const trailing = (7 - ((startWeekday + daysInMonth) % 7)) % 7;
+  for (let i = 0; i < trailing; i++) cells += `<div class="cal-cell empty"></div>`;
+
+  return `
+  <section class="card">
+    <div class="cal-header">
+      <button type="button" class="icon-btn" data-action="cal-prev" aria-label="Poprzedni miesiąc">‹</button>
+      <strong>${monthLabel.charAt(0).toUpperCase() + monthLabel.slice(1)}</strong>
+      <button type="button" class="icon-btn" data-action="cal-next" aria-label="Następny miesiąc">›</button>
+    </div>
+    <div class="cal-grid cal-weekdays">
+      <span>Pn</span><span>Wt</span><span>Śr</span><span>Cz</span><span>Pt</span><span>So</span><span>Nd</span>
+    </div>
+    <div class="cal-grid">${cells}</div>
+    <div class="cal-legend">
+      <span>🟢 wykonany</span><span>🔵 dziś</span><span>🔴 pominięty</span><span>⚪ zaplanowany / odpoczynek</span>
+    </div>
+  </section>`;
 }
 
 // ---------- Library ----------
@@ -930,11 +1131,25 @@ function viewProgress(profile) {
   const measureRows = [...p.measurements].reverse().slice(0, 8);
   const sparkline = weightSparkline(p.weightLog);
 
+  const badges = Store.getBadges(profile);
+  const earnedCount = badges.filter(b => b.earned).length;
+
   return `
   <h2 class="page-title">Postępy</h2>
   <section class="card">
     <div class="progress-bar"><div class="progress-bar-fill" style="width:${pct}%"></div></div>
     <p>${completedCount}/60 dni ukończonych (${pct}%) · seria: ${streak} dni</p>
+  </section>
+
+  <section class="card">
+    <h3 style="margin-top:0">Odznaki (${earnedCount}/${badges.length})</h3>
+    <div class="badge-grid">
+      ${badges.map(b => `
+        <div class="badge-item ${b.earned ? 'earned' : ''}" title="${esc(b.desc)}">
+          <span class="badge-item-icon">${b.icon}</span>
+          <span class="badge-item-name">${esc(b.name)}</span>
+        </div>`).join('')}
+    </div>
   </section>
 
   <section class="card">
@@ -1305,6 +1520,57 @@ document.addEventListener('click', async e => {
       break;
     }
     case 'toggle-ex': break; // handled by change event
+    case 'toggle-constraint':
+      toggleConstraint(target.dataset.type, target.dataset.part);
+      render();
+      break;
+    case 'apply-constraint-text': {
+      const input = document.getElementById('constraint-text-input');
+      const found = parseConstraintText(input?.value || '');
+      if (!found.length) {
+        alert('Nie rozpoznałam nic konkretnego w tym tekście — spróbuj np. "mało czasu", "brak hantli" albo wybierz chipy poniżej.');
+        break;
+      }
+      found.forEach(c => {
+        const exists = workoutConstraints.some(x => x.type === c.type && x.part === c.part);
+        if (!exists) workoutConstraints.push(c);
+      });
+      if (input) input.value = '';
+      render();
+      break;
+    }
+    case 'clear-constraints':
+      workoutConstraints = [];
+      render();
+      break;
+    case 'set-readiness-sleep': {
+      const manual = Store.getReadinessInput(profile) || { sleep: 3, soreness: 3 };
+      Store.setReadinessInput(profile.id, Number(target.dataset.value), manual.soreness);
+      render();
+      break;
+    }
+    case 'set-readiness-soreness': {
+      const manual = Store.getReadinessInput(profile) || { sleep: 3, soreness: 3 };
+      Store.setReadinessInput(profile.id, manual.sleep, Number(target.dataset.value));
+      render();
+      break;
+    }
+    case 'apply-difficulty-suggestion':
+      Store.updateProfile(profile.id, { difficultyPreference: target.dataset.direction === 'easier' ? 'easier' : 'harder' });
+      render();
+      break;
+    case 'set-schedule-view':
+      scheduleViewMode = target.dataset.mode === 'calendar' ? 'calendar' : 'list';
+      render();
+      break;
+    case 'cal-prev':
+      calendarMonthOffset -= 1;
+      render();
+      break;
+    case 'cal-next':
+      calendarMonthOffset += 1;
+      render();
+      break;
     case 'onboard-next': {
       const form = document.getElementById('form-onboard');
       showOnboardStep(form, Number(form.dataset.step) + 1);
@@ -1377,8 +1643,11 @@ document.addEventListener('click', async e => {
       Store.recordSession(profile.id, {
         day, durationSeconds: activeWorkoutRunner.elapsedSeconds(),
         difficulty: f.difficulty, feeling: f.feeling, pain: f.pain,
+        exercises: Object.values(activeWorkoutRunner._results || {}),
       });
+      const newBadges = Store.checkNewBadges(profile.id);
       exitWorkout();
+      if (newBadges.length) showBadgeToast(newBadges);
       break;
     }
     case 'start-timer':

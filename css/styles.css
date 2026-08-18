@@ -526,3 +526,67 @@ a { color: inherit; text-decoration: none; }
 @media (min-width: 480px) {
   .lib-grid { grid-template-columns: 1fr 1fr 1fr; }
 }
+
+/* ---------- Constraint panel ("mało czasu / ból / brak sprzętu") ---------- */
+.constraint-panel { padding: 10px 16px; }
+.constraint-panel summary { cursor: pointer; font-weight: 700; padding: 6px 0; list-style: none; display: flex; align-items: center; gap: 8px; }
+.constraint-panel summary::-webkit-details-marker { display: none; }
+.constraint-panel summary::before { content: '⚙️'; font-size: 1rem; }
+.constraint-panel[open] summary { margin-bottom: 4px; }
+.constraint-panel #constraint-text-input {
+  padding: 10px 12px; border-radius: 10px; border: 1px solid var(--border);
+  background: var(--bg); color: var(--text); font-size: 0.9rem;
+}
+
+/* ---------- Badge toast ---------- */
+.badge-toast {
+  position: fixed; left: 50%; bottom: 90px; transform: translateX(-50%) translateY(12px);
+  background: var(--surface); border: 1px solid var(--gold); border-radius: 14px;
+  box-shadow: var(--shadow); padding: 12px 16px; z-index: 60; max-width: 340px; width: calc(100% - 32px);
+  opacity: 0; transition: opacity 0.25s ease-out, transform 0.25s ease-out;
+}
+.badge-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+.badge-toast-row { display: flex; align-items: center; gap: 10px; padding: 4px 0; }
+.badge-toast-icon { font-size: 1.6rem; flex-shrink: 0; }
+.badge-toast-row strong { display: block; font-size: 0.88rem; }
+.badge-toast-row span { display: block; font-size: 0.76rem; color: var(--text-muted); }
+
+/* ---------- Badges grid (Postępy) ---------- */
+.badge-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(78px, 1fr)); gap: 10px; margin-top: 10px; }
+.badge-item { text-align: center; padding: 10px 4px; border-radius: 12px; background: var(--bg); opacity: 0.4; }
+.badge-item.earned { opacity: 1; background: linear-gradient(160deg, rgba(201,162,39,0.15), transparent); }
+.badge-item-icon { font-size: 1.6rem; }
+.badge-item-name { font-size: 0.68rem; margin-top: 4px; color: var(--text-muted); line-height: 1.2; }
+.badge-item.earned .badge-item-name { color: var(--text); font-weight: 600; }
+
+/* ---------- Readiness / difficulty suggestion cards ---------- */
+.readiness-score { display: flex; align-items: baseline; gap: 6px; margin: 4px 0 8px; }
+.readiness-score strong { font-size: 2.2rem; color: var(--navy); line-height: 1; }
+[data-theme="dark"] .readiness-score strong, [data-theme="auto"] .readiness-score strong { color: var(--gold); }
+.readiness-score span { color: var(--text-muted); font-size: 0.85rem; }
+.readiness-inputs { display: flex; flex-direction: column; gap: 8px; margin-top: 10px; }
+.readiness-input-row { display: flex; align-items: center; gap: 8px; }
+.readiness-input-row label { font-size: 0.82rem; color: var(--text-muted); min-width: 78px; }
+.readiness-input-row .chip-row { margin-top: 0; }
+.suggestion-card { border-left: 4px solid var(--gold); }
+.suggestion-card .btn { margin-top: 8px; }
+
+/* ---------- Calendar (Plan) ---------- */
+.cal-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+.cal-header strong { text-transform: capitalize; }
+.cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
+.cal-weekdays { margin-bottom: 4px; text-align: center; font-size: 0.72rem; color: var(--text-muted); font-weight: 700; }
+.cal-cell {
+  aspect-ratio: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 2px; border-radius: 10px; background: var(--bg); text-decoration: none; color: var(--text);
+  font-size: 0.78rem;
+}
+.cal-cell.empty, .cal-cell.outside { background: none; color: var(--text-muted); opacity: 0.4; }
+.cal-daynum { font-weight: 700; }
+.cal-dot { font-size: 0.7rem; line-height: 1; }
+.cal-cell.cal-done { background: rgba(47, 143, 78, 0.16); }
+.cal-cell.cal-today { background: rgba(31, 78, 121, 0.16); outline: 2px solid var(--navy); }
+[data-theme="dark"] .cal-cell.cal-today, [data-theme="auto"] .cal-cell.cal-today { outline-color: var(--gold); }
+.cal-cell.cal-missed { background: rgba(192, 57, 43, 0.14); }
+.cal-cell.cal-future { background: var(--bg); }
+.cal-legend { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 12px; font-size: 0.72rem; color: var(--text-muted); }

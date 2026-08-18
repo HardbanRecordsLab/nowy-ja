@@ -146,6 +146,105 @@ const Store = (() => {
     return streak;
   }
 
+  // ---------- Gamifikacja ----------
+  const BADGES = [
+    { id: 'first_day', icon: '🎉', name: 'Pierwszy krok', desc: 'Ukończ pierwszy dzień programu', check: p => p.progress.completedDays.length >= 1 },
+    { id: 'streak_3', icon: '🔥', name: '3 dni z rzędu', desc: 'Utrzymaj serię 3 dni', check: p => currentStreak(p) >= 3 },
+    { id: 'streak_7', icon: '🔥', name: 'Tydzień w ogniu', desc: 'Seria 7 dni z rzędu', check: p => currentStreak(p) >= 7 },
+    { id: 'streak_14', icon: '⚡', name: '2 tygodnie nonstop', desc: 'Seria 14 dni z rzędu', check: p => currentStreak(p) >= 14 },
+    { id: 'quarter', icon: '🥉', name: '25% za Tobą', desc: 'Ukończ 15 dni programu', check: p => p.progress.completedDays.length >= 15 },
+    { id: 'half', icon: '🥈', name: 'Połowa drogi', desc: 'Ukończ 30 dni programu', check: p => p.progress.completedDays.length >= 30 },
+    { id: 'three_quarter', icon: '🥇', name: '75% za Tobą', desc: 'Ukończ 45 dni programu', check: p => p.progress.completedDays.length >= 45 },
+    { id: 'finisher', icon: '🏆', name: 'Program ukończony!', desc: 'Ukończ wszystkie 60 dni', check: p => p.progress.completedDays.length >= 60 },
+    { id: 'five_sessions', icon: '💪', name: '5 treningów', desc: 'Zapisz 5 sesji treningowych', check: p => (p.progress.sessions || []).length >= 5 },
+    { id: 'ten_sessions', icon: '💪', name: '10 treningów', desc: 'Zapisz 10 sesji treningowych', check: p => (p.progress.sessions || []).length >= 10 },
+    { id: 'first_measurement', icon: '📏', name: 'Pierwszy pomiar', desc: 'Zapisz pierwszy pomiar sylwetki', check: p => (p.progress.measurements || []).length >= 1 },
+  ];
+
+  function checkNewBadges(profileId) {
+    const profiles = getProfiles();
+    const p = profiles.find(x => x.id === profileId);
+    if (!p) return [];
+    if (!p.progress.badges) p.progress.badges = [];
+    const earned = new Set(p.progress.badges);
+    const newly = [];
+    for (const b of BADGES) {
+      if (!earned.has(b.id) && b.check(p)) { earned.add(b.id); newly.push(b); }
+    }
+    if (newly.length) { p.progress.badges = Array.from(earned); saveProfiles(profiles); }
+    return newly;
+  }
+
+  function getBadges(profile) {
+    const earned = new Set(profile.progress.badges || []);
+    return BADGES.map(b => ({ ...b, earned: earned.has(b.id) }));
+  }
+
+  // ---------- Gotowość (regeneracja) ----------
+  // Orientacyjny wskaźnik, NIE diagnoza medyczna — łączy realne dane z treningów
+  // (trudność/samopoczucie/ból z ostatnich sesji) z opcjonalnym ręcznym wpisem snu/zakwasów,
+  // ponieważ PWA nie ma dostępu do Health Connect / danych z zegarka.
+  function computeReadiness(profile) {
+    let score = 78; // neutralny punkt startowy zanim zbierzemy jakiekolwiek dane
+    const sessions = (profile.progress.sessions || []).slice(-5);
+    if (sessions.length) {
+      const avgDifficulty = sessions.reduce((s, x) => s + (x.difficulty || 3), 0) / sessions.length;
+      const avgFeeling = sessions.reduce((s, x) => s + (x.feeling || 3), 0) / sessions.length;
+      const painCount = sessions.filter(s => s.pain && s.pain !== 'none').length;
+      score = 82 - (avgDifficulty - 3) * 7 + (avgFeeling - 3) * 6 - painCount * 10;
+    }
+    const manual = getReadinessInput(profile);
+    if (manual) {
+      score += (manual.sleep - 3) * 6;
+      score -= (manual.soreness - 1) * 5;
+    }
+    return Math.max(0, Math.min(100, Math.round(score)));
+  }
+
+  function setReadinessInput(profileId, sleep, soreness) {
+    const profiles = getProfiles();
+    const p = profiles.find(x => x.id === profileId);
+    if (!p) return;
+    if (!p.progress.readinessInputs) p.progress.readinessInputs = {};
+    p.progress.readinessInputs[new Date().toISOString().slice(0, 10)] = { sleep, soreness };
+    saveProfiles(profiles);
+  }
+
+  function getReadinessInput(profile) {
+    const today = new Date().toISOString().slice(0, 10);
+    return (profile.progress.readinessInputs && profile.progress.readinessInputs[today]) || null;
+  }
+
+  // ---------- Adaptacja poziomu trudności ----------
+  // Prosta, przejrzysta reguła (nie "czarna skrzynka") oparta o ostatnie 3-5 sesji.
+  function computeDifficultySuggestion(profile) {
+    const sessions = (profile.progress.sessions || []).slice(-5);
+    if (sessions.length < 3) return null;
+    const avgDifficulty = sessions.reduce((s, x) => s + (x.difficulty || 3), 0) / sessions.length;
+    const avgFeeling = sessions.reduce((s, x) => s + (x.feeling || 3), 0) / sessions.length;
+    const painCount = sessions.filter(s => s.pain && s.pain !== 'none').length;
+    const completionRates = sessions.map(s => {
+      const ex = s.exercises || [];
+      if (!ex.length) return 1;
+      const done = ex.filter(e => !e.skipped && e.setsCompleted >= e.setsTarget).length;
+      return done / ex.length;
+    });
+    const avgCompletion = completionRates.reduce((a, b) => a + b, 0) / completionRates.length;
+
+    if (profile.difficultyPreference !== 'easier' && (painCount >= 2 || (avgDifficulty >= 4.3 && avgCompletion < 0.75))) {
+      return {
+        direction: 'easier',
+        reason: painCount >= 2
+          ? 'Ostatnio kilka razy zgłaszałaś/eś dyskomfort w trakcie treningu.'
+          : 'Ostatnie treningi oceniasz jako bardzo trudne i nie zawsze kończysz wszystkie serie.'
+      };
+    }
+    if (profile.difficultyPreference !== 'harder' && avgDifficulty <= 2.2 && avgFeeling >= 4 && avgCompletion >= 0.95 && painCount === 0) {
+      return { direction: 'harder', reason: 'Ostatnie treningi kończysz bez trudności i czujesz się świetnie — możesz dodać sobie wyzwania.' };
+    }
+    return null;
+  }
+
   // Personalizacja: liczymy ile razy ból zgłoszono przy danym ćwiczeniu, żeby po 2. razie
   // zaproponować zamiennik — prosta reguła zamiast pełnego "Personalization Engine".
   function logExercisePain(profileId, exerciseCode) {
@@ -191,6 +290,9 @@ const Store = (() => {
     currentDayNumber, toggleDayComplete, setExerciseChecks, getExerciseChecks,
     addMeasurement, addWeight, recordSession, getLastSession, currentStreak,
     logExercisePain, getExercisePainCount,
+    checkNewBadges, getBadges,
+    computeReadiness, setReadinessInput, getReadinessInput,
+    computeDifficultySuggestion,
     getReminderSettings, setReminderSettings,
     getTheme, setTheme, exportData, importData
   };

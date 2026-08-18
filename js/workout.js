@@ -38,6 +38,46 @@ function firstInt(text, fallback) {
   return m ? parseInt(m[0], 10) : fallback;
 }
 
+// ---------- "Napisz co się dzieje" — dopasowanie wzorców, NIE prawdziwe rozumienie języka ----------
+// Świadomy kompromis: bez serwera i płatnego API nie da się bezpiecznie wywołać modelu
+// językowego z czystego JS w przeglądarce. To rozpoznaje typowe, udokumentowane sytuacje
+// (mało czasu / brak sprzętu / ból konkretnej okolicy / zmęczenie) i odpala TĘ SAMĄ logikę
+// co przyciski szybkiego wyboru — więc działa przewidywalnie, za darmo i natychmiast.
+const PAIN_KEYWORDS = [
+  { kw: /kolan/i, label: 'Kolana' },
+  { kw: /biodr/i, label: 'Biodra' },
+  { kw: /(plec|kręgosłup|krzyż)/i, label: 'Kręgosłup / plecy' },
+  { kw: /bark/i, label: 'Barki' },
+  { kw: /nadgarst/i, label: 'Nadgarstki' },
+];
+
+function parseConstraintText(text) {
+  const t = (text || '').toLowerCase();
+  const constraints = [];
+
+  const timeMatch = t.match(/(\d+)\s*min/);
+  if (timeMatch || /\b(mało czasu|niewiele czasu|na szybko|w pośpiechu|nie mam czasu)\b/.test(t)) {
+    constraints.push({ type: 'time', minutes: timeMatch ? parseInt(timeMatch[1], 10) : null });
+  }
+
+  if (/\b(nie mam|brak)\b[^.!?]{0,25}\b(hantl|bidon|taśm|sprzęt|krzesł|schod|stopni|ścian)/.test(t)
+    || /\b(hantl|bidon|taśm)\w*[^.!?]{0,15}\b(nie mam|brak)\b/.test(t)) {
+    constraints.push({ type: 'equipment' });
+  }
+
+  for (const { kw, label } of PAIN_KEYWORDS) {
+    if (kw.test(t) && /\b(bol|ból|boli|obolał|dyskomfort)/.test(t)) {
+      constraints.push({ type: 'pain', part: label });
+    }
+  }
+
+  if (/\b(ciężki trening|bardzo zmęczon|wyczerpując|nie doszed[łl]em do siebie)\b/.test(t) && !constraints.some(c => c.type === 'pain')) {
+    constraints.push({ type: 'fatigue' });
+  }
+
+  return constraints;
+}
+
 // Zbuduj listę kroków treningu (ćwiczenia sekwencyjne, albo stacje×rundy dla dni obwodowych).
 function buildWorkoutSteps(dayInfo, exByCode) {
   if (dayInfo.rest) return [];
@@ -64,12 +104,13 @@ const PREP_SECONDS = 3;
 const DEFAULT_REST_SECONDS = 45;
 
 class WorkoutRunner {
-  constructor({ dayInfo, steps, restSeconds, stationRestSeconds, roundRestSeconds, onLogSet, onStateChange }) {
+  constructor({ dayInfo, steps, restSeconds, stationRestSeconds, roundRestSeconds, setsReduction, onLogSet, onStateChange }) {
     this.dayInfo = dayInfo;
     this.steps = steps;
     this.restSeconds = restSeconds || DEFAULT_REST_SECONDS;
     this.stationRestSeconds = stationRestSeconds || 25;
     this.roundRestSeconds = roundRestSeconds || 75;
+    this.setsReduction = setsReduction || 0; // "Mało czasu": ile serii mniej niż standardowo (min. 1 seria zostaje)
     this.onLogSet = onLogSet || (() => {});
     this.onStateChange = onStateChange || (() => {});
     this.startedAt = Date.now();
@@ -99,9 +140,10 @@ class WorkoutRunner {
     const phase = this.dayInfo.phase;
     const spec = parseReps(step.exercise.reps['faza' + phase]);
     this._currentSpec = spec;
+    const totalSets = this.isCircuit ? 1 : Math.max(1, spec.sets - this.setsReduction);
     this._setState({
       currentSet: 1,
-      totalSets: this.isCircuit ? 1 : spec.sets,
+      totalSets,
       isTimed: spec.isTimed,
       stage: STAGE.COUNTDOWN,
     });
