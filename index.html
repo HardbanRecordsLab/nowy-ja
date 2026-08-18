@@ -267,6 +267,9 @@ section { position: relative; }
   gap: 16px;
 }
 .brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
   font-weight: 800;
   font-size: 1.2rem;
   letter-spacing: 0.2px;
@@ -274,6 +277,7 @@ section { position: relative; }
   color: var(--panel-ink);
 }
 .brand span { color: var(--gold); }
+.brand-logo { width: 36px; height: 36px; border-radius: 9px; display: block; }
 
 .hero {
   padding-top: clamp(28px, 6vw, 56px);
@@ -738,8 +742,9 @@ section { position: relative; }
    ============================================================ */
 .site-footer { padding-block: 56px; border-top: 1px solid var(--border); }
 .footer-inner { text-align: center; }
-.footer-brand { font-weight: 800; font-size: 1.1rem; margin-bottom: 10px; }
+.footer-brand { display: flex; align-items: center; justify-content: center; gap: 8px; font-weight: 800; font-size: 1.1rem; margin-bottom: 10px; }
 .footer-brand span { color: var(--gold-ink); }
+.footer-brand img { width: 28px; height: 28px; border-radius: 7px; display: block; }
 .footer-tag { color: var(--text-muted); font-size: 0.92rem; max-width: 46ch; margin: 0 auto 14px; }
 .footer-link {
   color: var(--navy);
@@ -844,7 +849,7 @@ html.js-reveal .reveal.is-visible {
 <div class="panel">
   <header class="site-header">
     <div class="wrap header-inner">
-      <a href="app.html" class="brand">Nowa <span>Ja</span></a>
+      <a href="app.html" class="brand"><img src="icons/icon-192.png" alt="" class="brand-logo">Nowa <span>Ja</span></a>
       <a href="app.html" class="btn btn-outline">Otwórz aplikację</a>
     </div>
   </header>
@@ -1073,7 +1078,7 @@ html.js-reveal .reveal.is-visible {
 
 <footer class="site-footer">
   <div class="wrap footer-inner">
-    <div class="footer-brand">Nowa <span>Ja</span></div>
+    <div class="footer-brand"><img src="icons/icon-192.png" alt="">Nowa <span>Ja</span></div>
     <p class="footer-tag">Darmowy, 60-dniowy program treningowy w domu — zbudowany jako osobisty projekt.</p>
     <a href="https://github.com/HardbanRecordsLab/nowa-ja" class="footer-link" target="_blank" rel="noopener">
       Zobacz kod na GitHubie
