@@ -1036,7 +1036,6 @@ function viewCalendarMonth(profile) {
   startWeekday = (startWeekday + 6) % 7; // 0=Pn..6=Nd
 
   const monthLabel = base.toLocaleDateString('pl-PL', { month: 'long', year: 'numeric' });
-  const todayStr = new Date().toISOString().slice(0, 10);
   const startOfToday = new Date(); startOfToday.setHours(0, 0, 0, 0);
 
   let cells = '';
@@ -1044,7 +1043,6 @@ function viewCalendarMonth(profile) {
 
   for (let d = 1; d <= daysInMonth; d++) {
     const cellDate = new Date(year, month, d);
-    const cellDateStr = cellDate.toISOString().slice(0, 10);
     const programDay = Math.floor((cellDate - start) / 86400000) + 1;
     const inProgram = programDay >= 1 && programDay <= 60;
 
@@ -1053,7 +1051,7 @@ function viewCalendarMonth(profile) {
     const info = getDayInfo(programDay);
     let statusClass, dot;
     if (completed.has(programDay)) { statusClass = 'cal-done'; dot = '🟢'; }
-    else if (cellDateStr === todayStr) { statusClass = 'cal-today'; dot = '🔵'; }
+    else if (cellDate.getTime() === startOfToday.getTime()) { statusClass = 'cal-today'; dot = '🔵'; }
     else if (cellDate < startOfToday) { statusClass = info.rest ? 'cal-future' : 'cal-missed'; dot = info.rest ? '⚪' : '🔴'; }
     else { statusClass = 'cal-future'; dot = '⚪'; }
 
