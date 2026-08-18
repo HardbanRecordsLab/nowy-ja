@@ -898,6 +898,7 @@ function viewExercise(profile, code) {
 
   <section class="card media-card">
     <h3>Wideo instruktażowe</h3>
+    <p class="muted small">Wideo jest wyciszone — puść je, a darmowy lektor przeczyta na głos instrukcje wykonania.</p>
     <div class="media-slot" id="media-video-${ex.code}" data-code="${ex.code}" data-kind="video">
       <div class="media-placeholder">Brak wideo</div>
     </div>
@@ -949,6 +950,18 @@ function groupLabel(g) {
 
 const activeFlipbookIntervals = {};
 
+// Filmiki są wyciszone (bez oryginalnego, generowanego przez AI dźwięku) — w zamian
+// darmowy lektor (ten sam Web Speech API co w treningu) czyta instrukcje wykonania na głos.
+function wireVideoNarration(video, code) {
+  if (!video) return;
+  const ex = exByCode[code];
+  if (!ex || !ex.steps || !ex.steps.length) return;
+  const text = ex.steps.join('. ');
+  video.addEventListener('play', () => Voice.speak(text, { interrupt: true }));
+  video.addEventListener('pause', () => Voice.stop());
+  video.addEventListener('ended', () => Voice.stop());
+}
+
 async function loadMediaInto(code) {
   for (const kind of ['image', 'video']) {
     const slot = document.getElementById(`media-${kind}-${code}`);
@@ -957,13 +970,14 @@ async function loadMediaInto(code) {
     if (url) {
       slot.innerHTML = kind === 'image'
         ? `<img src="${url}" alt="Infografika ${esc(code)}">`
-        : `<video src="${url}" controls playsinline></video>`;
+        : `<video src="${url}" muted controls playsinline></video>`;
     } else {
       const localPath = `assets/exercises/${code}.${kind === 'image' ? 'png' : 'mp4'}`;
       slot.innerHTML = kind === 'image'
         ? `<img src="${localPath}" alt="Infografika ${esc(code)}" onerror="this.parentElement.innerHTML='<div class=\\'media-placeholder\\'>Brak infografiki — użyj promptu AI poniżej</div>'">`
-        : `<video src="${localPath}" controls playsinline onerror="this.parentElement.innerHTML='<div class=\\'media-placeholder\\'>Brak wideo — użyj promptu AI poniżej</div>'"></video>`;
+        : `<video src="${localPath}" muted controls playsinline onerror="this.parentElement.innerHTML='<div class=\\'media-placeholder\\'>Brak wideo — użyj promptu AI poniżej</div>'"></video>`;
     }
+    if (kind === 'video') wireVideoNarration(slot.querySelector('video'), code);
   }
 
   const framesSlot = document.getElementById(`media-frames-${code}`);
