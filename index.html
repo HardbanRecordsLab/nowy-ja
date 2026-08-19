@@ -566,42 +566,6 @@ section { position: relative; }
 .phase-chips .arrow { color: var(--text-muted); font-size: 0.78rem; }
 
 /* ============================================================
-   INTRO VIDEO — teaser card, swapped for a real <video> once produced
-   ============================================================ */
-.intro-video { padding-block: 100px; background: var(--bg); }
-.video-teaser {
-  position: relative;
-  max-width: 760px;
-  margin: 40px auto 0;
-  border-radius: var(--radius-lg);
-  overflow: hidden;
-  box-shadow: var(--shadow-lg);
-  aspect-ratio: 16 / 9;
-  background: #0A0F17;
-}
-.video-teaser-poster { width: 100%; height: 100%; object-fit: cover; display: block; opacity: 0.55; }
-.video-teaser-play {
-  position: absolute; inset: 0; margin: auto;
-  width: 84px; height: 84px;
-  border-radius: 50%;
-  border: none;
-  background: color-mix(in srgb, var(--gold) 92%, white 8%);
-  color: #2A0A0E;
-  display: flex; align-items: center; justify-content: center;
-  cursor: not-allowed;
-}
-.video-teaser-play svg { width: 34px; height: 34px; margin-left: 4px; }
-.video-teaser-badge {
-  position: absolute; left: 20px; bottom: 18px;
-  background: rgba(10, 15, 23, 0.75);
-  color: #fff;
-  font-size: 0.8rem;
-  font-weight: 700;
-  padding: 6px 14px;
-  border-radius: 999px;
-}
-
-/* ============================================================
    SAFETY / TRUST
    ============================================================ */
 .safety { padding-block: 100px; background: var(--surface); }
@@ -883,24 +847,6 @@ html.js-reveal .reveal.is-visible {
     </div>
   </section>
 
-  <section class="intro-video" id="poznaj">
-    <div class="wrap">
-      <header class="section-head reveal">
-        <p class="eyebrow">60 sekund</p>
-        <h2>Zanim zaczniesz — posłuchaj, o co tu chodzi.</h2>
-        <p class="section-sub">Krótkie wprowadzenie: dla kogo jest ten program i czego się po nim spodziewać.</p>
-      </header>
-      <!-- Placeholder do podmiany na <video controls poster="assets/video/poster.jpg"><source src="assets/video/wprowadzenie.mp4" type="video/mp4"></video>
-           gdy plik będzie gotowy — patrz skrypt w wiadomości czatu. -->
-      <div class="video-teaser reveal reveal-delay-1">
-        <img src="assets/og-image.png" alt="Nowa Ja — zapowiedź wideo wprowadzającego" class="video-teaser-poster">
-        <button type="button" class="video-teaser-play" aria-label="Odtwórz wideo wprowadzające" disabled>
-          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7Z"/></svg>
-        </button>
-        <span class="video-teaser-badge">Wideo w przygotowaniu</span>
-      </div>
-    </div>
-  </section>
 
   <section class="safety">
     <div class="wrap">
