@@ -152,7 +152,7 @@ a { color: inherit; }
   left: -999px;
   top: 0;
   background: var(--gold);
-  color: #2A2205;
+  color: #2A0A0E;
   padding: 10px 16px;
   border-radius: 0 0 10px 0;
   font-weight: 700;
@@ -215,7 +215,7 @@ section { position: relative; }
 }
 .btn-primary {
   background: var(--gold);
-  color: #2A2205;
+  color: #2A0A0E;
   box-shadow: 0 10px 24px -8px rgba(201, 162, 39, 0.55);
 }
 .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 14px 30px -8px rgba(201, 162, 39, 0.65); }
@@ -378,69 +378,6 @@ section { position: relative; }
   flex-wrap: wrap;
 }
 
-/* --- product frames: browser-window chrome ---
-   The real screenshots are 1264×625 landscape (desktop/tablet browser
-   captures, not phone captures), so the chrome mimics a browser window —
-   title bar + window dots + a label pill — rather than a phone bezel.
-   Squared-ish 14px radius, no home-indicator. Sized generously per
-   placement so the in-app UI stays legible instead of being downscaled
-   into noise. */
-.device-frame {
-  border-radius: 14px;
-  overflow: hidden;
-  background: var(--panel-bezel-b);
-  box-shadow: var(--shadow-lg);
-  border: 1px solid rgba(5, 12, 22, 0.5);
-}
-.device-frame-bar {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 9px 12px;
-  background: linear-gradient(160deg, var(--panel-bezel-a), var(--panel-bezel-b));
-}
-.device-frame-dots { display: flex; gap: 5px; flex-shrink: 0; }
-.device-frame-dots i {
-  display: block;
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: rgba(255,255,255,0.22);
-  font-style: normal;
-}
-.device-frame-url {
-  flex: 1;
-  min-width: 0;
-  background: rgba(255,255,255,0.08);
-  border-radius: 999px;
-  padding: 4px 12px;
-  font-size: 0.7rem;
-  font-weight: 700;
-  letter-spacing: 0.01em;
-  color: var(--panel-ink-muted);
-  text-align: center;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-.device-frame img {
-  display: block;
-  width: 100%;
-  height: auto;
-}
-/* progress-compare.png's raw capture cuts off mid-content at its own bottom
-   edge (an overlapping, half-visible comparison-photo fragment behind the
-   sticky nav bar) — that's baked into the source PNG, not fixable via CSS
-   sizing alone. Crop it out entirely rather than display a broken-looking
-   frame: show the clean top portion (header through the "Porównanie: ..."
-   line) and stop before the defect. workout-circuit.png gets the same
-   crop window so the two paired showcase frames read at matching density
-   instead of one being conspicuously sparser than the other. */
-.device-frame img.crop-tight {
-  aspect-ratio: 1264 / 474;
-  object-fit: cover;
-  object-position: top;
-}
 
 /* --- hero visual --- */
 .hero-visual {
@@ -449,42 +386,66 @@ section { position: relative; }
   margin-inline: auto;
   padding: 10px 4px 0;
 }
-/* The frame and its overlapping badge get their own positioning context,
-   separate from .hero-visual, so a caption can follow in normal flow below
-   without the badge's bottom-anchored offset jumping to chase it. */
-.hero-frame-wrap {
+/* Animated hero visual: a filling progress ring (pure CSS/SVG motion, no
+   screenshot) with the logo centered and stat badges floating around it. */
+.hero-motion {
   position: relative;
-  padding-bottom: 26px;
+  width: 100%;
+  max-width: 420px;
+  aspect-ratio: 1;
+  margin: 20px auto 0;
 }
-.device-hero-main {
-  position: relative;
-  transform: rotate(-1.1deg);
+.hero-ring { width: 100%; height: 100%; transform: rotate(-90deg); }
+.hero-ring-track, .hero-ring-fill {
+  fill: none;
+  stroke-width: 10;
+  stroke-linecap: round;
 }
-.floating-chip {
+.hero-ring-track { stroke: rgba(255,255,255,0.12); }
+.hero-ring-fill {
+  stroke: var(--gold);
+  stroke-dasharray: 603;
+  stroke-dashoffset: 603;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .hero-ring-fill { animation: heroRingFill 1.6s 0.3s cubic-bezier(.16,.8,.3,1) forwards; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-ring-fill { stroke-dashoffset: 522; }
+}
+@keyframes heroRingFill { to { stroke-dashoffset: 522; } }
+.hero-motion-center {
+  position: absolute; inset: 0;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 4px;
+  text-align: center;
+}
+.hero-motion-center img { width: 56px; height: 56px; border-radius: 14px; margin-bottom: 6px; box-shadow: 0 6px 20px rgba(0,0,0,0.35); }
+.hero-motion-center strong { font-size: 1.6rem; color: var(--panel-ink); }
+.hero-motion-center span { font-size: 0.82rem; color: var(--panel-ink-muted); }
+.hero-float-chip {
   position: absolute;
-  left: 22px;
-  bottom: 4px;
-  z-index: 3;
   background: var(--surface);
   color: var(--text);
   font-weight: 800;
-  font-size: 0.82rem;
-  padding: 10px 16px;
+  font-size: 0.8rem;
+  padding: 9px 14px;
   border-radius: 999px;
   box-shadow: 0 14px 30px -8px rgba(10,20,30,0.45);
-  display: flex;
-  align-items: center;
-  gap: 8px;
+  white-space: nowrap;
 }
-.floating-chip .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--gold); flex-shrink: 0; }
-/* Closes some of the vertical gap between the visual column and the taller
-   copy column beside it (a fixed-aspect landscape frame can't grow tall
-   enough on its own to match a multi-line headline's height). */
-.hero-visual-note {
-  margin: 4px 8px 0;
-  font-size: 0.9rem;
-  color: var(--panel-ink-muted);
-  text-align: center;
+.hero-float-1 { top: 6%; left: -4%; }
+.hero-float-2 { top: 46%; right: -8%; }
+.hero-float-3 { bottom: 4%; left: 6%; }
+@media (prefers-reduced-motion: no-preference) {
+  .hero-float-chip { animation: heroChipFloat 4.5s ease-in-out infinite; }
+  .hero-float-2 { animation-delay: 0.6s; }
+  .hero-float-3 { animation-delay: 1.2s; }
+}
+@keyframes heroChipFloat { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+@media (max-width: 480px) {
+  .hero-float-1 { left: 0; }
+  .hero-float-2 { right: 0; }
 }
 
 /* ---------- trust stat bar ---------- */
@@ -650,7 +611,57 @@ section { position: relative; }
 .step h3 { margin-bottom: 6px; }
 .step p { margin: 0; color: var(--text-muted); }
 
-.how-visual .device-frame { max-width: 480px; margin-inline: auto; }
+.how-motion {
+  position: relative;
+  max-width: 360px;
+  margin: 0 auto;
+  height: 380px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 0;
+}
+.how-motion-line {
+  position: absolute;
+  left: 50%; top: 20px; bottom: 20px;
+  width: 3px;
+  transform: translateX(-50%);
+  background: var(--border);
+  overflow: hidden;
+}
+.how-motion-line::after {
+  content: '';
+  position: absolute; left: 0; top: 0; width: 100%; height: 100%;
+  background: linear-gradient(180deg, var(--navy), var(--gold));
+  transform: translateY(-100%);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .how-motion-line::after { animation: howLineDraw 2.4s 0.2s cubic-bezier(.16,.8,.3,1) forwards; }
+}
+@media (prefers-reduced-motion: reduce) { .how-motion-line::after { transform: translateY(0); } }
+@keyframes howLineDraw { to { transform: translateY(0); } }
+.how-motion-node {
+  position: relative;
+  width: 76px; height: 76px;
+  border-radius: 50%;
+  background: var(--bg);
+  border: 3px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.8rem;
+  z-index: 1;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .how-motion-node { animation: howNodeLight 2.4s ease forwards; }
+  .how-motion-node-1 { animation-delay: 0.2s; }
+  .how-motion-node-2 { animation-delay: 1s; }
+  .how-motion-node-3 { animation-delay: 1.8s; }
+}
+@keyframes howNodeLight {
+  0%, 60% { border-color: var(--border); box-shadow: none; transform: scale(1); }
+  75% { transform: scale(1.12); }
+  100% { border-color: var(--gold); box-shadow: 0 0 0 6px color-mix(in srgb, var(--gold) 18%, transparent); transform: scale(1); }
+}
 
 /* ============================================================
    SHOWCASE — dark panel
@@ -671,13 +682,70 @@ section { position: relative; }
   position: relative;
 }
 .showcase-item { margin: 0; }
-.showcase-item .device-frame {
-  max-width: 640px;
+.showcase-motion {
+  max-width: 320px;
   margin-inline: auto;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  aspect-ratio: 4/3;
+  border-radius: var(--radius-lg);
+  background: color-mix(in srgb, var(--gold) 7%, var(--surface));
+  border: 1px solid color-mix(in srgb, var(--gold) 24%, var(--border));
+  display: flex; align-items: center; justify-content: center;
+  transition: transform 0.3s ease;
 }
-.showcase-item:hover .device-frame { transform: translateY(-6px); }
+@media (prefers-color-scheme: dark) {
+  .showcase-motion { background: color-mix(in srgb, var(--gold) 28%, #1a1712); border-color: color-mix(in srgb, var(--gold) 45%, var(--border)); }
+}
+.showcase-item:hover .showcase-motion { transform: translateY(-6px); }
 .showcase-item figcaption { margin-top: 20px; }
+
+/* Countdown circle */
+.motion-timer {
+  width: 92px; height: 92px; border-radius: 50%;
+  border: 5px solid var(--gold);
+  display: flex; align-items: center; justify-content: center;
+}
+.motion-timer-num { font-size: 2.4rem; font-weight: 800; color: var(--panel-ink); }
+@media (prefers-reduced-motion: no-preference) {
+  .motion-timer { animation: motionPulse 1.8s ease infinite; }
+}
+@keyframes motionPulse { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.08); opacity: 0.7; } }
+
+/* Growing bar chart */
+.motion-bars { display: flex; align-items: flex-end; gap: 10px; height: 90px; }
+.motion-bars span { width: 16px; border-radius: 6px 6px 0 0; background: linear-gradient(180deg, var(--gold), color-mix(in srgb, var(--gold) 50%, var(--navy))); }
+.motion-bars span:nth-child(1) { height: 35%; }
+.motion-bars span:nth-child(2) { height: 55%; }
+.motion-bars span:nth-child(3) { height: 40%; }
+.motion-bars span:nth-child(4) { height: 75%; }
+.motion-bars span:nth-child(5) { height: 95%; }
+@media (prefers-reduced-motion: no-preference) {
+  .motion-bars span { animation: motionGrow 2.2s ease infinite; transform-origin: bottom; }
+  .motion-bars span:nth-child(1) { animation-delay: 0s; }
+  .motion-bars span:nth-child(2) { animation-delay: 0.15s; }
+  .motion-bars span:nth-child(3) { animation-delay: 0.3s; }
+  .motion-bars span:nth-child(4) { animation-delay: 0.45s; }
+  .motion-bars span:nth-child(5) { animation-delay: 0.6s; }
+}
+@keyframes motionGrow { 0%, 100% { transform: scaleY(0.5); } 50% { transform: scaleY(1); } }
+
+/* Voice equalizer */
+.motion-wave { display: flex; align-items: center; gap: 6px; height: 70px; }
+.motion-wave span { width: 6px; height: 20%; border-radius: 999px; background: var(--gold); }
+@media (prefers-reduced-motion: no-preference) {
+  .motion-wave span { animation: motionWave 1.1s ease-in-out infinite; }
+  .motion-wave span:nth-child(1) { animation-delay: 0s; }
+  .motion-wave span:nth-child(2) { animation-delay: 0.1s; }
+  .motion-wave span:nth-child(3) { animation-delay: 0.2s; }
+  .motion-wave span:nth-child(4) { animation-delay: 0.3s; }
+  .motion-wave span:nth-child(5) { animation-delay: 0.2s; }
+  .motion-wave span:nth-child(6) { animation-delay: 0.1s; }
+  .motion-wave span:nth-child(7) { animation-delay: 0s; }
+}
+@keyframes motionWave { 0%, 100% { height: 20%; } 50% { height: 90%; } }
+@media (prefers-reduced-motion: reduce) {
+  .motion-bars span:nth-child(1) { height: 35% !important; }
+  .motion-wave span { height: 55% !important; }
+}
 .showcase-item h3 { color: var(--panel-ink); margin-bottom: 6px; font-size: 1.08rem; }
 .showcase-item p { margin: 0; color: var(--panel-ink-muted); font-size: 0.95rem; }
 
@@ -858,7 +926,7 @@ html.js-reveal .reveal.is-visible {
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   html.js-reveal .reveal, .reveal { opacity: 1 !important; transform: none !important; transition: none !important; }
-  .btn-primary:hover, .feature:hover, .feature-lead:hover, .showcase-item:hover .device-frame {
+  .btn-primary:hover, .feature:hover, .feature-lead:hover, .showcase-item:hover .showcase-motion {
     transform: none;
   }
 }
@@ -884,7 +952,7 @@ html.js-reveal .reveal.is-visible {
      orphan. */
   .showcase-grid { grid-template-columns: repeat(2, 1fr); gap: 40px 32px; }
   .showcase-grid .showcase-item:last-child { grid-column: 1 / -1; }
-  .showcase-grid .showcase-item:last-child .device-frame { max-width: 560px; }
+  .showcase-grid .showcase-item:last-child .showcase-motion { max-width: 560px; }
   .showcase-grid .showcase-item:last-child figcaption { max-width: 560px; margin-inline: auto; text-align: center; }
 }
 
@@ -926,17 +994,20 @@ html.js-reveal .reveal.is-visible {
       </div>
 
       <div class="hero-visual reveal reveal-delay-1">
-        <div class="hero-frame-wrap">
-          <div class="device-frame device-hero-main">
-            <div class="device-frame-bar" aria-hidden="true">
-              <span class="device-frame-dots"><i></i><i></i><i></i></span>
-              <span class="device-frame-url">Pulpit aplikacji</span>
-            </div>
-            <img src="assets/screenshots/dashboard.png" alt="Zrzut ekranu pulpitu aplikacji Nowa Ja: dzisiejszy trening „A — Brzuch i biodra”, pasek postępu 0/60 dni oraz podpowiedź od AI Coacha o skupieniu się na technice.">
+        <div class="hero-motion" aria-hidden="true">
+          <svg class="hero-ring" viewBox="0 0 220 220">
+            <circle class="hero-ring-track" cx="110" cy="110" r="96"></circle>
+            <circle class="hero-ring-fill" cx="110" cy="110" r="96"></circle>
+          </svg>
+          <div class="hero-motion-center">
+            <img src="icons/icon-192.png" alt="">
+            <strong>60 dni</strong>
+            <span>od zera do nawyku</span>
           </div>
-          <div class="floating-chip"><span class="dot" aria-hidden="true"></span>0 zł · bez konta</div>
+          <div class="hero-float-chip hero-float-1">💪 38 ćwiczeń</div>
+          <div class="hero-float-chip hero-float-2">🎯 4 fazy progresji</div>
+          <div class="hero-float-chip hero-float-3">0 zł · bez konta</div>
         </div>
-        <p class="hero-visual-note">Prawdziwy pulpit aplikacji — bez upiększeń na potrzeby zrzutu ekranu.</p>
       </div>
 
     </div>
@@ -1041,13 +1112,12 @@ html.js-reveal .reveal.is-visible {
           </li>
         </ol>
       </div>
-      <div class="how-visual reveal reveal-delay-2">
-        <div class="device-frame">
-          <div class="device-frame-bar" aria-hidden="true">
-            <span class="device-frame-dots"><i></i><i></i><i></i></span>
-            <span class="device-frame-url">Twój profil</span>
-          </div>
-          <img src="assets/screenshots/onboarding.png" alt="Zrzut ekranu onboardingu aplikacji Nowa Ja: wybór doświadczenia treningowego i głównego celu za pomocą chipów.">
+      <div class="how-visual reveal reveal-delay-2" aria-hidden="true">
+        <div class="how-motion">
+          <div class="how-motion-line"></div>
+          <div class="how-motion-node how-motion-node-1">👋</div>
+          <div class="how-motion-node how-motion-node-2">🎬</div>
+          <div class="how-motion-node how-motion-node-3">📈</div>
         </div>
       </div>
     </div>
@@ -1061,12 +1131,10 @@ html.js-reveal .reveal.is-visible {
       </header>
       <div class="showcase-grid">
         <figure class="showcase-item reveal">
-          <div class="device-frame">
-            <div class="device-frame-bar" aria-hidden="true">
-              <span class="device-frame-dots"><i></i><i></i><i></i></span>
-              <span class="device-frame-url">Trening obwodowy</span>
+          <div class="showcase-motion" aria-hidden="true">
+            <div class="motion-timer">
+              <span class="motion-timer-num">3</span>
             </div>
-            <img class="crop-tight" src="assets/screenshots/workout-circuit.png" alt="Zrzut ekranu prowadzonego treningu obwodowego: stacja 1 z 6, runda 1 z 2, ćwiczenie „Przysiad przy krześle” z odliczaniem.">
           </div>
           <figcaption>
             <h3>Prowadzony trening</h3>
@@ -1074,12 +1142,10 @@ html.js-reveal .reveal.is-visible {
           </figcaption>
         </figure>
         <figure class="showcase-item reveal">
-          <div class="device-frame">
-            <div class="device-frame-bar" aria-hidden="true">
-              <span class="device-frame-dots"><i></i><i></i><i></i></span>
-              <span class="device-frame-url">Porównanie postępów</span>
+          <div class="showcase-motion" aria-hidden="true">
+            <div class="motion-bars">
+              <span></span><span></span><span></span><span></span><span></span>
             </div>
-            <img class="crop-tight" src="assets/screenshots/progress-compare.png" alt="Zrzut ekranu porównania zdjęć sylwetki przed i po za pomocą suwaka.">
           </div>
           <figcaption>
             <h3>Postępy, które widać</h3>
@@ -1087,12 +1153,10 @@ html.js-reveal .reveal.is-visible {
           </figcaption>
         </figure>
         <figure class="showcase-item reveal">
-          <div class="device-frame">
-            <div class="device-frame-bar" aria-hidden="true">
-              <span class="device-frame-dots"><i></i><i></i><i></i></span>
-              <span class="device-frame-url">Ustawienia głosu</span>
+          <div class="showcase-motion" aria-hidden="true">
+            <div class="motion-wave">
+              <span></span><span></span><span></span><span></span><span></span><span></span><span></span>
             </div>
-            <img src="assets/screenshots/voice-settings.png" alt="Zrzut ekranu ustawień lektora głosowego ze stylem motywacji łagodnym lub ostrym.">
           </div>
           <figcaption>
             <h3>Głos na Twoich warunkach</h3>
