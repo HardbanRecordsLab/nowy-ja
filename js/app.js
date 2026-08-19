@@ -236,7 +236,7 @@ function highlightNav(name) {
 }
 
 // ---------- Onboarding ----------
-const ONBOARD_STEPS = 6;
+const ONBOARD_STEPS = 8;
 const EQUIPMENT_OPTIONS = ['Mata', 'Krzesło', 'Butelki wody / hantle', 'Taśma oporowa', 'Stopień / schody', 'Ściana'];
 const FOCUS_OPTIONS = ['Brzuch', 'Uda', 'Biodra', 'Klatka piersiowa', 'Ramiona', 'Pośladki'];
 const LIMITATION_OPTIONS = ['Kolana', 'Biodra', 'Kręgosłup / plecy', 'Barki', 'Nadgarstki', 'Brak ograniczeń'];
@@ -266,17 +266,23 @@ function viewOnboarding() {
       <div class="onboard-step-label">Krok <span id="onboard-step-num">1</span> z ${ONBOARD_STEPS}</div>
 
       <div class="onboard-step" data-step="0">
-        <label>Jak Cię nazwać?<input type="text" name="name" placeholder="np. Ania" autocomplete="off"></label>
+        <span class="onboard-step-icon" aria-hidden="true">👋</span>
+        <h2 class="onboard-step-title">Jak się do Ciebie zwracać?</h2>
+        <label>Imię<input type="text" name="name" placeholder="np. Ania" autocomplete="off"></label>
         <label>Wiek<input type="number" name="ageYears" min="10" max="100" placeholder="np. 34"></label>
       </div>
 
       <div class="onboard-step" data-step="1" hidden>
+        <span class="onboard-step-icon" aria-hidden="true">📏</span>
+        <h2 class="onboard-step-title">Kilka podstawowych parametrów</h2>
         <p class="muted small">Program zostanie opisany w kontekście Twoich parametrów. To dane ogólne, nie medyczne.</p>
         <label>Wzrost (cm)<input type="number" name="heightCm" min="100" max="230" placeholder="np. 165"></label>
         <label>Waga (kg)<input type="number" name="weightKg" min="30" max="300" placeholder="np. 80"></label>
       </div>
 
       <div class="onboard-step" data-step="2" hidden>
+        <span class="onboard-step-icon" aria-hidden="true">🎯</span>
+        <h2 class="onboard-step-title">Skąd startujesz i dokąd zmierzasz?</h2>
         <span class="onboard-field-label">Doświadczenie treningowe</span>
         <div class="chip-group">${Object.entries(EXPERIENCE_LABELS).map(([v, l]) => chipRadio('experience', v, l, v === 'beginner')).join('')}</div>
         <span class="onboard-field-label">Główny cel</span>
@@ -284,25 +290,41 @@ function viewOnboarding() {
       </div>
 
       <div class="onboard-step" data-step="3" hidden>
+        <span class="onboard-step-icon" aria-hidden="true">📅</span>
+        <h2 class="onboard-step-title">Ile czasu możesz na to poświęcić?</h2>
         <span class="onboard-field-label">Treningi tygodniowo</span>
         <div class="chip-group">${[3, 4, 5, 6, 7].map(n => chipRadio('sessionsPerWeek', n, String(n), n === 6)).join('')}</div>
         <span class="onboard-field-label">Długość treningu</span>
         <div class="chip-group">${[20, 30, 35, 45, 60].map(n => chipRadio('sessionDurationMinutes', n, n + ' min', n === 35)).join('')}</div>
+      </div>
+
+      <div class="onboard-step" data-step="4" hidden>
+        <span class="onboard-step-icon" aria-hidden="true">🏋️</span>
+        <h2 class="onboard-step-title">Co masz pod ręką w domu?</h2>
         <span class="onboard-field-label">Dostępny sprzęt</span>
         <div class="chip-group">${EQUIPMENT_OPTIONS.map(o => chipCheckbox('equipment', o, false)).join('')}</div>
       </div>
 
-      <div class="onboard-step" data-step="4" hidden>
+      <div class="onboard-step" data-step="5" hidden>
+        <span class="onboard-step-icon" aria-hidden="true">💪</span>
+        <h2 class="onboard-step-title">Na czym Ci najbardziej zależy?</h2>
         <span class="onboard-field-label">Poziom trudności</span>
         <div class="chip-group">${Object.entries(DIFFICULTY_LABELS).map(([v, l]) => chipRadio('difficultyPreference', v, l, v === 'standard')).join('')}</div>
         <span class="onboard-field-label">Priorytetowe partie ciała</span>
         <div class="chip-group">${FOCUS_OPTIONS.map(o => chipCheckbox('focusAreas', o, false)).join('')}</div>
+      </div>
+
+      <div class="onboard-step" data-step="6" hidden>
+        <span class="onboard-step-icon" aria-hidden="true">🛡️</span>
+        <h2 class="onboard-step-title">Coś, o czym powinniśmy wiedzieć?</h2>
         <span class="onboard-field-label">Ograniczenia ruchowe</span>
         <div class="chip-group">${LIMITATION_OPTIONS.map(o => chipCheckbox('limitations', o, false)).join('')}</div>
         <label>Inne przeciwwskazania (opcjonalnie)<input type="text" name="contraindicationsNote" placeholder="opcjonalnie"></label>
       </div>
 
-      <div class="onboard-step" data-step="5" hidden>
+      <div class="onboard-step" data-step="7" hidden>
+        <span class="onboard-step-icon" aria-hidden="true">🚀</span>
+        <h2 class="onboard-step-title">Ostatnia rzecz — kiedy zaczynamy?</h2>
         <span class="onboard-field-label">Data startu programu</span>
         <input type="date" name="startDate" value="${new Date().toISOString().slice(0, 10)}">
         <p class="muted small" style="margin-top:14px">Ten program ma charakter ogólny i edukacyjny — nie zastępuje porady medycznej. Przed pierwszym treningiem poprosimy Cię o potwierdzenie bezpieczeństwa.</p>
