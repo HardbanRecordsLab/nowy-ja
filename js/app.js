@@ -160,12 +160,14 @@ function render() {
   if (!profile && name !== 'onboarding') {
     root.innerHTML = viewOnboarding();
     document.getElementById('nav').hidden = true;
+    updateHeader(null);
     bindOnboarding();
     return;
   }
   if (profile && !profile.safetyConsentAcceptedAt && name !== 'onboarding' && name !== 'safety') {
     root.innerHTML = viewSafety();
     document.getElementById('nav').hidden = true;
+    updateHeader(profile);
     bindSafety();
     return;
   }
@@ -199,7 +201,7 @@ function render() {
 
 function updateHeader(profile) {
   const el = document.getElementById('active-profile-name');
-  if (el) el.textContent = profile ? profile.name : '';
+  if (el) { el.textContent = profile ? profile.name : ''; el.hidden = !profile; }
 
   const nameEl = document.getElementById('sidebar-name');
   const dayEl = document.getElementById('sidebar-day');
