@@ -566,190 +566,6 @@ section { position: relative; }
 .phase-chips .arrow { color: var(--text-muted); font-size: 0.78rem; }
 
 /* ============================================================
-   HOW IT WORKS
-   ============================================================ */
-.how { padding-block: 100px; background: var(--surface); border-block: 1px solid var(--border); }
-.how-inner {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 56px;
-  align-items: center;
-}
-.steps { list-style: none; margin: 32px 0 0; padding: 0; }
-.step {
-  display: grid;
-  grid-template-columns: 44px 1fr;
-  gap: 18px;
-  position: relative;
-  padding-bottom: 32px;
-}
-.step:last-child { padding-bottom: 0; }
-.step::before {
-  content: '';
-  position: absolute;
-  left: 21px;
-  top: 44px;
-  bottom: 0;
-  width: 2px;
-  background: var(--border);
-}
-.step:last-child::before { display: none; }
-.step-num {
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
-  background: var(--navy);
-  color: #fff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 800;
-  font-size: 1.05rem;
-  flex-shrink: 0;
-  z-index: 1;
-}
-.step h3 { margin-bottom: 6px; }
-.step p { margin: 0; color: var(--text-muted); }
-
-.how-motion {
-  position: relative;
-  max-width: 360px;
-  margin: 0 auto;
-  height: 380px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  align-items: center;
-  padding: 20px 0;
-}
-.how-motion-line {
-  position: absolute;
-  left: 50%; top: 20px; bottom: 20px;
-  width: 3px;
-  transform: translateX(-50%);
-  background: var(--border);
-  overflow: hidden;
-}
-.how-motion-line::after {
-  content: '';
-  position: absolute; left: 0; top: 0; width: 100%; height: 100%;
-  background: linear-gradient(180deg, var(--navy), var(--gold));
-  transform: translateY(-100%);
-}
-@media (prefers-reduced-motion: no-preference) {
-  .how-motion-line::after { animation: howLineDraw 2.4s 0.2s cubic-bezier(.16,.8,.3,1) forwards; }
-}
-@media (prefers-reduced-motion: reduce) { .how-motion-line::after { transform: translateY(0); } }
-@keyframes howLineDraw { to { transform: translateY(0); } }
-.how-motion-node {
-  position: relative;
-  width: 76px; height: 76px;
-  border-radius: 50%;
-  background: var(--bg);
-  border: 3px solid var(--border);
-  display: flex; align-items: center; justify-content: center;
-  font-size: 1.8rem;
-  z-index: 1;
-}
-@media (prefers-reduced-motion: no-preference) {
-  .how-motion-node { animation: howNodeLight 2.4s ease forwards; }
-  .how-motion-node-1 { animation-delay: 0.2s; }
-  .how-motion-node-2 { animation-delay: 1s; }
-  .how-motion-node-3 { animation-delay: 1.8s; }
-}
-@keyframes howNodeLight {
-  0%, 60% { border-color: var(--border); box-shadow: none; transform: scale(1); }
-  75% { transform: scale(1.12); }
-  100% { border-color: var(--gold); box-shadow: 0 0 0 6px color-mix(in srgb, var(--gold) 18%, transparent); transform: scale(1); }
-}
-
-/* ============================================================
-   SHOWCASE — dark panel
-   ============================================================ */
-.showcase { padding-block: 110px; overflow: hidden; }
-.showcase::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background-image: radial-gradient(circle at 1px 1px, rgba(255,255,255,0.06) 1px, transparent 0);
-  background-size: 26px 26px;
-  pointer-events: none;
-}
-.showcase-grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 44px;
-  position: relative;
-}
-.showcase-item { margin: 0; }
-.showcase-motion {
-  max-width: 320px;
-  margin-inline: auto;
-  aspect-ratio: 4/3;
-  border-radius: var(--radius-lg);
-  background: color-mix(in srgb, var(--gold) 7%, var(--surface));
-  border: 1px solid color-mix(in srgb, var(--gold) 24%, var(--border));
-  display: flex; align-items: center; justify-content: center;
-  transition: transform 0.3s ease;
-}
-@media (prefers-color-scheme: dark) {
-  .showcase-motion { background: color-mix(in srgb, var(--gold) 28%, #1a1712); border-color: color-mix(in srgb, var(--gold) 45%, var(--border)); }
-}
-.showcase-item:hover .showcase-motion { transform: translateY(-6px); }
-.showcase-item figcaption { margin-top: 20px; }
-
-/* Countdown circle */
-.motion-timer {
-  width: 92px; height: 92px; border-radius: 50%;
-  border: 5px solid var(--gold);
-  display: flex; align-items: center; justify-content: center;
-}
-.motion-timer-num { font-size: 2.4rem; font-weight: 800; color: var(--panel-ink); }
-@media (prefers-reduced-motion: no-preference) {
-  .motion-timer { animation: motionPulse 1.8s ease infinite; }
-}
-@keyframes motionPulse { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.08); opacity: 0.7; } }
-
-/* Growing bar chart */
-.motion-bars { display: flex; align-items: flex-end; gap: 10px; height: 90px; }
-.motion-bars span { width: 16px; border-radius: 6px 6px 0 0; background: linear-gradient(180deg, var(--gold), color-mix(in srgb, var(--gold) 50%, var(--navy))); }
-.motion-bars span:nth-child(1) { height: 35%; }
-.motion-bars span:nth-child(2) { height: 55%; }
-.motion-bars span:nth-child(3) { height: 40%; }
-.motion-bars span:nth-child(4) { height: 75%; }
-.motion-bars span:nth-child(5) { height: 95%; }
-@media (prefers-reduced-motion: no-preference) {
-  .motion-bars span { animation: motionGrow 2.2s ease infinite; transform-origin: bottom; }
-  .motion-bars span:nth-child(1) { animation-delay: 0s; }
-  .motion-bars span:nth-child(2) { animation-delay: 0.15s; }
-  .motion-bars span:nth-child(3) { animation-delay: 0.3s; }
-  .motion-bars span:nth-child(4) { animation-delay: 0.45s; }
-  .motion-bars span:nth-child(5) { animation-delay: 0.6s; }
-}
-@keyframes motionGrow { 0%, 100% { transform: scaleY(0.5); } 50% { transform: scaleY(1); } }
-
-/* Voice equalizer */
-.motion-wave { display: flex; align-items: center; gap: 6px; height: 70px; }
-.motion-wave span { width: 6px; height: 20%; border-radius: 999px; background: var(--gold); }
-@media (prefers-reduced-motion: no-preference) {
-  .motion-wave span { animation: motionWave 1.1s ease-in-out infinite; }
-  .motion-wave span:nth-child(1) { animation-delay: 0s; }
-  .motion-wave span:nth-child(2) { animation-delay: 0.1s; }
-  .motion-wave span:nth-child(3) { animation-delay: 0.2s; }
-  .motion-wave span:nth-child(4) { animation-delay: 0.3s; }
-  .motion-wave span:nth-child(5) { animation-delay: 0.2s; }
-  .motion-wave span:nth-child(6) { animation-delay: 0.1s; }
-  .motion-wave span:nth-child(7) { animation-delay: 0s; }
-}
-@keyframes motionWave { 0%, 100% { height: 20%; } 50% { height: 90%; } }
-@media (prefers-reduced-motion: reduce) {
-  .motion-bars span:nth-child(1) { height: 35% !important; }
-  .motion-wave span { height: 55% !important; }
-}
-.showcase-item h3 { color: var(--panel-ink); margin-bottom: 6px; font-size: 1.08rem; }
-.showcase-item p { margin: 0; color: var(--panel-ink-muted); font-size: 0.95rem; }
-
-/* ============================================================
    INTRO VIDEO — teaser card, swapped for a real <video> once produced
    ============================================================ */
 .intro-video { padding-block: 100px; background: var(--bg); }
@@ -912,12 +728,6 @@ html.js-reveal .reveal.is-visible {
 .feature-grid-secondary .feature:nth-child(2) { transition-delay: 0.09s; }
 .feature-grid-secondary .feature:nth-child(3) { transition-delay: 0.16s; }
 .feature-grid-secondary .feature:nth-child(4) { transition-delay: 0.23s; }
-.showcase-grid .showcase-item:nth-child(1) { transition-delay: 0.02s; }
-.showcase-grid .showcase-item:nth-child(2) { transition-delay: 0.1s; }
-.showcase-grid .showcase-item:nth-child(3) { transition-delay: 0.18s; }
-.steps .step:nth-child(1) { transition-delay: 0.02s; }
-.steps .step:nth-child(2) { transition-delay: 0.1s; }
-.steps .step:nth-child(3) { transition-delay: 0.18s; }
 /* Reveal stagger delays apply to hover too since it's the same transition
    property — without this the last card's lift lags ~230ms behind the cursor. */
 .feature-grid-secondary .feature:hover,
@@ -926,7 +736,7 @@ html.js-reveal .reveal.is-visible {
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   html.js-reveal .reveal, .reveal { opacity: 1 !important; transform: none !important; transition: none !important; }
-  .btn-primary:hover, .feature:hover, .feature-lead:hover, .showcase-item:hover .showcase-motion {
+  .btn-primary:hover, .feature:hover, .feature-lead:hover {
     transform: none;
   }
 }
@@ -944,16 +754,6 @@ html.js-reveal .reveal.is-visible {
 @media (min-width: 900px) {
   .hero-inner { grid-template-columns: 1fr 1fr; gap: 40px; }
   .hero-cta-row { gap: 32px; }
-  .how-inner { grid-template-columns: 1fr 0.85fr; }
-
-  /* Two-up showcase so each landscape screenshot gets real width instead
-     of being crammed three-across; the odd third item spans both columns
-     and is capped/centered so it reads as a deliberate spotlight, not an
-     orphan. */
-  .showcase-grid { grid-template-columns: repeat(2, 1fr); gap: 40px 32px; }
-  .showcase-grid .showcase-item:last-child { grid-column: 1 / -1; }
-  .showcase-grid .showcase-item:last-child .showcase-motion { max-width: 560px; }
-  .showcase-grid .showcase-item:last-child figcaption { max-width: 560px; margin-inline: auto; text-align: center; }
 }
 
 @media (max-width: 480px) {
@@ -986,8 +786,8 @@ html.js-reveal .reveal.is-visible {
         <p class="hero-sub">60 dni, prowadzone krok po kroku — timer, głos, dostosowanie do bólu i sprzętu, którego akurat nie masz. Bez konta, bez karty, bez presji. Otwierasz i zaczynasz.</p>
         <div class="hero-cta-row">
           <a href="app.html" class="btn btn-primary">Rozpocznij za darmo — 60 sekund</a>
-          <a href="#jak-to-dziala" class="btn-text">
-            Zobacz, jak to działa
+          <a href="#funkcje" class="btn-text">
+            Zobacz funkcje
             <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
           </a>
         </div>
@@ -1079,90 +879,6 @@ html.js-reveal .reveal.is-visible {
           <h3>Zainstaluj jak aplikację</h3>
           <p>Prawdziwe PWA: instaluje się na ekranie głównym, działa offline, bez konta i bez chmury — Twoje dane zostają na urządzeniu.</p>
         </article>
-      </div>
-    </div>
-  </section>
-
-  <section class="how" id="jak-to-dziala">
-    <div class="wrap how-inner">
-      <div class="how-copy">
-        <p class="eyebrow reveal">Jak to działa</p>
-        <h2 class="reveal">Trzy kroki. Zero zgadywania.</h2>
-        <ol class="steps">
-          <li class="step reveal">
-            <span class="step-num" aria-hidden="true">1</span>
-            <div>
-              <h3>Profil w minutę</h3>
-              <p>Uzupełnij krótki profil — wiek, cel, sprzęt, ograniczenia. Bez zakładania konta.</p>
-            </div>
-          </li>
-          <li class="step reveal">
-            <span class="step-num" aria-hidden="true">2</span>
-            <div>
-              <h3>Trenuj z prowadzeniem</h3>
-              <p>Trenuj z prowadzeniem głosowym i timerem, dzień po dniu.</p>
-            </div>
-          </li>
-          <li class="step reveal">
-            <span class="step-num" aria-hidden="true">3</span>
-            <div>
-              <h3>Dostosowuj do siebie</h3>
-              <p>Śledź postępy — wagę, obwody, zdjęcia — i dostosowuj plan do siebie.</p>
-            </div>
-          </li>
-        </ol>
-      </div>
-      <div class="how-visual reveal reveal-delay-2" aria-hidden="true">
-        <div class="how-motion">
-          <div class="how-motion-line"></div>
-          <div class="how-motion-node how-motion-node-1">👋</div>
-          <div class="how-motion-node how-motion-node-2">🎬</div>
-          <div class="how-motion-node how-motion-node-3">📈</div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section class="showcase panel-dark" id="aplikacja">
-    <div class="wrap">
-      <header class="section-head reveal">
-        <p class="eyebrow">Aplikacja w akcji</p>
-        <h2>Zobacz produkt, nie obietnice.</h2>
-      </header>
-      <div class="showcase-grid">
-        <figure class="showcase-item reveal">
-          <div class="showcase-motion" aria-hidden="true">
-            <div class="motion-timer">
-              <span class="motion-timer-num">3</span>
-            </div>
-          </div>
-          <figcaption>
-            <h3>Prowadzony trening</h3>
-            <p>Stacje i rundy prowadzone krok po kroku — zero zgadywania, co dalej.</p>
-          </figcaption>
-        </figure>
-        <figure class="showcase-item reveal">
-          <div class="showcase-motion" aria-hidden="true">
-            <div class="motion-bars">
-              <span></span><span></span><span></span><span></span><span></span>
-            </div>
-          </div>
-          <figcaption>
-            <h3>Postępy, które widać</h3>
-            <p>Waga, obwody i zdjęcia sylwetki z suwakiem porównania przed/po.</p>
-          </figcaption>
-        </figure>
-        <figure class="showcase-item reveal">
-          <div class="showcase-motion" aria-hidden="true">
-            <div class="motion-wave">
-              <span></span><span></span><span></span><span></span><span></span><span></span><span></span>
-            </div>
-          </div>
-          <figcaption>
-            <h3>Głos na Twoich warunkach</h3>
-            <p>Lektor łagodny albo ostry — Ty decydujesz, jak brzmi motywacja.</p>
-          </figcaption>
-        </figure>
       </div>
     </div>
   </section>
