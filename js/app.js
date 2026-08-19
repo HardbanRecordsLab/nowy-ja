@@ -200,6 +200,31 @@ function render() {
 function updateHeader(profile) {
   const el = document.getElementById('active-profile-name');
   if (el) el.textContent = profile ? profile.name : '';
+
+  const nameEl = document.getElementById('sidebar-name');
+  const dayEl = document.getElementById('sidebar-day');
+  const avatarEl = document.getElementById('sidebar-avatar');
+  if (nameEl) nameEl.textContent = profile ? profile.name : '';
+  if (dayEl) dayEl.textContent = profile ? `Dzień ${Math.min(Store.currentDayNumber(profile), 60)} / 60` : '';
+  if (avatarEl) avatarEl.textContent = profile && profile.name ? profile.name[0].toUpperCase() : '?';
+}
+
+function openSidebar() {
+  document.getElementById('sidebar')?.classList.add('open');
+  document.getElementById('sidebar')?.removeAttribute('inert');
+  const overlay = document.getElementById('sidebar-overlay');
+  if (overlay) { overlay.hidden = false; requestAnimationFrame(() => overlay.classList.add('show')); }
+  document.getElementById('sidebar-toggle')?.setAttribute('aria-expanded', 'true');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeSidebar() {
+  document.getElementById('sidebar')?.classList.remove('open');
+  document.getElementById('sidebar')?.setAttribute('inert', '');
+  const overlay = document.getElementById('sidebar-overlay');
+  if (overlay) { overlay.classList.remove('show'); setTimeout(() => { overlay.hidden = true; }, 250); }
+  document.getElementById('sidebar-toggle')?.setAttribute('aria-expanded', 'false');
+  document.body.style.overflow = '';
 }
 
 function highlightNav(name) {
@@ -1599,6 +1624,10 @@ function beep() {
   } catch {}
 }
 
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape' && document.getElementById('sidebar')?.classList.contains('open')) closeSidebar();
+});
+
 // ---------- Event delegation ----------
 document.addEventListener('click', async e => {
   const target = e.target.closest('[data-action]');
@@ -1664,6 +1693,12 @@ document.addEventListener('click', async e => {
     case 'set-schedule-view':
       scheduleViewMode = target.dataset.mode === 'calendar' ? 'calendar' : 'list';
       render();
+      break;
+    case 'toggle-sidebar':
+      document.getElementById('sidebar')?.classList.contains('open') ? closeSidebar() : openSidebar();
+      break;
+    case 'close-sidebar':
+      closeSidebar();
       break;
     case 'cal-prev':
       calendarMonthOffset -= 1;

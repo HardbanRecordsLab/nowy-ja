@@ -33,13 +33,37 @@
 </head>
 <body>
 <header id="app-header">
-  <a href="#/today" class="brand"><img src="icons/icon-192.png" alt="" class="brand-logo">Nowa <span>Ja</span></a>
+  <div class="header-left">
+    <button type="button" id="sidebar-toggle" class="icon-btn-plain" data-action="toggle-sidebar" aria-label="Menu" aria-expanded="false" aria-controls="sidebar">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+    </button>
+    <a href="#/today" class="brand"><img src="icons/icon-192.png" alt="" class="brand-logo">Nowa <span>Ja</span></a>
+  </div>
   <a href="#/settings" class="header-profile" id="active-profile-name">…</a>
 </header>
 
+<div id="sidebar-overlay" class="sidebar-overlay" data-action="close-sidebar" hidden></div>
+<aside id="sidebar" class="sidebar" aria-label="Menu boczne" inert>
+  <div class="sidebar-profile">
+    <div class="sidebar-avatar" id="sidebar-avatar">?</div>
+    <div class="sidebar-profile-info">
+      <strong id="sidebar-name">…</strong>
+      <p class="muted small" id="sidebar-day">…</p>
+    </div>
+  </div>
+  <nav class="sidebar-nav" aria-label="Menu boczne — linki">
+    <a href="#/settings" data-action="close-sidebar">⚙️ Profil i ustawienia</a>
+    <a href="#/info" data-action="close-sidebar">🛡️ Bezpieczeństwo i informacje</a>
+    <a href="polityka-prywatnosci.html">🔒 Polityka prywatności</a>
+    <a href="regulamin.html">📄 Regulamin</a>
+    <a href="index.html">🏡 Strona główna</a>
+  </nav>
+  <p class="sidebar-footnote muted small">Twoje dane zostają wyłącznie na tym urządzeniu.</p>
+</aside>
+
 <main id="app"></main>
 
-<nav id="nav">
+<nav id="nav" aria-label="Nawigacja główna">
   <a href="#/today" data-route="today"><span class="nav-icon">🏠</span><span>Dziś</span></a>
   <a href="#/schedule" data-route="schedule"><span class="nav-icon">📅</span><span>Plan</span></a>
   <a href="#/library" data-route="library"><span class="nav-icon">📚</span><span>Ćwiczenia</span></a>
