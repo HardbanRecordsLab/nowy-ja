@@ -771,5 +771,223 @@
     },
     "infographicPrompt": "Clean flat-vector fitness infographic, square format, showing a friendly plus-size adult demonstrating \"seated or kneeling thoracic rotation mobility\" in 3 sequential steps (start position, mid-movement, end position), side angle, minimalist home-gym background, soft blue-and-white color palette, bold sans-serif captions in Polish labeling: nazwa ćwiczenia \"Rotacje klatki piersiowej (mobilność górnych pleców)\", partia mięśniowa \"Mobilność górnej części pleców i barków\", oraz jedna wskazówka bezpieczeństwa: \"Biodra pozostają skierowane do przodu — ruch tylko w górnym odcinku kręgosłupa.\". Numbered arrows indicating movement direction, dashed alignment guide lines on knees/spine, no spelling errors, high contrast, flat illustration style, no photorealism, inclusive and body-positive character design.",
     "videoPrompt": "10-15 second instructional fitness demo video, static camera, side angle, a calm plus-size adult performing \"seated or kneeling thoracic rotation mobility\" with correct form on a non-slip mat in a bright home setting, slow controlled tempo with a brief pause at the end range of the rotation, subtle on-screen Polish captions fade in: \"Rotacje klatki piersiowej (mobilność górnych pleców)\", \"Mobilność górnej części pleców i barków\", and safety cue \"Biodra pozostają skierowane do przodu — ruch tylko w górnym odcinku kręgosłupa.\", soft ambient background music, seamless loop, photorealistic, steady well-lit shot, encouraging non-judgmental tone suitable for beginners with a larger body size."
+  },
+  {
+    "code": "E1",
+    "name": "Przewracanie opony (tire flip)",
+    "group": "E",
+    "muscle": "Całe ciało, nogi, plecy, core",
+    "steps": [
+      "Stań przed leżącą płasko oponą, stopy na szerokości barków, chwyt od dołu za krawędź opony.",
+      "Z prostymi plecami (jak przy martwym ciągu) podnieś oponę, pchając biodrami do przodu.",
+      "W momencie, gdy opona jest pionowo, popchnij ją mocno do przodu, aż się przewróci.",
+      "Podejdź, powtórz w drugą stronę (lub wróć do startu, jeśli trenujesz w miejscu)."
+    ],
+    "safety": "Prosty kręgosłup przy podnoszeniu (nie okrągłe plecy), buty z dobrą przyczepnością, nie wykonywać przy bólu dolnego odcinka pleców.",
+    "reps": {
+      "faza1": "2 × 4 przewroty",
+      "faza2": "3 × 5",
+      "faza3": "3 × 6-8",
+      "faza4": "4 × 8-10"
+    },
+    "infographicPrompt": "Clean flat-vector fitness infographic, square format, showing a friendly plus-size adult demonstrating \"car tire flip\" in 3 sequential steps (start position, mid-movement, end position), side angle, minimalist outdoor driveway background with a large car tire, soft blue-and-white color palette, bold sans-serif captions in Polish labeling: nazwa ćwiczenia \"Przewracanie opony (tire flip)\", partia mięśniowa \"Całe ciało, nogi, plecy, core\", oraz jedna wskazówka bezpieczeństwa: \"Utrzymuj proste plecy przy podnoszeniu, nie okrąglaj kręgosłupa. Noś obuwie z dobrą przyczepnością.\". Numbered arrows indicating movement direction, dashed alignment guide lines on knees/spine, no spelling errors, high contrast, flat illustration style, no photorealism, inclusive and body-positive character design.",
+    "videoPrompt": "10-15 second instructional fitness demo video, static camera, side angle, a calm plus-size adult flipping a large car tire across a driveway or grassy backyard with correct form, explosive push at the top of each flip with a brief reset between reps, subtle on-screen Polish captions fade in: \"Przewracanie opony (tire flip)\", \"Całe ciało, nogi, plecy, core\", and safety cue \"Utrzymuj proste plecy przy podnoszeniu, nie okrąglaj kręgosłupa. Noś obuwie z dobrą przyczepnością.\", soft ambient background music, seamless loop, photorealistic, steady well-lit shot, encouraging non-judgmental tone suitable for beginners with a larger body size."
+  },
+  {
+    "code": "E2",
+    "name": "Skoki boczne przez oponę (tire lateral jumps)",
+    "group": "E",
+    "muscle": "Nogi, pośladki, zwinność, kardio",
+    "steps": [
+      "Stań bokiem przy oponie, stopy razem.",
+      "Przeskocz obunóż na drugą stronę opony, miękko lądując w lekkim ugięciu kolan.",
+      "Przeskakuj tam i z powrotem w rytmie (np. 20–30 s)."
+    ],
+    "safety": "Lądowanie zawsze na ugiętych kolanach (nie na sztywnych nogach), wariant delikatniejszy: przenoszenie stopy po stopie zamiast skoku.",
+    "reps": {
+      "faza1": "2 × 20 s",
+      "faza2": "3 × 25 s",
+      "faza3": "3 × 30 s",
+      "faza4": "4 × 35-40 s"
+    },
+    "infographicPrompt": "Clean flat-vector fitness infographic, square format, showing a friendly plus-size adult demonstrating \"lateral jumps over a flat tire\" in 3 sequential steps (start position, mid-movement, end position), front angle, minimalist outdoor driveway background with a flat car tire on the ground, soft blue-and-white color palette, bold sans-serif captions in Polish labeling: nazwa ćwiczenia \"Skoki boczne przez oponę (tire lateral jumps)\", partia mięśniowa \"Nogi, pośladki, zwinność, kardio\", oraz jedna wskazówka bezpieczeństwa: \"Ląduj zawsze na lekko ugiętych kolanach, nigdy na sztywnych nogach.\". Numbered arrows indicating movement direction, dashed alignment guide lines on knees/spine, no spelling errors, high contrast, flat illustration style, no photorealism, inclusive and body-positive character design.",
+    "videoPrompt": "10-15 second instructional fitness demo video, static camera, front angle, a calm plus-size adult jumping side to side over a flat car tire on a driveway with correct form, quick rhythmic jumps with soft controlled landings, subtle on-screen Polish captions fade in: \"Skoki boczne przez oponę (tire lateral jumps)\", \"Nogi, pośladki, zwinność, kardio\", and safety cue \"Ląduj zawsze na lekko ugiętych kolanach, nigdy na sztywnych nogach.\", soft ambient background music, seamless loop, photorealistic, steady well-lit shot, encouraging non-judgmental tone suitable for beginners with a larger body size."
+  },
+  {
+    "code": "E3",
+    "name": "Martwy ciąg + rzut oponą (tire deadlift to slam)",
+    "group": "E",
+    "muscle": "Plecy, pośladki, uda, core, siła funkcjonalna",
+    "steps": [
+      "Podnieś oponę z ziemi techniką martwego ciągu (proste plecy, ciężar na piętach).",
+      "Wyprostuj się w biodrach, opona na wysokości bioder/klatki.",
+      "Rzuć oponą z powrotem na ziemię przed sobą (mocny, kontrolowany ruch)."
+    ],
+    "safety": "Absolutnie nie okrąglać pleców przy podnoszeniu; przy bólu pleców — pominąć.",
+    "reps": {
+      "faza1": "2 × 6 powt.",
+      "faza2": "3 × 8",
+      "faza3": "3 × 10",
+      "faza4": "4 × 10-12"
+    },
+    "infographicPrompt": "Clean flat-vector fitness infographic, square format, showing a friendly plus-size adult demonstrating \"tire deadlift to slam\" in 3 sequential steps (start position, mid-movement, end position), side angle, minimalist outdoor driveway or garage background with a car tire, soft blue-and-white color palette, bold sans-serif captions in Polish labeling: nazwa ćwiczenia \"Martwy ciąg + rzut oponą (tire deadlift to slam)\", partia mięśniowa \"Plecy, pośladki, uda, core\", oraz jedna wskazówka bezpieczeństwa: \"Nigdy nie okrąglaj pleców przy podnoszeniu — ciężar prowadź biodrami.\". Numbered arrows indicating movement direction, dashed alignment guide lines on knees/spine, no spelling errors, high contrast, flat illustration style, no photorealism, inclusive and body-positive character design.",
+    "videoPrompt": "10-15 second instructional fitness demo video, static camera, side angle, a calm plus-size adult lifting a tire off the ground with a deadlift technique and slamming it back down in a driveway or garage setting, controlled lift followed by a powerful controlled slam, subtle on-screen Polish captions fade in: \"Martwy ciąg + rzut oponą (tire deadlift to slam)\", \"Plecy, pośladki, uda, core\", and safety cue \"Nigdy nie okrąglaj pleców przy podnoszeniu — ciężar prowadź biodrami.\", soft ambient background music, seamless loop, photorealistic, steady well-lit shot, encouraging non-judgmental tone suitable for beginners with a larger body size."
+  },
+  {
+    "code": "E4",
+    "name": "Rosyjskie skręty na oponie (siedząc)",
+    "group": "E",
+    "muscle": "Brzuch (mięśnie skośne)",
+    "steps": [
+      "Usiądź na krawędzi opony (albo na ziemi obok, stopy oparte o oponę), tułów lekko odchylony do tyłu.",
+      "Dłonie złączone przed klatką, skręcaj tułów na przemian w lewo i prawo.",
+      "Wariant łatwiejszy: stopy na ziemi przez cały czas. Wariant trudniejszy: stopy uniesione."
+    ],
+    "safety": "Przy bólu odcinka lędźwiowego — wersja ze stopami opartymi o podłogę.",
+    "reps": {
+      "faza1": "2 × 10/stronę",
+      "faza2": "3 × 12/stronę",
+      "faza3": "3 × 15/stronę",
+      "faza4": "4 × 15-20/stronę"
+    },
+    "infographicPrompt": "Clean flat-vector fitness infographic, square format, showing a friendly plus-size adult demonstrating \"seated Russian twist using a tire as a seat\" in 3 sequential steps (start position, mid-movement, end position), side angle, minimalist home-gym background with a car tire used as a seat, soft blue-and-white color palette, bold sans-serif captions in Polish labeling: nazwa ćwiczenia \"Rosyjskie skręty na oponie (siedząc)\", partia mięśniowa \"Brzuch (mięśnie skośne)\", oraz jedna wskazówka bezpieczeństwa: \"Przy bólu odcinka lędźwiowego trzymaj stopy oparte o podłogę przez cały czas.\". Numbered arrows indicating movement direction, dashed alignment guide lines on knees/spine, no spelling errors, high contrast, flat illustration style, no photorealism, inclusive and body-positive character design.",
+    "videoPrompt": "10-15 second instructional fitness demo video, static camera, side angle, a calm plus-size adult sitting on a tire and performing slow controlled torso rotations with correct form in a bright home setting, slow controlled rotation side to side, subtle on-screen Polish captions fade in: \"Rosyjskie skręty na oponie (siedząc)\", \"Brzuch (mięśnie skośne)\", and safety cue \"Przy bólu odcinka lędźwiowego trzymaj stopy oparte o podłogę przez cały czas.\", soft ambient background music, seamless loop, photorealistic, steady well-lit shot, encouraging non-judgmental tone suitable for beginners with a larger body size."
+  },
+  {
+    "code": "E5",
+    "name": "Deska z dłońmi na oponie (elevated plank)",
+    "group": "E",
+    "muscle": "Core, barki",
+    "steps": [
+      "Oprzyj dłonie na krawędzi opony, ciało w linii prostej od głowy do pięt, stopy na ziemi za sobą.",
+      "Napnij brzuch, utrzymaj pozycję przez określony czas."
+    ],
+    "safety": "Biodra nie mogą opadać ani sterczeć do góry — prosta linia ciała.",
+    "reps": {
+      "faza1": "2 × 20-25 s",
+      "faza2": "3 × 25-30 s",
+      "faza3": "3 × 35-40 s",
+      "faza4": "4 × 40-45 s"
+    },
+    "infographicPrompt": "Clean flat-vector fitness infographic, square format, showing a friendly plus-size adult demonstrating \"elevated plank with hands on a tire\" in 3 sequential steps (start position, mid-movement, end position), side angle, minimalist home-gym background with a car tire, soft blue-and-white color palette, bold sans-serif captions in Polish labeling: nazwa ćwiczenia \"Deska z dłońmi na oponie (elevated plank)\", partia mięśniowa \"Core, barki\", oraz jedna wskazówka bezpieczeństwa: \"Biodra w linii prostej — nie unoś ani nie opuszczaj ich nadmiernie.\". Numbered arrows indicating movement direction, dashed alignment guide lines on knees/spine, no spelling errors, high contrast, flat illustration style, no photorealism, inclusive and body-positive character design.",
+    "videoPrompt": "10-15 second instructional fitness demo video, static camera, side angle, a calm plus-size adult holding a steady elevated plank with hands resting on a tire in a bright home setting, holding a steady static position with controlled breathing, subtle on-screen Polish captions fade in: \"Deska z dłońmi na oponie (elevated plank)\", \"Core, barki\", and safety cue \"Biodra w linii prostej — nie unoś ani nie opuszczaj ich nadmiernie.\", soft ambient background music, seamless loop, photorealistic, steady well-lit shot, encouraging non-judgmental tone suitable for beginners with a larger body size."
+  },
+  {
+    "code": "E6",
+    "name": "Wejścia na oponę (tire step-up)",
+    "group": "E",
+    "muscle": "Uda, pośladki",
+    "steps": [
+      "Postaw jedną stopę na oponie, przenieś ciężar ciała i wejdź na nią całym ciałem.",
+      "Zejdź kontrolowanym ruchem, powtórz na drugą nogę."
+    ],
+    "safety": "Upewnij się, że opona się nie przesuwa (oprzeć o ścianę/inną przeszkodę); przy bólu kolan — niższa, szersza opona.",
+    "reps": {
+      "faza1": "2 × 8/nogę",
+      "faza2": "3 × 10/nogę",
+      "faza3": "3 × 12/nogę",
+      "faza4": "4 × 12-15/nogę"
+    },
+    "infographicPrompt": "Clean flat-vector fitness infographic, square format, showing a friendly plus-size adult demonstrating \"step-ups onto a tire\" in 3 sequential steps (start position, mid-movement, end position), side angle, minimalist outdoor garage background with a car tire braced against a wall, soft blue-and-white color palette, bold sans-serif captions in Polish labeling: nazwa ćwiczenia \"Wejścia na oponę (tire step-up)\", partia mięśniowa \"Uda, pośladki\", oraz jedna wskazówka bezpieczeństwa: \"Upewnij się, że opona się nie przesuwa — oprzyj ją o ścianę lub inną stabilną przeszkodę.\". Numbered arrows indicating movement direction, dashed alignment guide lines on knees/spine, no spelling errors, high contrast, flat illustration style, no photorealism, inclusive and body-positive character design.",
+    "videoPrompt": "10-15 second instructional fitness demo video, static camera, side angle, a calm plus-size adult stepping up onto a stable tire braced against a wall and stepping back down with correct form in a garage setting, controlled step up and down at a steady tempo, subtle on-screen Polish captions fade in: \"Wejścia na oponę (tire step-up)\", \"Uda, pośladki\", and safety cue \"Upewnij się, że opona się nie przesuwa — oprzyj ją o ścianę lub inną stabilną przeszkodę.\", soft ambient background music, seamless loop, photorealistic, steady well-lit shot, encouraging non-judgmental tone suitable for beginners with a larger body size."
+  },
+  {
+    "code": "E7",
+    "name": "Przeciąganie opony (tire drag/pull)",
+    "group": "E",
+    "muscle": "Plecy, ramiona, nogi, kardio siłowe",
+    "steps": [
+      "Przewiąż linę/pas przez środek opony, złap za drugi koniec.",
+      "Idąc do tyłu (lub w wykroku do przodu), ciągnij oponę po ziemi na wyznaczonym dystansie.",
+      "Wersja stacjonarna: siad, opona z przodu, ciągnij liną do klatki jak przy wiosłowaniu (naprzemiennie lub oburącz)."
+    ],
+    "safety": "Równa, nieśliska powierzchnia (trawnik/podjazd, nie ostry beton, który zniszczy oponę i może być śliski).",
+    "reps": {
+      "faza1": "2 × 15 s ciągu",
+      "faza2": "3 × 20 s",
+      "faza3": "3 × 25 s",
+      "faza4": "4 × 30 s"
+    },
+    "infographicPrompt": "Clean flat-vector fitness infographic, square format, showing a friendly plus-size adult demonstrating \"dragging a tire with a rope\" in 3 sequential steps (start position, mid-movement, end position), side angle, minimalist outdoor driveway or grassy backyard background with a car tire and a rope, soft blue-and-white color palette, bold sans-serif captions in Polish labeling: nazwa ćwiczenia \"Przeciąganie opony (tire drag/pull)\", partia mięśniowa \"Plecy, ramiona, nogi, kardio siłowe\", oraz jedna wskazówka bezpieczeństwa: \"Ćwicz na równej, nieśliskiej powierzchni — trawnik lub podjazd, nie mokry beton.\". Numbered arrows indicating movement direction, dashed alignment guide lines on knees/spine, no spelling errors, high contrast, flat illustration style, no photorealism, inclusive and body-positive character design.",
+    "videoPrompt": "10-15 second instructional fitness demo video, static camera, side angle, a calm plus-size adult walking backward while pulling a tire attached to a rope across a driveway or grassy yard with correct form, steady walking pace with a firm grip on the rope, subtle on-screen Polish captions fade in: \"Przeciąganie opony (tire drag/pull)\", \"Plecy, ramiona, nogi, kardio siłowe\", and safety cue \"Ćwicz na równej, nieśliskiej powierzchni — trawnik lub podjazd, nie mokry beton.\", soft ambient background music, seamless loop, photorealistic, steady well-lit shot, encouraging non-judgmental tone suitable for beginners with a larger body size."
+  },
+  {
+    "code": "E8",
+    "name": "Przysiad z plecakiem",
+    "group": "E",
+    "muscle": "Uda, pośladki",
+    "steps": [
+      "Załóż plecak, stopy na szerokości bioder.",
+      "Wykonaj przysiad jak w B1/B2, plecak dociąża ruch."
+    ],
+    "safety": "Nie przeciążać plecaka na start (2–4 kg wystarczy na początek); przy bólu kolan — płytszy zakres.",
+    "reps": {
+      "faza1": "2 × 10",
+      "faza2": "3 × 12",
+      "faza3": "3 × 15",
+      "faza4": "4 × 15-18"
+    },
+    "infographicPrompt": "Clean flat-vector fitness infographic, square format, showing a friendly plus-size adult demonstrating \"weighted backpack squat\" in 3 sequential steps (start position, mid-movement, end position), front angle, minimalist home-gym background, soft blue-and-white color palette, bold sans-serif captions in Polish labeling: nazwa ćwiczenia \"Przysiad z plecakiem\", partia mięśniowa \"Uda, pośladki\", oraz jedna wskazówka bezpieczeństwa: \"Zacznij od lekkiego obciążenia (2–4 kg) i przy bólu kolan skróć zakres ruchu.\". Numbered arrows indicating movement direction, dashed alignment guide lines on knees/spine, no spelling errors, high contrast, flat illustration style, no photorealism, inclusive and body-positive character design.",
+    "videoPrompt": "10-15 second instructional fitness demo video, static camera, front angle, a calm plus-size adult wearing a loaded backpack and performing a controlled squat with correct form on a non-slip mat in a bright home setting, slow controlled tempo with a brief pause at the bottom, subtle on-screen Polish captions fade in: \"Przysiad z plecakiem\", \"Uda, pośladki\", and safety cue \"Zacznij od lekkiego obciążenia (2–4 kg) i przy bólu kolan skróć zakres ruchu.\", soft ambient background music, seamless loop, photorealistic, steady well-lit shot, encouraging non-judgmental tone suitable for beginners with a larger body size."
+  },
+  {
+    "code": "E9",
+    "name": "Wiosłowanie w opadzie tułowia z plecakiem",
+    "group": "E",
+    "muscle": "Plecy (mięsień najszerszy, czworoboczny)",
+    "steps": [
+      "Lekki wykrok, tułów pochylony do przodu pod kątem ok. 45°, plecy proste.",
+      "Trzymaj plecak oburącz, ręce wyprostowane pod klatką.",
+      "Przyciągnij plecak do brzucha, łokcie blisko ciała, ściśnij łopatki.",
+      "Kontrolowany powrót do pozycji wyjściowej."
+    ],
+    "safety": "Kluczowe są proste plecy przez cały ruch — przy bólu odcinka lędźwiowego pominąć lub robić siedząc.",
+    "reps": {
+      "faza1": "2 × 10",
+      "faza2": "3 × 12",
+      "faza3": "3 × 15",
+      "faza4": "4 × 15-18"
+    },
+    "infographicPrompt": "Clean flat-vector fitness infographic, square format, showing a friendly plus-size adult demonstrating \"bent-over row using a weighted backpack\" in 3 sequential steps (start position, mid-movement, end position), side angle, minimalist home-gym background, soft blue-and-white color palette, bold sans-serif captions in Polish labeling: nazwa ćwiczenia \"Wiosłowanie w opadzie tułowia z plecakiem\", partia mięśniowa \"Plecy (mięsień najszerszy, czworoboczny)\", oraz jedna wskazówka bezpieczeństwa: \"Przez cały ruch utrzymuj proste plecy — przy bólu odcinka lędźwiowego wykonuj siedząc.\". Numbered arrows indicating movement direction, dashed alignment guide lines on knees/spine, no spelling errors, high contrast, flat illustration style, no photorealism, inclusive and body-positive character design.",
+    "videoPrompt": "10-15 second instructional fitness demo video, static camera, side angle, a calm plus-size adult in a hinged forward-lean position pulling a loaded backpack toward the stomach with correct form on a non-slip mat in a bright home setting, slow controlled tempo with a brief squeeze at the top, subtle on-screen Polish captions fade in: \"Wiosłowanie w opadzie tułowia z plecakiem\", \"Plecy (mięsień najszerszy, czworoboczny)\", and safety cue \"Przez cały ruch utrzymuj proste plecy — przy bólu odcinka lędźwiowego wykonuj siedząc.\", soft ambient background music, seamless loop, photorealistic, steady well-lit shot, encouraging non-judgmental tone suitable for beginners with a larger body size."
+  },
+  {
+    "code": "E10",
+    "name": "Skakanka, podstawowe skoki obunóż",
+    "group": "E",
+    "muscle": "Kardio, łydki, koordynacja",
+    "steps": [
+      "Skakanka za piętami, chwyt uchwytów w dłoniach.",
+      "Drobne skoki obunóż, sznur przechodzi pod stopami, lądowanie na śródstopiu (nie na pięcie).",
+      "Interwały np. 20–30 s skoków / 30–40 s przerwy."
+    ],
+    "safety": "Miękkie podłoże (mata, nie beton), przeciwwskazane przy aktywnych problemach z kolanami/stawem skokowym — wtedy spróbuj E11.",
+    "reps": {
+      "faza1": "2 × 20 s",
+      "faza2": "3 × 25 s",
+      "faza3": "4 × 30 s",
+      "faza4": "5 × 30-40 s"
+    },
+    "infographicPrompt": "Clean flat-vector fitness infographic, square format, showing a friendly plus-size adult demonstrating \"basic two-foot jump rope skipping\" in 3 sequential steps (start position, mid-movement, end position), front angle, minimalist home-gym background with a jump rope, soft blue-and-white color palette, bold sans-serif captions in Polish labeling: nazwa ćwiczenia \"Skakanka, podstawowe skoki obunóż\", partia mięśniowa \"Kardio, łydki, koordynacja\", oraz jedna wskazówka bezpieczeństwa: \"Ląduj miękko na śródstopiu, nie na piętach. Ćwicz na miękkim podłożu.\". Numbered arrows indicating movement direction, dashed alignment guide lines on knees/spine, no spelling errors, high contrast, flat illustration style, no photorealism, inclusive and body-positive character design.",
+    "videoPrompt": "10-15 second instructional fitness demo video, static camera, front angle, a calm plus-size adult jumping rope with correct form on a non-slip mat in a bright home setting, steady rhythmic skipping tempo with soft landings, subtle on-screen Polish captions fade in: \"Skakanka, podstawowe skoki obunóż\", \"Kardio, łydki, koordynacja\", and safety cue \"Ląduj miękko na śródstopiu, nie na piętach. Ćwicz na miękkim podłożu.\", soft ambient background music, seamless loop, photorealistic, steady well-lit shot, encouraging non-judgmental tone suitable for beginners with a larger body size."
+  },
+  {
+    "code": "E11",
+    "name": "Skakanka bez sznura (low-impact, wariant dla stawów)",
+    "group": "E",
+    "muscle": "Kardio, koordynacja",
+    "steps": [
+      "Ten sam ruch nadgarstków co przy skakance, ale bez sznura.",
+      "Zamiast skoku — naprzemienne unoszenie pięt (low impact) w rytmie ruchu nadgarstków."
+    ],
+    "safety": "Minimalne obciążenie stawów — bezpieczne dla większości.",
+    "reps": {
+      "faza1": "2 × 20 s",
+      "faza2": "3 × 25 s",
+      "faza3": "3 × 30 s",
+      "faza4": "4 × 35-40 s"
+    },
+    "infographicPrompt": "Clean flat-vector fitness infographic, square format, showing a friendly plus-size adult demonstrating \"low-impact jump rope motion without a rope\" in 3 sequential steps (start position, mid-movement, end position), front angle, minimalist home-gym background, soft blue-and-white color palette, bold sans-serif captions in Polish labeling: nazwa ćwiczenia \"Skakanka bez sznura (low-impact)\", partia mięśniowa \"Kardio, koordynacja\", oraz jedna wskazówka bezpieczeństwa: \"Ruch niskiego wpływu — bezpieczny dla większości, w tym dla osób z wrażliwymi stawami.\". Numbered arrows indicating movement direction, dashed alignment guide lines on knees/spine, no spelling errors, high contrast, flat illustration style, no photorealism, inclusive and body-positive character design.",
+    "videoPrompt": "10-15 second instructional fitness demo video, static camera, front angle, a calm plus-size adult mimicking a jump rope wrist motion with alternating light heel raises with correct form on a non-slip mat in a bright home setting, steady low-impact rhythmic tempo, subtle on-screen Polish captions fade in: \"Skakanka bez sznura (low-impact)\", \"Kardio, koordynacja\", and safety cue \"Ruch niskiego wpływu — bezpieczny dla większości, w tym dla osób z wrażliwymi stawami.\", soft ambient background music, seamless loop, photorealistic, steady well-lit shot, encouraging non-judgmental tone suitable for beginners with a larger body size."
   }
 ]

@@ -1,6 +1,6 @@
 # Propozycja dodatkowych ćwiczeń — do przygotowania (zdjęcia/wideo)
 
-**Status: sam tekst, nic jeszcze nie jest wpięte do aplikacji.** To jest lista do przejrzenia i przygotowania materiału (tak jak przy oryginalnych 38 ćwiczeniach) — dopiero po dostarczeniu zdjęć/wideo wpinam je do `exercises.json` i silnika programu.
+**Status: infografiki dostarczone i wpięte do aplikacji (E1–E11 w `exercises.json`, biblioteka ćwiczeń, filtr "Bonus", nowy sprzęt w onboardingu/ustawieniach).** Wideo do E1–E11 jeszcze nie dostarczone — jak dojdą pliki `E1.mp4`...`E11.mp4`, dograją się automatycznie (aplikacja już ma logikę fallbacku image/video per kod ćwiczenia, tak samo jak dla A–D).
 
 **Zasada, którą trzymam:** 60-dniowy program z dokumentu źródłowego zostaje **podstawą** — nic w jego strukturze (4 fazy, cykl A→B→C→D→E→F→R, 38 ćwiczeń) się nie zmienia. To, co poniżej, to **opcjonalny dodatek** ("Bonus" / grupa E), który aplikacja może zaproponować użytkownikowi na podstawie jego dopasowania (dostępny sprzęt, poziom trudności, cel) — dokładnie tak, jak dziś działa dopasowanie reszty programu, tylko z nową pulą ćwiczeń do wyboru, nie zamiennikiem rdzenia.
 

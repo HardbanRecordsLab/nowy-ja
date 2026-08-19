@@ -237,7 +237,7 @@ function highlightNav(name) {
 
 // ---------- Onboarding ----------
 const ONBOARD_STEPS = 8;
-const EQUIPMENT_OPTIONS = ['Mata', 'Krzesło', 'Butelki wody / hantle', 'Taśma oporowa', 'Stopień / schody', 'Ściana'];
+const EQUIPMENT_OPTIONS = ['Mata', 'Krzesło', 'Butelki wody / hantle', 'Taśma oporowa', 'Stopień / schody', 'Ściana', 'Opona', 'Plecak obciążony', 'Skakanka'];
 const FOCUS_OPTIONS = ['Brzuch', 'Uda', 'Biodra', 'Klatka piersiowa', 'Ramiona', 'Pośladki'];
 const LIMITATION_OPTIONS = ['Kolana', 'Biodra', 'Kręgosłup / plecy', 'Barki', 'Nadgarstki', 'Brak ograniczeń'];
 const EXPERIENCE_LABELS = { beginner: 'Początkujący', intermediate: 'Średniozaawansowany', advanced: 'Zaawansowany' };
@@ -469,6 +469,7 @@ function viewToday(profile) {
     <a class="quick-link" href="#/schedule"><span class="qi">📅</span>Harmonogram</a>
     <a class="quick-link" href="#/library"><span class="qi">📚</span>Biblioteka ćwiczeń</a>
     <a class="quick-link" href="#/info"><span class="qi">🛡️</span>Bezpieczeństwo</a>
+    ${(profile.equipment || []).some(e => ['Opona', 'Plecak obciążony', 'Skakanka'].includes(e)) ? `<a class="quick-link" href="#/library"><span class="qi">🎒</span>Ćwiczenia bonus</a>` : ''}
   </section>`;
 }
 
@@ -1011,7 +1012,7 @@ function viewExercise(profile, code) {
 }
 
 function groupLabel(g) {
-  return { A: 'Brzuch + Biodra', B: 'Uda + Pośladki', C: 'Klatka + Ramiona', D: 'Aktywność / mobilność' }[g] || g;
+  return { A: 'Brzuch + Biodra', B: 'Uda + Pośladki', C: 'Klatka + Ramiona', D: 'Aktywność / mobilność', E: 'Bonus (opona, plecak, skakanka)' }[g] || g;
 }
 
 const activeFlipbookIntervals = {};
@@ -1173,6 +1174,7 @@ function viewLibrary() {
       <button class="chip" data-group="B">Uda/Pośladki</button>
       <button class="chip" data-group="C">Klatka/Ramiona</button>
       <button class="chip" data-group="D">Mobilność</button>
+      <button class="chip" data-group="E">Bonus</button>
     </div>
   </div>
   <div id="lib-results" class="lib-grid">${libraryCards(EXERCISES)}</div>`;

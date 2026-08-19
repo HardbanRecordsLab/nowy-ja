@@ -279,7 +279,7 @@ a { color: inherit; text-decoration: none; }
 .progress-bar { flex: 1; height: 10px; border-radius: 999px; background: var(--border); overflow: hidden; }
 .progress-bar-fill { height: 100%; background: linear-gradient(90deg, var(--navy), var(--gold)); }
 
-.quick-links { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 4px; }
+.quick-links { display: grid; grid-template-columns: repeat(auto-fit, minmax(90px, 1fr)); gap: 10px; margin-top: 4px; }
 .quick-link {
   background: var(--surface);
   border: 1px solid var(--border);
@@ -596,6 +596,7 @@ a { color: inherit; text-decoration: none; }
 .group-B { background: #2f8f4e; }
 .group-C { background: #c0392b; }
 .group-D { background: #8e6fce; }
+.group-E { background: var(--gold); color: #2A0A0E; }
 .lib-name { font-weight: 600; font-size: 0.88rem; }
 .lib-muscle { font-size: 0.75rem; }
 
