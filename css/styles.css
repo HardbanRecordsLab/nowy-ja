@@ -295,9 +295,18 @@ a { color: inherit; text-decoration: none; }
 .qi { display: block; font-size: 1.4rem; margin-bottom: 4px; }
 
 .onboard { padding-top: 10px; }
-.onboard h1 { color: var(--navy); margin-bottom: 2px; }
+.onboard-brand { display: flex; align-items: center; gap: 10px; margin-bottom: 2px; }
+.onboard-brand img { width: 44px; height: 44px; border-radius: 11px; box-shadow: 0 3px 12px rgba(0,0,0,0.2); }
+.onboard h1 { color: var(--navy); margin: 0; }
 [data-theme="dark"] .onboard h1, [data-theme="auto"] .onboard h1 { color: var(--gold); }
 .tagline { color: var(--text-muted); margin-top: 0; }
+
+.onboard-progress { display: flex; gap: 6px; margin: 16px 0 18px; }
+.onboard-progress-seg {
+  flex: 1; height: 6px; border-radius: 999px; background: var(--border);
+  transition: background 0.3s ease;
+}
+.onboard-progress-seg.active { background: linear-gradient(90deg, var(--navy), var(--gold)); }
 
 .form label { display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 12px; }
 .form input, .form select { width: 100%; margin-top: 5px; padding: 10px 12px; border-radius: 10px; border: 1px solid var(--border); background: var(--bg); color: var(--text); font-size: 1rem; }

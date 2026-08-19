@@ -255,8 +255,11 @@ function chipCheckbox(name, value, checked) {
 function viewOnboarding() {
   return `
   <div class="onboard">
-    <h1>Nowa Ja</h1>
+    <div class="onboard-brand"><img src="icons/icon-192.png" alt=""><h1>Nowa Ja</h1></div>
     <p class="tagline">Twój 60-dniowy plan treningowy w domu — dopasowany do Ciebie.</p>
+    <div class="onboard-progress" role="progressbar" aria-valuemin="1" aria-valuemax="${ONBOARD_STEPS}" aria-valuenow="1">
+      ${Array.from({ length: ONBOARD_STEPS }, (_, i) => `<span class="onboard-progress-seg${i === 0 ? ' active' : ''}" data-seg="${i}"></span>`).join('')}
+    </div>
     <form id="form-onboard" class="card form" data-step="0" novalidate>
       <div class="onboard-step-label">Krok <span id="onboard-step-num">1</span> z ${ONBOARD_STEPS}</div>
 
@@ -319,6 +322,10 @@ function showOnboardStep(form, index) {
   form.querySelectorAll('.onboard-step').forEach(el => { el.hidden = Number(el.dataset.step) !== clamped; });
   const numEl = document.getElementById('onboard-step-num');
   if (numEl) numEl.textContent = String(clamped + 1);
+  document.querySelectorAll('.onboard-progress-seg').forEach(seg => {
+    seg.classList.toggle('active', Number(seg.dataset.seg) <= clamped);
+  });
+  document.querySelector('.onboard-progress')?.setAttribute('aria-valuenow', String(clamped + 1));
   const backBtn = document.getElementById('onboard-back-btn');
   const nextBtn = document.getElementById('onboard-next-btn');
   const submitBtn = document.getElementById('onboard-submit-btn');
@@ -361,7 +368,7 @@ function bindOnboarding() {
 function viewSafety() {
   return `
   <div class="onboard">
-    <h1>Zanim zaczniesz</h1>
+    <div class="onboard-brand"><img src="icons/icon-192.png" alt=""><h1>Zanim zaczniesz</h1></div>
     <div class="card">
       <p>${esc(PROGRAM_INTRO)}</p>
       <div class="consent-box">
