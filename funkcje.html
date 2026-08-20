@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1199802338847388" crossorigin="anonymous"></script>
+<title>Funkcje i plan rozwoju — Nowa Ja</title>
+<meta name="description" content="Specyfikacja funkcjonalna aplikacji Nowa Ja: co dokładnie dostajesz w programie, jak to działa, i plan dalszego rozwoju.">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://nowa-ja.vercel.app/funkcje.html">
+<meta name="theme-color" content="#3F6B17">
+<link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/styles.css">
+<style>
+  .legal-wrap { max-width: 720px; margin: 0 auto; padding: 24px 16px 60px; }
+  .legal-wrap h1 { margin-top: 0; }
+  .legal-wrap h2 { margin: 0 0 8px; font-size: 1.15rem; }
+  .legal-wrap h3 { margin: 0 0 6px; font-size: 1rem; }
+  .legal-wrap section.card { line-height: 1.6; }
+  .legal-wrap ul, .legal-wrap ol { margin: 8px 0; padding-left: 20px; }
+  .legal-wrap li { margin-bottom: 6px; }
+  .legal-updated { color: var(--text-muted); font-size: 0.85rem; margin-bottom: 24px; }
+  .legal-back { display: inline-block; margin-bottom: 18px; }
+  .guide-toc { display: flex; flex-wrap: wrap; gap: 8px; margin: 4px 0 0; padding: 0; list-style: none; }
+  .guide-toc a {
+    display: inline-block; padding: 6px 12px; border-radius: 999px; border: 1px solid var(--border);
+    font-size: 0.82rem; font-weight: 600; color: var(--navy);
+  }
+  .feat-block { margin-bottom: 18px; padding-bottom: 18px; border-bottom: 1px solid var(--border); }
+  .feat-block:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+  .phase-chip-row { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-top: 8px; }
+  .phase-chip-row span.chip {
+    display: inline-flex; align-items: center; justify-content: center; width: 26px; height: 26px;
+    border-radius: 50%; background: var(--navy); color: #fff; font-weight: 700; font-size: 0.8rem;
+  }
+  .phase-chip-row span.chip.chip-r { background: var(--gold); color: var(--navy); }
+  .roadmap-horizon { margin-bottom: 20px; }
+  .roadmap-horizon h3 { color: var(--navy); }
+  [data-theme="dark"] .roadmap-horizon h3, [data-theme="auto"] .roadmap-horizon h3 { color: var(--gold); }
+  .roadmap-principle { background: color-mix(in srgb, var(--gold) 12%, transparent); border-radius: var(--radius); padding: 14px 16px; margin-top: 16px; }
+</style>
+</head>
+<body>
+<header id="app-header">
+  <a href="index.html" class="brand"><img src="assets/brand-transformation.jpg" alt="" class="brand-logo">Nowa <span>Ja</span></a>
+</header>
+
+<div class="legal-wrap">
+  <a href="index.html" class="legal-back link">← Wróć do strony głównej</a>
+  <h1 class="page-title">Funkcje i plan rozwoju</h1>
+  <p class="legal-updated">Dokument funkcyjno-biznesowy · ostatnia aktualizacja: 21 sierpnia 2026</p>
+
+  <section class="card">
+    <h2>Spis treści</h2>
+    <ul class="guide-toc">
+      <li><a href="#co-dostajesz">Co dokładnie dostajesz</a></li>
+      <li><a href="#model">Model działania</a></li>
+      <li><a href="#roadmap">Plan rozwoju</a></li>
+    </ul>
+  </section>
+
+  <section class="card" id="co-dostajesz">
+    <h2>Co dokładnie dostajesz</h2>
+    <p class="muted small">Pięć elementów działających razem, nie osobnych funkcji do składania samodzielnie.</p>
+
+    <div class="feat-block">
+      <h3>Program Engine</h3>
+      <p>Cały 60-dniowy plan (4 fazy, harmonogram A→B→C→D→E→F→R) generowany z reguł, nie sztywno zakodowany dzień po dniu. Plan reaguje na Twoje zgłoszenia (brak czasu, ból, brak sprzętu) i dostosowuje się na bieżąco.</p>
+      <div class="phase-chip-row" aria-hidden="true">
+        <span class="chip">A</span>→<span class="chip">B</span>→<span class="chip">C</span>→<span class="chip">D</span>→<span class="chip">E</span>→<span class="chip">F</span>→<span class="chip chip-r">R</span>
+      </div>
+    </div>
+
+    <div class="feat-block">
+      <h3>Trening teraz</h3>
+      <p>Prowadzony tryb treningu: odliczanie 3-2-1, automatyczne serie i odpoczynek, pełna obsługa dni obwodowych (stacje/rundy). Do każdego ćwiczenia — infografika i wideo instruktażowe, widoczne w trakcie jego wykonywania, nie tylko w bibliotece.</p>
+    </div>
+
+    <div class="feat-block">
+      <h3>Analiza formy przez kamerę</h3>
+      <p>Rozpoznawanie sylwetki (MediaPipe Pose) działające w całości lokalnie, w przeglądarce — żaden obraz z kamery nigdy nie opuszcza urządzenia i nie jest zapisywany. Dla wybranych ćwiczeń: ocena poprawności formy na żywo, automatyczne liczenie powtórzeń, wykrywanie zmęczenia i utraty formy w trakcie serii.</p>
+    </div>
+
+    <div class="feat-block">
+      <h3>Darmowy lektor i motywator</h3>
+      <p>Głosowe zapowiadanie ćwiczeń i odliczanie (Web Speech API), w stylu łagodnym lub ostrzejszym — do wyboru.</p>
+    </div>
+
+    <div class="feat-block">
+      <h3>Śledzenie postępów</h3>
+      <p>Panel monitoringu z serią dni, gotowością do treningu, mapą całego 60-dniowego programu, prognozą ukończenia i trendem formy — liczone z danych, które aplikacja już zbiera. Waga, obwody ciała i zdjęcia sylwetki z suwakiem porównania przed/po. System odznak za konsekwencję i kamienie milowe.</p>
+    </div>
+
+    <div class="feat-block">
+      <h3>Zainstaluj jak aplikację</h3>
+      <p>Prawdziwe PWA: instaluje się na ekranie głównym, działa offline, bez konta i bez chmury — Twoje dane zostają na urządzeniu.</p>
+    </div>
+  </section>
+
+  <section class="card" id="model">
+    <h2>Model działania</h2>
+    <p>Nowa Ja jest darmowa i nie wymaga konta. Wszystkie dane — profil, historia treningów, waga, obwody, zdjęcia — zapisywane są lokalnie na Twoim urządzeniu (localStorage i IndexedDB w przeglądarce), nie na serwerze. Nic nie jest wysyłane ani przechowywane w chmurze. Aplikacja działa offline po pierwszym wczytaniu.</p>
+    <p class="muted small">Szczegóły dotyczące danych i prywatności: <a href="polityka-prywatnosci.html" class="footer-link">Polityka prywatności</a>.</p>
+  </section>
+
+  <section class="card" id="roadmap">
+    <h2>Plan rozwoju</h2>
+    <p class="muted small">Kierunki, w które aplikacja realnie zmierza — nie lista obietnic z datami. Kolejność i zakres mogą się zmieniać.</p>
+
+    <div class="roadmap-horizon">
+      <h3>Najbliższe kierunki</h3>
+      <ul>
+        <li>Dalsze rozszerzanie analizy formy przez kamerę na kolejne ćwiczenia (obecnie pokryta część biblioteki, cel: sukcesywne dokładanie kolejnych)</li>
+        <li>Nowe odznaki i wyzwania motywacyjne</li>
+        <li>Rozszerzone statystyki trendu formy i tempa ukończenia programu</li>
+        <li>Poprawki czytelności i dostępności na małych ekranach</li>
+      </ul>
+    </div>
+
+    <div class="roadmap-horizon">
+      <h3>Średni horyzont</h3>
+      <ul>
+        <li>Eksport i import danych treningowych między urządzeniami — lokalnie, bez chmury (plik do samodzielnego zapisania i przeniesienia)</li>
+        <li>Osobne ścieżki programu dla różnych poziomów zaawansowania, nie tylko codzienne dostosowanie</li>
+        <li>Pełniejsze cache'owanie wideo instruktażowych do trybu offline</li>
+        <li>Personalizowane przypomnienia głosowe</li>
+      </ul>
+    </div>
+
+    <div class="roadmap-horizon">
+      <h3>Dalsza przyszłość / eksploracja</h3>
+      <ul>
+        <li>Odczyt danych z lokalnych czujników urządzenia (np. tętno z opaski przez Web Bluetooth) — jeśli przeglądarka na to pozwoli, zawsze bez wysyłania danych na zewnątrz</li>
+        <li>Tryb dla dwóch osób trenujących razem na jednym urządzeniu</li>
+        <li>Kontynuacja programu poza pierwsze 60 dni</li>
+      </ul>
+    </div>
+
+    <div class="roadmap-principle">
+      <strong>Zasada, która się nie zmienia:</strong> bez konta, bez chmury, bez subskrypcji. Cokolwiek zostanie dodane, dane użytkownika zostają na jego urządzeniu.
+    </div>
+  </section>
+</div>
+
+</body>
+</html>

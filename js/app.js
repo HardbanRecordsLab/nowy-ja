@@ -216,7 +216,7 @@ async function renderShareCanvas({ title, stat, subtitle, badge }) {
     }
   } else {
     try {
-      const logo = await loadImageEl('icons/icon-192.png');
+      const logo = await loadImageEl('assets/brand-transformation.jpg');
       ctx.drawImage(logo, 460, 110, 160, 160);
     } catch {}
 
@@ -407,7 +407,7 @@ function viewOnboarding() {
   return `
   <div class="onboard">
     <div class="onboard-hero-image"><img src="assets/brand-transformation.jpg" alt="Nowa Ja — Twoja przemiana" loading="eager"></div>
-    <div class="onboard-brand"><img src="icons/icon-192.png" alt=""><h1>Nowa Ja</h1></div>
+    <div class="onboard-brand"><img src="assets/brand-transformation.jpg" alt=""><h1>Nowa Ja</h1></div>
     <p class="tagline">Twój 60-dniowy plan treningowy w domu — dopasowany do Ciebie.</p>
     <button type="button" class="onboard-quickstart" data-action="onboard-quickstart">Zacznij od razu, dostosuję później →</button>
     <div class="onboard-progress" role="progressbar" aria-valuemin="1" aria-valuemax="${ONBOARD_STEPS}" aria-valuenow="1">
@@ -545,7 +545,7 @@ function bindOnboarding() {
 function viewSafety() {
   return `
   <div class="onboard">
-    <div class="onboard-brand"><img src="icons/icon-192.png" alt=""><h1>Zanim zaczniesz</h1></div>
+    <div class="onboard-brand"><img src="assets/brand-transformation.jpg" alt=""><h1>Zanim zaczniesz</h1></div>
     <div class="card">
       <p>${esc(PROGRAM_INTRO)}</p>
       <div class="consent-box">
