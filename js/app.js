@@ -255,6 +255,13 @@ function render() {
     activeWorkoutDay = null;
   }
 
+  // Wyłącz kamerę/analizę formy, gdy użytkownik nawiguje gdzie indziej — inaczej kamera
+  // zostałaby włączona w tle bez sensu (i drenowałaby baterię).
+  if (name !== 'form-check' && typeof PoseCheck !== 'undefined' && PoseCheck.isRunning()) {
+    Voice.stop();
+    PoseCheck.stop();
+  }
+
   if (!profile && name !== 'onboarding') {
     root.innerHTML = viewOnboarding();
     document.getElementById('nav').hidden = true;
@@ -270,7 +277,7 @@ function render() {
     return;
   }
 
-  const fullScreenRoute = name === 'workout' || name === 'safety' || name === 'onboarding';
+  const fullScreenRoute = name === 'workout' || name === 'safety' || name === 'onboarding' || name === 'form-check';
   document.getElementById('nav').hidden = fullScreenRoute;
   updateHeader(profile);
 
@@ -279,6 +286,7 @@ function render() {
     case 'today': html = viewToday(profile); break;
     case 'day': html = viewDay(profile, parseInt(arg, 10)); break;
     case 'workout': html = viewWorkoutShell(); break;
+    case 'form-check': html = viewFormCheck(arg); break;
     case 'exercise': html = viewExercise(profile, arg); break;
     case 'schedule': html = viewSchedule(profile); break;
     case 'library': html = viewLibrary(); break;
@@ -522,9 +530,22 @@ function bindSafety() {
 }
 
 // ---------- Today ----------
+// Jeśli profil ma aktywne przyspieszenie fazy (patrz computePhaseTrend), stosujemy je do
+// dnia dzisiejszego i przyszłych — nie do dni już ukończonych, tych nie przepisujemy wstecz.
+function effectiveDayInfo(profile, day) {
+  const info = getDayInfo(day);
+  if (info.rest) return info;
+  const override = Store.getPhaseOverride(profile);
+  if (override && override > info.phase && day >= Store.currentDayNumber(profile)) {
+    const phaseName = (PHASES.find(p => p.id === override) || {}).name || info.phaseName;
+    return { ...info, phase: override, phaseName };
+  }
+  return info;
+}
+
 function viewToday(profile) {
   const day = Store.currentDayNumber(profile);
-  const info = getDayInfo(day);
+  const info = effectiveDayInfo(profile, day);
   const done = profile.progress.completedDays.includes(day);
   const completedCount = profile.progress.completedDays.length;
   const pct = Math.round((completedCount / 60) * 100);
@@ -542,6 +563,7 @@ function viewToday(profile) {
     <p class="muted">${esc(info.muscles)}</p>
     ${done ? '<p class="done-badge">✓ Ukończono dzisiejszy trening</p>' : ''}
     <a class="btn primary big" href="#/${done ? 'day' : 'workout'}/${day}">${done ? 'Zobacz trening' : (info.rest ? 'Zobacz dzień odpoczynku' : 'Rozpocznij trening')}</a>
+    ${!done && !info.rest ? `<a class="btn ghost big" href="#/workout/${day}-express">⚡ Nie mam siły na cały trening — 10 minut wystarczy</a>` : ''}
   </section>
 
   <section class="card progress-mini">
@@ -554,7 +576,9 @@ function viewToday(profile) {
   </section>
 
   ${viewReadinessCard(profile)}
+  ${viewDailyLogCard(profile)}
   ${viewDifficultySuggestion(profile)}
+  ${viewPhaseTrendSuggestion(profile)}
 
   <section class="card">
     <h3 style="margin-top:0">🤖 AI Coach</h3>
@@ -601,6 +625,37 @@ function viewDifficultySuggestion(profile) {
     <h3 style="margin-top:0">💡 Sugestia dostosowania</h3>
     <p class="muted" style="margin-bottom:10px">${esc(s.reason)}</p>
     <button type="button" class="btn small primary" data-action="apply-difficulty-suggestion" data-direction="${s.direction}">Ustaw poziom: ${label}</button>
+  </section>`;
+}
+
+const EATING_LABELS = { light: 'Lekko', normal: 'Normalnie', heavy: 'Ciężko' };
+
+function viewDailyLogCard(profile) {
+  const log = Store.getDailyLog(profile);
+  return `
+  <section class="card">
+    <h3 style="margin-top:0">🍽️ Dzień w pigułce</h3>
+    <p class="muted small" style="margin-bottom:2px">Jak dziś jadłaś/eś?</p>
+    <div class="chip-row">${Object.entries(EATING_LABELS).map(([v, l]) => `<button type="button" class="chip ${log.eating === v ? 'active' : ''}" data-action="set-eating" data-value="${v}">${l}</button>`).join('')}</div>
+    <p class="muted small" style="margin:10px 0 4px">Nawodnienie: ${log.water || 0} ${log.water === 1 ? 'szklanka' : 'szklanek'}</p>
+    <div class="chip-row">
+      <button type="button" class="btn small ghost" data-action="water-remove">− szklanka</button>
+      <button type="button" class="btn small primary" data-action="water-add">+ 💧 szklanka</button>
+    </div>
+  </section>`;
+}
+
+function viewPhaseTrendSuggestion(profile) {
+  const t = Store.computePhaseTrend(profile);
+  if (!t) return '';
+  return `
+  <section class="card" style="border-left:4px solid var(--gold)">
+    <h3 style="margin-top:0">📈 Stały postęp — czas na wyższą fazę?</h3>
+    <p class="muted" style="margin-bottom:10px">${esc(t.reason)}</p>
+    <div class="btn-row">
+      <button type="button" class="btn small primary" data-action="apply-phase-trend" data-phase="${t.suggestedPhase}">Przejdź na „${esc(t.phaseName)}"</button>
+      <button type="button" class="btn small ghost" data-action="dismiss-phase-trend" data-phase="${t.suggestedPhase}">Nie teraz</button>
+    </div>
   </section>`;
 }
 
@@ -687,7 +742,7 @@ function viewConstraintPanel() {
 
 function viewDay(profile, day) {
   if (!day || day < 1 || day > 60) return `<div class="empty-state"><p>Nieprawidłowy dzień.</p><a class="link" href="#/schedule">Wróć do harmonogramu</a></div>`;
-  const info = getDayInfo(day);
+  const info = effectiveDayInfo(profile, day);
   const done = profile.progress.completedDays.includes(day);
   const checked = new Set(Store.getExerciseChecks(profile, day));
 
@@ -793,17 +848,28 @@ document.addEventListener('visibilitychange', () => {
   }
 });
 
-function initWorkout(profile, day) {
-  if (activeWorkoutRunner && activeWorkoutDay === day) {
+// Tryb ekspresowy: prawdziwy osobny ~10-minutowy wariant dnia (mniej ćwiczeń, 1 seria każde),
+// nie tylko redukcja serii przy "mało czasu" — dla dni zerowej motywacji łatwiej zacząć
+// dedykowany krótki plan niż "skrócony" pełny trening.
+const EXPRESS_MAX_EXERCISES = 4;
+
+function initWorkout(profile, day, opts = {}) {
+  const isExpress = !!opts.express;
+  if (activeWorkoutRunner && activeWorkoutDay === day && !!activeWorkoutRunner._express === isExpress) {
     renderWorkoutBody(activeWorkoutRunner);
     return;
   }
   requestWakeLock();
-  let dayInfo = getDayInfo(day);
+  let dayInfo = effectiveDayInfo(profile, day);
   const isTimeConstrained = hasConstraint('time');
-  if (isTimeConstrained && dayInfo.circuit) {
+  if (isExpress && dayInfo.circuit) {
+    dayInfo = { ...dayInfo, rounds: '1' };
+  } else if (isTimeConstrained && dayInfo.circuit) {
     const rounds = firstIntFrom(dayInfo.rounds, 2);
     dayInfo = { ...dayInfo, rounds: String(Math.max(1, rounds - 1)) };
+  }
+  if (isExpress && !dayInfo.rest && !dayInfo.circuit) {
+    dayInfo = { ...dayInfo, exercises: dayInfo.exercises.slice(0, EXPRESS_MAX_EXERCISES) };
   }
   const steps = buildWorkoutSteps(dayInfo, exByCode);
   const phaseDef = PHASES.find(p => p.id === dayInfo.phase) || PHASES[0];
@@ -816,7 +882,7 @@ function initWorkout(profile, day) {
     dayInfo,
     steps,
     restSeconds,
-    setsReduction: isTimeConstrained ? 1 : 0,
+    setsReduction: isExpress ? 99 : (isTimeConstrained ? 1 : 0),
     onLogSet: (code, setsCompleted, setsTarget, skipped) => {
       results[code] = { code, setsCompleted, setsTarget, skipped: !!skipped };
     },
@@ -824,6 +890,7 @@ function initWorkout(profile, day) {
   });
   activeWorkoutRunner._day = day;
   activeWorkoutRunner._results = results;
+  activeWorkoutRunner._express = isExpress;
   activeWorkoutRunner._equipmentFlag = hasConstraint('equipment');
   activeWorkoutRunner._painParts = workoutConstraints.filter(c => c.type === 'pain').map(c => c.part);
   activeWorkoutRunner.begin();
@@ -857,7 +924,7 @@ function renderWorkoutBody(runner, day, profile) {
   body.innerHTML = `
     <div class="workout-header">
       <button type="button" class="icon-btn" data-action="workout-exit" aria-label="Zakończ">✕</button>
-      <span class="muted">${esc(dayInfo.typeName)}</span>
+      <span class="muted">${esc(dayInfo.typeName)}${runner._express ? ' <span class="pill">⚡ ekspresowo</span>' : ''}</span>
       <div class="workout-header-actions">
         <button type="button" class="icon-btn" data-action="workout-toggle-voice" aria-label="Lektor">${Voice.isEnabled() ? '🔊' : '🔇'}</button>
         <button type="button" class="icon-btn" data-action="workout-toggle-music" aria-label="Muzyka">${Music.isEnabled() ? '🎵' : '🔕'}</button>
@@ -1014,6 +1081,98 @@ function workoutFeedbackHtml(runner) {
   </div>`;
 }
 
+// ---------- Sprawdzian formy (kamera, w 100% lokalnie — patrz js/poseCheck.js) ----------
+function viewFormCheck(code) {
+  const ex = exByCode[code];
+  const kind = FORM_CHECK_KIND[code];
+  if (!ex || !kind) {
+    return `<div class="empty-state"><p>Sprawdzian formy niedostępny dla tego ćwiczenia.</p><a class="link" href="#/library">Wróć do biblioteki</a></div>`;
+  }
+  if (typeof PoseCheck === 'undefined' || !PoseCheck.isSupported()) {
+    return `
+    <div class="workout-header">
+      <button type="button" class="icon-btn" data-action="exit-form-check" data-code="${code}" aria-label="Zamknij">✕</button>
+      <span class="muted">Sprawdzian formy</span>
+      <div></div>
+    </div>
+    <div class="workout-center"><p class="muted">Ta przeglądarka nie obsługuje analizy kamery na urządzeniu. Spróbuj w aktualnej wersji Chrome lub Safari.</p></div>`;
+  }
+  return `
+  <div class="workout-header">
+    <button type="button" class="icon-btn" data-action="exit-form-check" data-code="${code}" aria-label="Zamknij">✕</button>
+    <span class="muted">${esc(ex.code)} — Sprawdzian formy (beta)</span>
+    <div></div>
+  </div>
+  <div class="form-check-root">
+    <div class="form-check-video-wrap">
+      <video id="fc-video" playsinline muted></video>
+      <canvas id="fc-canvas"></canvas>
+    </div>
+    <p class="muted small" id="fc-status">Ustaw telefon z boku, ok. 2 metry od siebie, tak żeby było widać całą sylwetkę od stóp po ramiona.</p>
+    <div class="btn-row" id="fc-controls">
+      <button type="button" class="btn primary" id="fc-btn-start">Uruchom kamerę</button>
+    </div>
+    <p class="muted small" style="margin-top:14px">Obraz z kamery jest przetwarzany wyłącznie na Twoim urządzeniu i nigdzie nie jest wysyłany ani zapisywany. To orientacyjna pomoc, nie ocena eksperta — pierwsze uruchomienie pobiera model rozpoznawania (kilka MB), potem działa bez ponownego pobierania.</p>
+  </div>`;
+}
+
+function bindFormCheck(code) {
+  const ex = exByCode[code];
+  const kind = FORM_CHECK_KIND[code];
+  const video = document.getElementById('fc-video');
+  const canvas = document.getElementById('fc-canvas');
+  const statusEl = document.getElementById('fc-status');
+  const controls = document.getElementById('fc-controls');
+  if (!ex || !kind || !video || !canvas || !statusEl || !controls) return;
+
+  function setControls(html) { controls.innerHTML = html; }
+
+  const startBtn = document.getElementById('fc-btn-start');
+  if (!startBtn) return;
+  startBtn.addEventListener('click', async () => {
+    setControls('<button type="button" class="btn primary" disabled>Uruchamianie…</button>');
+    statusEl.textContent = 'Uruchamianie kamery i (przy pierwszym użyciu) pobieranie modelu analizy — to może chwilę potrwać…';
+
+    await PoseCheck.start({
+      video, canvas, kind,
+      onSpeak: (text) => Voice.speak(text, { interrupt: true }),
+      onStatus: (s) => {
+        if (s.phase === 'error') {
+          statusEl.textContent = s.message;
+          setControls('<button type="button" class="btn primary" id="fc-btn-retry">Spróbuj ponownie</button>');
+          document.getElementById('fc-btn-retry')?.addEventListener('click', () => bindFormCheck(code));
+        } else if (s.phase === 'ready') {
+          statusEl.textContent = 'Widzę obraz z kamery. Stań prosto w kadrze, żeby skalibrować pozycję neutralną.';
+          setControls('<button type="button" class="btn primary" id="fc-btn-calibrate">Kalibruj (stój prosto ok. 3 s)</button>');
+          document.getElementById('fc-btn-calibrate')?.addEventListener('click', async () => {
+            setControls('<button type="button" class="btn primary" disabled>Kalibracja — stój prosto…</button>');
+            statusEl.textContent = 'Stój prosto i nieruchomo przez chwilę…';
+            const ok = await PoseCheck.calibrate();
+            if (ok) {
+              statusEl.textContent = `Kalibracja gotowa. Zacznij ${kind === 'hinge' ? 'martwy ciąg' : 'przysiad / wykrok'} — będę podpowiadać na głos.`;
+              setControls('<button type="button" class="btn ghost" id="fc-btn-stop">Zakończ analizę</button>');
+              document.getElementById('fc-btn-stop')?.addEventListener('click', () => {
+                PoseCheck.stop();
+                navigate(`#/exercise/${code}`);
+              });
+            } else {
+              statusEl.textContent = 'Nie udało się wykryć całej sylwetki — sprawdź, czy mieścisz się w kadrze, i spróbuj ponownie.';
+              setControls('<button type="button" class="btn primary" id="fc-btn-calibrate2">Kalibruj ponownie</button>');
+              document.getElementById('fc-btn-calibrate2')?.addEventListener('click', () => bindFormCheck(code));
+            }
+          });
+        } else if (s.phase === 'tracking-lost') {
+          statusEl.textContent = 'Nie widzę całej sylwetki — cofnij się lub popraw ustawienie telefonu.';
+        } else if (s.phase === 'analyzing') {
+          statusEl.textContent = s.ok
+            ? '✅ Forma wygląda dobrze.'
+            : '⚠️ ' + (s.issues.includes('back') ? 'Sprawdź plecy / tułów.' : s.issues.includes('knee') ? 'Sprawdź pozycję kolan.' : 'Zwiększ zakres pochylenia w biodrach.');
+        }
+      },
+    });
+  });
+}
+
 function exitWorkout() {
   Voice.stop();
   Music.stop();
@@ -1112,6 +1271,13 @@ function viewExercise(profile, code) {
     <p>${esc(ex.safety)}</p>
   </section>
 
+  ${FORM_CHECK_KIND[ex.code] ? `
+  <section class="card" style="border-left:4px solid var(--gold)">
+    <h3 style="margin-top:0">🎥 Sprawdzian formy (beta)</h3>
+    <p class="muted small">Kamera na Twoim urządzeniu orientacyjnie sprawdza pochylenie tułowia i pozycję kolan — obraz nigdy nie opuszcza telefonu/komputera. To pomoc, nie ocena eksperta — nie zastępuje wskazówek bezpieczeństwa powyżej.</p>
+    <a class="btn small primary" href="#/form-check/${ex.code}">Uruchom kamerę</a>
+  </section>` : ''}
+
   <section class="card">
     <h3>Serie × powtórzenia wg fazy</h3>
     <table class="reps-table"><tbody>${repsRows}</tbody></table>
@@ -1137,6 +1303,12 @@ function viewExercise(profile, code) {
     </div>
   </details>`;
 }
+
+// Ćwiczenia z ruchem przysiadu/wykroku/zawiasu biodrowego — jedyne, dla których heurystyka
+// "odchylenie od pozycji stojącej" ma sens. B9 (przysiad izometryczny przy ścianie) celowo
+// pominięty — to statyczny wytrzym w ugięciu, więc odchylenie od stania jest tam z założenia
+// duże i nie oznacza błędu formy.
+const FORM_CHECK_KIND = { B1: 'squat', B2: 'squat', B3: 'squat', E3: 'hinge', E8: 'squat', B13: 'squat' };
 
 function groupLabel(g) {
   return { A: 'Brzuch + Biodra', B: 'Uda + Pośladki', C: 'Klatka + Ramiona', D: 'Aktywność / mobilność', E: 'Bonus (opona, plecak, skakanka)' }[g] || g;
@@ -1578,7 +1750,7 @@ function viewSettings(profile) {
   const profiles = Store.getProfiles();
   const theme = Store.getTheme();
   const day = Store.currentDayNumber(profile);
-  const info = getDayInfo(day);
+  const info = effectiveDayInfo(profile, day);
   const streak = Store.currentStreak(profile);
   const completedCount = profile.progress.completedDays.length;
   const initial = (profile.name || '?').trim().charAt(0).toUpperCase() || '?';
@@ -1860,6 +2032,32 @@ document.addEventListener('click', async e => {
       Store.updateProfile(profile.id, { difficultyPreference: target.dataset.direction === 'easier' ? 'easier' : 'harder' });
       render();
       break;
+    case 'set-eating':
+      Store.setEatingLog(profile.id, target.dataset.value);
+      render();
+      break;
+    case 'water-add':
+      Store.addWaterLog(profile.id, 1);
+      vibrate(20);
+      render();
+      break;
+    case 'water-remove':
+      Store.addWaterLog(profile.id, -1);
+      render();
+      break;
+    case 'apply-phase-trend': {
+      const phaseId = Number(target.dataset.phase);
+      Store.setPhaseOverride(profile.id, phaseId);
+      vibrate([40, 30, 80]);
+      render();
+      break;
+    }
+    case 'dismiss-phase-trend': {
+      const phaseId = Number(target.dataset.phase);
+      Store.dismissPhaseTrend(profile.id, phaseId);
+      render();
+      break;
+    }
     case 'set-schedule-view':
       scheduleViewMode = target.dataset.mode === 'calendar' ? 'calendar' : 'list';
       render();
@@ -1899,6 +2097,11 @@ document.addEventListener('click', async e => {
     }
     case 'workout-exit':
       if (confirm('Zakończyć trening teraz? Postęp tej sesji nie zostanie zapisany.')) exitWorkout();
+      break;
+    case 'exit-form-check':
+      Voice.stop();
+      if (typeof PoseCheck !== 'undefined') PoseCheck.stop();
+      navigate(`#/exercise/${target.dataset.code}`);
       break;
     case 'workout-toggle-voice':
       Voice.setEnabled(!Voice.isEnabled());
@@ -1968,6 +2171,7 @@ document.addEventListener('click', async e => {
         day, durationSeconds: activeWorkoutRunner.elapsedSeconds(),
         difficulty: f.difficulty, feeling: f.feeling, pain: f.pain,
         exercises: Object.values(activeWorkoutRunner._results || {}),
+        express: !!activeWorkoutRunner._express,
       });
       const newBadges = Store.checkNewBadges(profile.id);
       exitWorkout();
@@ -2237,7 +2441,11 @@ function bindDynamic(routeName, profile, arg) {
   }
   if (routeName === 'workout') {
     const day = parseInt(arg, 10);
-    if (day >= 1 && day <= 60) initWorkout(profile, day);
+    const isExpress = /-express$/.test(arg || '');
+    if (day >= 1 && day <= 60) initWorkout(profile, day, { express: isExpress });
+  }
+  if (routeName === 'form-check') {
+    bindFormCheck(arg);
   }
   if (routeName === 'safety') {
     bindSafety();

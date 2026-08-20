@@ -221,6 +221,16 @@ a { color: inherit; text-decoration: none; }
 .hero.card .pill { background: rgba(255,255,255,0.22); }
 .hero.card .pill-outline { border-color: rgba(255,255,255,0.5); color: #fff; }
 .hero.card .btn.primary { background: #fff; color: var(--navy); box-shadow: 0 4px 14px rgba(0,0,0,0.18); }
+.hero.card .btn.ghost { background: rgba(255,255,255,0.12); border-color: rgba(255,255,255,0.5); color: #fff; }
+
+.form-check-root { padding: 16px; max-width: 480px; margin: 0 auto; }
+.form-check-video-wrap {
+  position: relative; width: 100%; aspect-ratio: 3 / 4;
+  background: #000; border-radius: var(--radius); overflow: hidden; margin-bottom: 12px;
+}
+.form-check-video-wrap video, .form-check-video-wrap canvas {
+  position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
+}
 .hero.card .done-badge { color: #cdf7d8; }
 
 .pill {

@@ -160,6 +160,35 @@ const Store = (() => {
     { id: 'five_sessions', icon: '💪', name: '5 treningów', desc: 'Zapisz 5 sesji treningowych', check: p => (p.progress.sessions || []).length >= 5 },
     { id: 'ten_sessions', icon: '💪', name: '10 treningów', desc: 'Zapisz 10 sesji treningowych', check: p => (p.progress.sessions || []).length >= 10 },
     { id: 'first_measurement', icon: '📏', name: 'Pierwszy pomiar', desc: 'Zapisz pierwszy pomiar sylwetki', check: p => (p.progress.measurements || []).length >= 1 },
+    {
+      id: 'body_aware', icon: '🧘', name: 'Słuchasz swojego ciała',
+      desc: 'Zgłoś dyskomfort i zamień ćwiczenie na bezpieczniejszy wariant łącznie 10 razy — to nie porażka, to mądrość',
+      check: p => Object.values(p.progress.exercisePain || {}).reduce((a, b) => a + b, 0) >= 10
+    },
+    {
+      id: 'comeback', icon: '🔄', name: 'Wracasz, i to się liczy',
+      desc: 'Wróć do treningu po co najmniej 3-dniowej przerwie',
+      check: p => {
+        const days = (p.progress.completedDays || []).slice().sort((a, b) => a - b);
+        for (let i = 1; i < days.length; i++) { if (days[i] - days[i - 1] >= 4) return true; }
+        return false;
+      }
+    },
+    {
+      id: 'explorer', icon: '🧭', name: 'Odkrywca ćwiczeń',
+      desc: 'Wykonaj co najmniej 20 różnych ćwiczeń z biblioteki',
+      check: p => {
+        const codes = new Set();
+        Object.values(p.progress.exerciseChecks || {}).forEach(arr => (arr || []).forEach(c => codes.add(c)));
+        return codes.size >= 20;
+      }
+    },
+    { id: 'weight_tracker', icon: '⚖️', name: 'Śledzisz swoją wagę', desc: 'Zapisz wagę co najmniej 4 razy', check: p => (p.progress.weightLog || []).length >= 4 },
+    {
+      id: 'readiness_pro', icon: '📋', name: 'Znasz swoje ciało',
+      desc: 'Uzupełnij "Gotowość do treningu" (sen/zakwasy) w co najmniej 10 różnych dniach',
+      check: p => Object.keys(p.progress.readinessInputs || {}).length >= 10
+    },
   ];
 
   function checkNewBadges(profileId) {
@@ -216,6 +245,40 @@ const Store = (() => {
     return (profile.progress.readinessInputs && profile.progress.readinessInputs[today]) || null;
   }
 
+  // ---------- Dziennik dnia (posiłki / nawodnienie) ----------
+  // Świadomie uproszczone: bez bazy kalorii, bez wagi porcji — jedno pytanie o charakter
+  // odżywiania + licznik szklanek wody, żeby pokazać całościowy obraz dnia bez budowania
+  // pełnego modułu dietetycznego (poza zakresem tej appki).
+  function todayKey() { return new Date().toISOString().slice(0, 10); }
+
+  function getDailyLog(profile, date) {
+    const key = date || todayKey();
+    return (profile.progress.dailyLog && profile.progress.dailyLog[key]) || { eating: null, water: 0 };
+  }
+
+  function setEatingLog(profileId, eating) {
+    const profiles = getProfiles();
+    const p = profiles.find(x => x.id === profileId);
+    if (!p) return;
+    if (!p.progress.dailyLog) p.progress.dailyLog = {};
+    const key = todayKey();
+    p.progress.dailyLog[key] = { ...(p.progress.dailyLog[key] || { water: 0 }), eating };
+    saveProfiles(profiles);
+  }
+
+  function addWaterLog(profileId, delta) {
+    const profiles = getProfiles();
+    const p = profiles.find(x => x.id === profileId);
+    if (!p) return 0;
+    if (!p.progress.dailyLog) p.progress.dailyLog = {};
+    const key = todayKey();
+    const current = p.progress.dailyLog[key] || { eating: null, water: 0 };
+    const water = Math.max(0, Math.min(20, (current.water || 0) + delta));
+    p.progress.dailyLog[key] = { ...current, water };
+    saveProfiles(profiles);
+    return water;
+  }
+
   // ---------- Adaptacja poziomu trudności ----------
   // Prosta, przejrzysta reguła (nie "czarna skrzynka") oparta o ostatnie 3-5 sesji.
   function computeDifficultySuggestion(profile) {
@@ -244,6 +307,61 @@ const Store = (() => {
       return { direction: 'harder', reason: 'Ostatnie treningi kończysz bez trudności i czujesz się świetnie — możesz dodać sobie wyzwania.' };
     }
     return null;
+  }
+
+  // ---------- Adaptacja harmonogramu faz (dłuższy trend, nie pojedyncza sesja) ----------
+  // computeDifficultySuggestion patrzy na 3-5 ostatnich sesji i sugeruje "łatwiej/trudniej" w OBRĘBIE tej samej fazy.
+  // Tu patrzymy na dłuższe okno (10 sesji, ~2 tyg. przy planowanych 6 treningach/tydz.), żeby świadomie
+  // zaproponować przejście do WYŻSZEJ fazy (więcej serii/powtórzeń) wcześniej niż wynika to z kalendarza.
+  function computePhaseTrend(profile) {
+    const sessions = (profile.progress.sessions || []).slice(-10);
+    if (sessions.length < 10) return null;
+    const nominalPhase = phaseForDay(currentDayNumber(profile)).id;
+    const currentTarget = Math.max(nominalPhase, getPhaseOverride(profile) || 0);
+    if (currentTarget >= 4) return null;
+    const nextPhase = currentTarget + 1;
+    if (profile.progress.phaseTrendDismissed === nextPhase) return null;
+
+    const avgDifficulty = sessions.reduce((s, x) => s + (x.difficulty || 3), 0) / sessions.length;
+    const avgFeeling = sessions.reduce((s, x) => s + (x.feeling || 3), 0) / sessions.length;
+    const painCount = sessions.filter(s => s.pain && s.pain !== 'none').length;
+    const completionRates = sessions.map(s => {
+      const ex = s.exercises || [];
+      if (!ex.length) return 1;
+      const done = ex.filter(e => !e.skipped && e.setsCompleted >= e.setsTarget).length;
+      return done / ex.length;
+    });
+    const avgCompletion = completionRates.reduce((a, b) => a + b, 0) / completionRates.length;
+
+    if (avgDifficulty <= 2.3 && avgFeeling >= 4 && avgCompletion >= 0.95 && painCount === 0) {
+      const phaseName = (PHASES.find(p => p.id === nextPhase) || {}).name || `Faza ${nextPhase}`;
+      return {
+        suggestedPhase: nextPhase,
+        phaseName,
+        reason: `Od ${sessions.length} ostatnich treningów oceniasz je jako łatwe i kończysz w całości — możesz już teraz przejść na zakres serii/powtórzeń z „${phaseName}", zamiast czekać na zaplanowany dzień.`
+      };
+    }
+    return null;
+  }
+
+  function getPhaseOverride(profile) {
+    return (profile.progress && profile.progress.phaseOverride) || null;
+  }
+
+  function setPhaseOverride(profileId, phaseId) {
+    const profiles = getProfiles();
+    const p = profiles.find(x => x.id === profileId);
+    if (!p) return;
+    p.progress.phaseOverride = phaseId;
+    saveProfiles(profiles);
+  }
+
+  function dismissPhaseTrend(profileId, phaseId) {
+    const profiles = getProfiles();
+    const p = profiles.find(x => x.id === profileId);
+    if (!p) return;
+    p.progress.phaseTrendDismissed = phaseId;
+    saveProfiles(profiles);
   }
 
   // Personalizacja: liczymy ile razy ból zgłoszono przy danym ćwiczeniu, żeby po 2. razie
@@ -293,7 +411,9 @@ const Store = (() => {
     logExercisePain, getExercisePainCount,
     checkNewBadges, getBadges,
     computeReadiness, setReadinessInput, getReadinessInput,
+    getDailyLog, setEatingLog, addWaterLog,
     computeDifficultySuggestion,
+    computePhaseTrend, getPhaseOverride, setPhaseOverride, dismissPhaseTrend,
     getReminderSettings, setReminderSettings,
     getTheme, setTheme, exportData, importData
   };
