@@ -31,6 +31,10 @@ const PoseCheck = (() => {
   const MIN_DETECT_INTERVAL_MS = 120; // ~8 analiz/s wystarcza do oceny formy, oszczędza baterię
   const DOWN_THRESHOLD = 0.9; // próg opuszczenia bioder (znorm. szerokością bioder) uznawany za "dół" powtórzenia
   const UP_THRESHOLD = 0.35;  // powrót poniżej tego progu = koniec powtórzenia
+  // Progi dla mostka biodrowego — przybliżone (brak realnych danych do kalibracji), do weryfikacji w praktyce.
+  const BRIDGE_UP_THRESHOLD = 0.35;   // uniesienie bioder (znorm. szerokością bioder) uznawane za "górę" powtórzenia
+  const BRIDGE_DOWN_THRESHOLD = 0.12; // powrót poniżej tego progu = koniec powtórzenia (biodra znów nisko)
+  const BRIDGE_DEVIATION_LIMIT = 0.12; // odchylenie biodra od linii bark-kolano na szczycie, powyżej którego zgłaszamy uwagę
 
   let landmarker = null;
   let loadingPromise = null;
@@ -55,6 +59,12 @@ const PoseCheck = (() => {
   let repPeak = null; // { torso, knee } — najgorsze odchylenie w trakcie bieżącego "dołu"
   let repHistory = [];
   let fatigueWarned = false;
+
+  // Stan liczenia powtórzeń dla mostka biodrowego (tylko 'bridge') — osobny od repPhase/repPeak,
+  // bo śledzi inny kierunek ruchu (biodra UNOSZĄ się od leżenia, nie opadają od stania).
+  let bridgePhase = 'down';
+  let bridgePeakDev = 0;
+  let bridgeLastResult = { ok: true, issues: [] }; // wynik ostatniego ukończonego powtórzenia — pokazywany, dopóki nie skończy się kolejne
 
   function isSupported() {
     return !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia && window.WebAssembly);
@@ -113,12 +123,16 @@ const PoseCheck = (() => {
       landmarks[IDX.LHIP].y - landmarks[IDX.RHIP].y
     ) || 0.08;
     const segLen = Math.hypot(ankle.x - shoulder.x, ankle.y - shoulder.y) || 0.3;
+    const segLenKnee = Math.hypot(knee.x - shoulder.x, knee.y - shoulder.y) || 0.3;
     return {
       torsoLean: torsoLeanDeg(shoulder, hip),
       kneeOffset: (knee.x - ankle.x) / hipWidth,
       hipY: hip.y,
       hipWidth,
       plankDeviation: plankHipDeviation(shoulder, hip, ankle, segLen),
+      // Ta sama matematyka co plankDeviation, ale liczona do KOLANA zamiast kostki — przy
+      // mostku biodrowym na szczycie ruchu prawidłowa linia to bark-biodro-kolano (nogi ugięte).
+      bridgeDeviation: plankHipDeviation(shoulder, hip, knee, segLenKnee),
     };
   }
 
@@ -274,6 +288,49 @@ const PoseCheck = (() => {
     else if (issues.includes('knee')) speakThrottled('Sprawdź kolana — nie powinny mocno wychodzić przed linię stóp.', state, onSpeak);
   }
 
+  // Mostek biodrowy — kalibracja to leżenie na plecach z biodrami opartymi o matę (nie stanie),
+  // ale korzysta z tej samej funkcji calibrate() (przechwytuje hipY niezależnie od tego, w jakiej
+  // pozycji użytkownik się kalibruje). Liczymy powtórzenia z UNOSZENIA bioder (odwrotny kierunek
+  // niż w przysiadzie), a formę na szczycie oceniamy przez odchylenie biodra od linii bark-kolano
+  // — dodatnie = biodra za nisko (niedoniesiony ruch), ujemne = biodra za wysoko (przegięcie
+  // odcinka lędźwiowego — dokładnie to, przed czym ostrzega opis tego ćwiczenia).
+  function analyzeBridgeFrame(sample, onStatus, onSpeak) {
+    recentSamples.push(sample);
+    if (recentSamples.length > 8) recentSamples.shift();
+    if (recentSamples.length < 5) return;
+
+    const avgHipY = recentSamples.reduce((s, x) => s + x.hipY, 0) / recentSamples.length;
+    const avgHipWidth = recentSamples.reduce((s, x) => s + x.hipWidth, 0) / recentSamples.length;
+    const avgBridgeDev = recentSamples.reduce((s, x) => s + x.bridgeDeviation, 0) / recentSamples.length;
+    const lift = (baseline.hipY - avgHipY) / avgHipWidth;
+
+    if (bridgePhase === 'down' && lift > BRIDGE_UP_THRESHOLD) {
+      bridgePhase = 'up';
+      bridgePeakDev = avgBridgeDev;
+    } else if (bridgePhase === 'up') {
+      if (Math.abs(avgBridgeDev) > Math.abs(bridgePeakDev)) bridgePeakDev = avgBridgeDev;
+      if (lift < BRIDGE_DOWN_THRESHOLD) {
+        bridgePhase = 'down';
+        repCount++;
+        vibrate(30);
+        const issue = bridgePeakDev > BRIDGE_DEVIATION_LIMIT ? 'not_high_enough'
+          : bridgePeakDev < -BRIDGE_DEVIATION_LIMIT ? 'overarch' : null;
+        bridgePeakDev = 0;
+        bridgeLastResult = { ok: !issue, issues: issue ? [issue] : [] };
+
+        onStatus({ phase: 'analyzing', ok: bridgeLastResult.ok, issues: bridgeLastResult.issues, repCount });
+        if (repCount > 0 && repCount % 5 === 0) speakThrottled(`${repCount} powtórzeń.`, 'rep-' + repCount, onSpeak, 0);
+        if (issue === 'not_high_enough') speakThrottled('Unieś biodra trochę wyżej, napnij pośladki.', 'not_high_enough', onSpeak);
+        else if (issue === 'overarch') speakThrottled('Nie przeginaj dolnej części pleców — unoś do wysokości komfortowej.', 'overarch', onSpeak);
+        return;
+      }
+    }
+
+    // Między powtórzeniami pokazujemy wynik OSTATNIEGO ukończonego powtórzenia (nie "ok" na sztywno)
+    // — inaczej ostrzeżenie migałoby przez pojedynczą klatkę i znikało, zanim użytkownik je zauważy.
+    onStatus({ phase: 'analyzing', ok: bridgeLastResult.ok, issues: bridgeLastResult.issues, repCount });
+  }
+
   function loop(kind, onStatus, onSpeak) {
     if (!running) return;
     rafId = requestAnimationFrame(() => loop(kind, onStatus, onSpeak));
@@ -310,6 +367,7 @@ const PoseCheck = (() => {
     }
     if (!baseline) return;
     if (!sample) { onStatus({ phase: 'tracking-lost' }); return; }
+    if (kind === 'bridge') { analyzeBridgeFrame(sample, onStatus, onSpeak); return; }
     analyzeSquatFrame(kind, sample, onStatus, onSpeak);
   }
 
@@ -321,6 +379,7 @@ const PoseCheck = (() => {
     lastSpokenState = null; lastSpokenAt = 0;
     repPhase = 'up'; repCount = 0; repPeak = null; repHistory = []; fatigueWarned = false;
     holdStartAt = 0; lastHoldAnnounceSec = 0; wallSitRef = null;
+    bridgePhase = 'down'; bridgePeakDev = 0; bridgeLastResult = { ok: true, issues: [] };
 
     try {
       stream = await navigator.mediaDevices.getUserMedia({
@@ -348,8 +407,10 @@ const PoseCheck = (() => {
     loop(kind, onStatus, onSpeak);
   }
 
-  // Kalibracja pozycji stojącej — tylko dla 'squat'/'hinge'. Dla 'plank' analiza geometryczna
-  // nie wymaga kalibracji (prosta linia ciała to kryterium niezależne od proporcji użytkownika).
+  // Kalibracja: dla 'squat'/'hinge' to pozycja stojąca, dla 'bridge' to leżenie na plecach
+  // z biodrami opartymi o matę — w obu przypadkach chodzi o złapanie referencyjnego hipY,
+  // więc ta sama funkcja działa dla obu (informacja "jak" się skalibrować jest po stronie UI).
+  // Dla 'plank'/'pushup'/'wall-sit' kalibracja nie jest używana w ogóle.
   function calibrate(durationMs = 2500) {
     return new Promise(resolve => {
       calibrating = true;

@@ -1101,6 +1101,8 @@ function viewFormCheck(code) {
     ? 'Ustaw telefon z boku, ok. 1,5 metra od siebie, tak żeby było widać całą sylwetkę od ramion po kostki.'
     : kind === 'wall-sit'
     ? 'Ustaw telefon z boku, tak żeby było widać całą sylwetkę przy ścianie — od ramion po stopy.'
+    : kind === 'bridge'
+    ? 'Ustaw telefon nisko, z boku (na wysokości podłogi), tak żeby leżąc na plecach było widać całą sylwetkę od barków po kolana.'
     : 'Ustaw telefon z boku, ok. 2 metry od siebie, tak żeby było widać całą sylwetkę od stóp po ramiona.';
   return `
   <div class="workout-header">
@@ -1165,14 +1167,16 @@ function bindFormCheck(code) {
           setControls('<button type="button" class="btn ghost" id="fc-btn-stop">Zakończ analizę</button>');
           attachStop();
         } else if (s.phase === 'ready') {
-          statusEl.textContent = 'Widzę obraz z kamery. Stań prosto w kadrze, żeby skalibrować pozycję neutralną.';
-          setControls('<button type="button" class="btn primary" id="fc-btn-calibrate">Kalibruj (stój prosto ok. 3 s)</button>');
+          const calibPose = kind === 'bridge' ? 'Leż na plecach, biodra oparte o matę, rozluźnij się' : 'Stań prosto w kadrze';
+          statusEl.textContent = `Widzę obraz z kamery. ${calibPose}, żeby skalibrować pozycję neutralną.`;
+          setControls(`<button type="button" class="btn primary" id="fc-btn-calibrate">Kalibruj (${kind === 'bridge' ? 'leż nieruchomo' : 'stój prosto'} ok. 3 s)</button>`);
           document.getElementById('fc-btn-calibrate')?.addEventListener('click', async () => {
-            setControls('<button type="button" class="btn primary" disabled>Kalibracja — stój prosto…</button>');
-            statusEl.textContent = 'Stój prosto i nieruchomo przez chwilę…';
+            setControls('<button type="button" class="btn primary" disabled>Kalibracja — nie ruszaj się…</button>');
+            statusEl.textContent = `${calibPose} i nieruchomo przez chwilę…`;
             const ok = await PoseCheck.calibrate();
             if (ok) {
-              statusEl.textContent = `Kalibracja gotowa. Zacznij ${kind === 'hinge' ? 'martwy ciąg' : 'przysiad / wykrok'} — będę liczyć powtórzenia i podpowiadać na głos.`;
+              const startLabel = kind === 'hinge' ? 'martwy ciąg' : kind === 'bridge' ? 'mostek biodrowy' : 'przysiad / wykrok';
+              statusEl.textContent = `Kalibracja gotowa. Zacznij ${startLabel} — będę liczyć powtórzenia i podpowiadać na głos.`;
               setControls('<button type="button" class="btn ghost" id="fc-btn-stop">Zakończ analizę</button>');
               attachStop();
             } else {
@@ -1198,6 +1202,9 @@ function bindFormCheck(code) {
           statusEl.textContent = s.ok
             ? '✅ Dobra forma — biodra w linii.'
             : '⚠️ ' + (s.issues.includes('sag') ? 'Biodra opadają — napnij brzuch.' : 'Biodra za wysoko — opuść je do linii prostej.');
+        } else if (s.phase === 'analyzing' && kind === 'bridge') {
+          const repLabel = `Powtórzenia: ${s.repCount || 0}`;
+          statusEl.textContent = (s.ok ? `✅ ${repLabel} — forma wygląda dobrze.` : `⚠️ ${repLabel} — ` + (s.issues.includes('overarch') ? 'nie przeginaj dolnej części pleców.' : 'unieś biodra trochę wyżej.'));
         } else if (s.phase === 'analyzing') {
           const repLabel = `Powtórzenia: ${s.repCount || 0}`;
           statusEl.textContent = (s.ok ? `✅ ${repLabel} — forma wygląda dobrze.` : `⚠️ ${repLabel} — ` + (s.issues.includes('back') ? 'sprawdź plecy / tułów.' : s.issues.includes('knee') ? 'sprawdź pozycję kolan.' : 'zwiększ zakres pochylenia w biodrach.'));
@@ -1312,6 +1319,7 @@ function viewExercise(profile, code) {
       plank: 'Kamera na Twoim urządzeniu orientacyjnie sprawdza, czy biodra nie opadają ani nie unoszą się za wysoko — obraz nigdy nie opuszcza telefonu/komputera.',
       pushup: 'Kamera na Twoim urządzeniu orientacyjnie sprawdza, czy biodra nie opadają ani nie unoszą się za wysoko podczas ruchu — obraz nigdy nie opuszcza telefonu/komputera.',
       'wall-sit': 'Kamera na Twoim urządzeniu orientacyjnie pilnuje, czy nie zjeżdżasz ani nie prostujesz nóg podczas trzymania pozycji — obraz nigdy nie opuszcza telefonu/komputera.',
+      bridge: 'Kamera na Twoim urządzeniu orientacyjnie sprawdza, czy biodra są uniesione wystarczająco wysoko i czy nie przeginasz dolnej części pleców, a przy okazji liczy powtórzenia — obraz nigdy nie opuszcza telefonu/komputera.',
     })[FORM_CHECK_KIND[ex.code]] || 'Kamera na Twoim urządzeniu orientacyjnie sprawdza pochylenie tułowia i pozycję kolan, a przy okazji liczy powtórzenia — obraz nigdy nie opuszcza telefonu/komputera.'} To pomoc, nie ocena eksperta — nie zastępuje wskazówek bezpieczeństwa powyżej.</p>
     <a class="btn small primary" href="#/form-check/${ex.code}">Uruchom kamerę</a>
   </section>` : ''}
@@ -1353,12 +1361,17 @@ function viewExercise(profile, code) {
 //   względem linii ramię-kostka), ale bez licznika czasu — to ćwiczenie na powtórzenia, nie hold.
 // - 'wall-sit' — hold w ugięciu bez ruchu od stania: referencja głębokości ustalana raz po
 //   wejściu w pozycję, dalej pilnowana stabilność (nie zjeżdżanie/prostowanie).
-// Świadomie pominięte na razie: ćwiczenia leżące na macie, izolacja ramion, ruchy jednostronne
-// (donkey kicks, clamshell) — wymagają osobnych, jeszcze niezbudowanych heurystyk.
+// - 'bridge' (B4) — kalibracja to leżenie na plecach (nie stanie); liczy powtórzenia z UNOSZENIA
+//   bioder, a na szczycie sprawdza linię bark-biodro-KOLANO (nie kostka — nogi ugięte).
+//   A9 (unoszenie bioder, reverse crunch) świadomie pominięte: ruch to "kilka centymetrów"
+//   z własnej instrukcji ćwiczenia — zbyt subtelne, żeby ufać, że kamera telefonu odróżni to
+//   od szumu pomiaru szkieletu.
+// Świadomie pominięte na razie: izolacja ramion, ruchy jednostronne (donkey kicks, clamshell)
+// — wymagają osobnych, jeszcze niezbudowanych heurystyk.
 const FORM_CHECK_KIND = {
   B1: 'squat', B2: 'squat', B3: 'squat', E3: 'hinge', E8: 'squat', B13: 'squat',
   A2: 'plank', E5: 'plank', C1: 'pushup', C2: 'pushup',
-  B9: 'wall-sit',
+  B9: 'wall-sit', B4: 'bridge',
 };
 
 function groupLabel(g) {
