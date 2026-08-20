@@ -22,6 +22,18 @@ function fmtDate(d) {
   return new Date(d + 'T00:00:00').toLocaleDateString('pl-PL', { day: 'numeric', month: 'long', year: 'numeric' });
 }
 
+// Kołowy wskaźnik postępu (SVG, bez JS/canvas) — używany w kartach statystyk na Dziś/Postępach.
+function progressRingSVG(pct, { size = 60, stroke = 6, color = 'var(--navy)' } = {}) {
+  const r = (size - stroke) / 2;
+  const c = 2 * Math.PI * r;
+  const clamped = Math.max(0, Math.min(100, pct));
+  const offset = c * (1 - clamped / 100);
+  return `<svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}" class="progress-ring" aria-hidden="true">
+    <circle cx="${size / 2}" cy="${size / 2}" r="${r}" fill="none" stroke="var(--border)" stroke-width="${stroke}"></circle>
+    <circle cx="${size / 2}" cy="${size / 2}" r="${r}" fill="none" stroke="${color}" stroke-width="${stroke}" stroke-linecap="round" stroke-dasharray="${c}" stroke-dashoffset="${offset}" transform="rotate(-90 ${size / 2} ${size / 2})"></circle>
+  </svg>`;
+}
+
 // ---------- Routing ----------
 function currentRoute() {
   const hash = location.hash.replace(/^#/, '') || '/today';
@@ -160,7 +172,9 @@ function wrapCanvasText(ctx, text, x, y, maxWidth, lineHeight) {
   return cy;
 }
 
-async function renderShareCanvas({ title, stat, subtitle }) {
+// `badge: true` (certyfikat 60 dni) rysuje duży obraz przemiany zamiast małego loga i pomija
+// wielką liczbę statystyki — sam obraz niesie ten komunikat mocniej niż powtórzone "60/60".
+async function renderShareCanvas({ title, stat, subtitle, badge }) {
   const canvas = document.createElement('canvas');
   canvas.width = 1080;
   canvas.height = 1080;
@@ -172,26 +186,55 @@ async function renderShareCanvas({ title, stat, subtitle }) {
   ctx.fillStyle = grad;
   ctx.fillRect(0, 0, 1080, 1080);
 
-  try {
-    const logo = await loadImageEl('icons/icon-192.png');
-    ctx.drawImage(logo, 460, 110, 160, 160);
-  } catch {}
-
   ctx.textAlign = 'center';
-  ctx.fillStyle = '#EAF1F8';
-  ctx.font = 'bold 56px -apple-system, "Segoe UI", Roboto, sans-serif';
-  wrapCanvasText(ctx, title, 540, 400, 880, 66);
 
-  if (stat) {
-    ctx.fillStyle = '#E8636E';
-    ctx.font = 'bold 200px -apple-system, "Segoe UI", Roboto, sans-serif';
-    ctx.fillText(stat, 540, 680);
-  }
+  if (badge) {
+    try {
+      const img = await loadImageEl('assets/brand-transformation.jpg');
+      const size = 460, bx = (1080 - size) / 2, by = 90, r = 32;
+      ctx.save();
+      ctx.beginPath();
+      ctx.moveTo(bx + r, by);
+      ctx.arcTo(bx + size, by, bx + size, by + size, r);
+      ctx.arcTo(bx + size, by + size, bx, by + size, r);
+      ctx.arcTo(bx, by + size, bx, by, r);
+      ctx.arcTo(bx, by, bx + size, by, r);
+      ctx.closePath();
+      ctx.clip();
+      ctx.drawImage(img, bx, by, size, size);
+      ctx.restore();
+    } catch {}
 
-  if (subtitle) {
-    ctx.fillStyle = '#9DB1C2';
-    ctx.font = '38px -apple-system, "Segoe UI", Roboto, sans-serif';
-    ctx.fillText(subtitle, 540, 760);
+    ctx.fillStyle = '#EAF1F8';
+    ctx.font = 'bold 54px -apple-system, "Segoe UI", Roboto, sans-serif';
+    const titleEndY = wrapCanvasText(ctx, title, 540, 640, 880, 62);
+
+    if (subtitle) {
+      ctx.fillStyle = '#9DB1C2';
+      ctx.font = '32px -apple-system, "Segoe UI", Roboto, sans-serif';
+      wrapCanvasText(ctx, subtitle, 540, titleEndY + 70, 800, 42);
+    }
+  } else {
+    try {
+      const logo = await loadImageEl('icons/icon-192.png');
+      ctx.drawImage(logo, 460, 110, 160, 160);
+    } catch {}
+
+    ctx.fillStyle = '#EAF1F8';
+    ctx.font = 'bold 56px -apple-system, "Segoe UI", Roboto, sans-serif';
+    wrapCanvasText(ctx, title, 540, 400, 880, 66);
+
+    if (stat) {
+      ctx.fillStyle = '#E8636E';
+      ctx.font = 'bold 200px -apple-system, "Segoe UI", Roboto, sans-serif';
+      ctx.fillText(stat, 540, 680);
+    }
+
+    if (subtitle) {
+      ctx.fillStyle = '#9DB1C2';
+      ctx.font = '38px -apple-system, "Segoe UI", Roboto, sans-serif';
+      ctx.fillText(subtitle, 540, 760);
+    }
   }
 
   ctx.fillStyle = '#9AC94A';
@@ -363,6 +406,7 @@ function chipCheckbox(name, value, checked) {
 function viewOnboarding() {
   return `
   <div class="onboard">
+    <div class="onboard-hero-image"><img src="assets/brand-transformation.jpg" alt="Nowa Ja — Twoja przemiana" loading="eager"></div>
     <div class="onboard-brand"><img src="icons/icon-192.png" alt=""><h1>Nowa Ja</h1></div>
     <p class="tagline">Twój 60-dniowy plan treningowy w domu — dopasowany do Ciebie.</p>
     <button type="button" class="onboard-quickstart" data-action="onboard-quickstart">Zacznij od razu, dostosuję później →</button>
@@ -457,6 +501,8 @@ function showOnboardStep(form, index) {
     seg.classList.toggle('active', Number(seg.dataset.seg) <= clamped);
   });
   document.querySelector('.onboard-progress')?.setAttribute('aria-valuenow', String(clamped + 1));
+  const heroImg = document.querySelector('.onboard-hero-image');
+  if (heroImg) heroImg.hidden = clamped !== 0;
   const backBtn = document.getElementById('onboard-back-btn');
   const nextBtn = document.getElementById('onboard-next-btn');
   const submitBtn = document.getElementById('onboard-submit-btn');
@@ -551,6 +597,8 @@ function viewToday(profile) {
   const pct = Math.round((completedCount / 60) * 100);
   const streak = Store.currentStreak(profile);
   const lastSession = Store.getLastSession(profile);
+  const readinessScore = Store.computeReadiness(profile);
+  const readinessColor = readinessScore >= 70 ? 'var(--success)' : readinessScore >= 45 ? 'var(--gold)' : 'var(--danger)';
 
   return `
   <section class="hero card">
@@ -566,13 +614,26 @@ function viewToday(profile) {
     ${!done && !info.rest ? `<a class="btn ghost big" href="#/workout/${day}-express">⚡ Nie mam siły na cały trening — 10 minut wystarczy</a>` : ''}
   </section>
 
-  <section class="card progress-mini">
-    <div class="progress-mini-row">
-      <div class="progress-bar"><div class="progress-bar-fill" style="width:${pct}%"></div></div>
-      <span>${completedCount}/60 dni · ${pct}%</span>
-    </div>
-    <p class="muted small" style="margin:6px 0 0">Seria: ${streak} dni · Faza ${info.phase}</p>
-    <a href="#/progress" class="link">Zobacz postępy →</a>
+  <section class="stat-grid">
+    <a class="stat-card accent-flame" href="#/progress">
+      <span class="stat-card-icon">🔥</span>
+      <strong class="stat-card-value">${streak}</strong>
+      <span class="stat-card-label">${streak === 1 ? 'dzień serii' : 'dni serii'}</span>
+    </a>
+    <a class="stat-card accent-program" href="#/progress">
+      <span class="stat-ring-wrap">
+        ${progressRingSVG(pct, { color: 'var(--navy)' })}
+        <span class="stat-ring-value">${pct}%</span>
+      </span>
+      <span class="stat-card-label">${completedCount}/60 dni</span>
+    </a>
+    <a class="stat-card accent-readiness" href="#/progress">
+      <span class="stat-ring-wrap">
+        ${progressRingSVG(readinessScore, { color: readinessColor })}
+        <span class="stat-ring-value">${readinessScore}</span>
+      </span>
+      <span class="stat-card-label">gotowość</span>
+    </a>
   </section>
 
   ${viewReadinessCard(profile)}
@@ -599,16 +660,11 @@ function viewToday(profile) {
 }
 
 function viewReadinessCard(profile) {
-  const score = Store.computeReadiness(profile);
   const manual = Store.getReadinessInput(profile);
-  const color = score >= 70 ? 'var(--success)' : score >= 45 ? 'var(--gold)' : 'var(--danger)';
   return `
   <section class="card">
-    <div class="progress-mini-row">
-      <h3 style="margin:0">Gotowość do treningu</h3>
-      <span style="font-weight:800;font-size:1.4rem;color:${color}">${score}</span>
-    </div>
-    <p class="muted small" style="margin:4px 0 10px">Orientacyjny wskaźnik na podstawie ostatnich treningów i Twojego dzisiejszego samopoczucia — to nie diagnoza medyczna.</p>
+    <h3 style="margin:0 0 4px">Ustaw dzisiejszą gotowość</h3>
+    <p class="muted small" style="margin:0 0 10px">Wskaźnik w karcie powyżej uwzględni Twoją dzisiejszą odpowiedź — to nie diagnoza medyczna.</p>
     <p class="muted small" style="margin-bottom:2px">Jak spałaś/eś?</p>
     <div class="chip-row">${[1, 2, 3, 4, 5].map(n => `<button type="button" class="chip" data-action="set-readiness-sleep" data-value="${n}" style="${manual && manual.sleep === n ? 'background:var(--navy);color:#fff' : ''}">${n}</button>`).join('')}</div>
     <p class="muted small" style="margin:8px 0 2px">Poziom zakwasów / zmęczenia?</p>
@@ -1606,9 +1662,15 @@ function viewProgress(profile) {
 
   return `
   <h2 class="page-title">Postępy</h2>
-  <section class="card">
-    <div class="progress-bar"><div class="progress-bar-fill" style="width:${pct}%"></div></div>
-    <p>${completedCount}/60 dni ukończonych (${pct}%) · seria: ${streak} dni</p>
+  <section class="card progress-hero-card">
+    <div class="stat-ring-wrap stat-ring-wrap-lg">
+      ${progressRingSVG(pct, { size: 88, stroke: 8, color: 'var(--navy)' })}
+      <span class="stat-ring-value stat-ring-value-lg">${pct}%</span>
+    </div>
+    <div class="progress-hero-info">
+      <strong>${completedCount}/60 dni ukończonych</strong>
+      <span class="muted small">seria: ${streak} ${streak === 1 ? 'dzień' : 'dni'} z rzędu</span>
+    </div>
     <div class="btn-row" style="margin-top:10px">
       <button type="button" class="btn small ghost" data-action="share-progress">📤 Udostępnij postęp</button>
       ${completedCount >= 60 ? `<button type="button" class="btn small primary" data-action="share-certificate">🏆 Pobierz certyfikat</button>` : ''}
@@ -1622,7 +1684,7 @@ function viewProgress(profile) {
     <div class="badge-grid">
       ${badges.map(b => `
         <div class="badge-item ${b.earned ? 'earned' : ''}" title="${esc(b.desc)}">
-          <span class="badge-item-icon">${b.icon}</span>
+          <span class="badge-item-icon-wrap"><span class="badge-item-icon">${b.icon}</span></span>
           <span class="badge-item-name">${esc(b.name)}</span>
         </div>`).join('')}
     </div>
@@ -2395,8 +2457,8 @@ document.addEventListener('click', async e => {
     case 'share-certificate': {
       shareAchievementImage({
         title: 'Program ukończony!',
-        stat: '60/60',
         subtitle: '60 dni treningu w domu — od zera do nawyku',
+        badge: true,
       }, 'nowa-ja-certyfikat.png');
       break;
     }

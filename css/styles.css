@@ -289,6 +289,27 @@ a { color: inherit; text-decoration: none; }
 .progress-bar { flex: 1; height: 10px; border-radius: 999px; background: var(--border); overflow: hidden; }
 .progress-bar-fill { height: 100%; background: linear-gradient(90deg, var(--navy), var(--gold)); }
 
+/* ---------- Stat grid (Dziś) — bento-style cards z ikoną/pierścieniem ---------- */
+.stat-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 14px; }
+.stat-card {
+  background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+  padding: 14px 8px 12px; box-shadow: var(--shadow); text-align: center;
+  display: flex; flex-direction: column; align-items: center; gap: 4px; min-width: 0;
+}
+.stat-card-icon {
+  width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  font-size: 1.05rem; margin-bottom: 2px; background: color-mix(in srgb, var(--gold) 16%, transparent);
+}
+.stat-card.accent-program .stat-ring-wrap { margin-bottom: 2px; }
+.stat-card-value { font-size: 1.5rem; font-weight: 800; line-height: 1; color: var(--text); }
+.stat-card-label { font-size: 0.68rem; color: var(--text-muted); line-height: 1.2; }
+.stat-ring-wrap { position: relative; width: 60px; height: 60px; }
+.stat-ring-wrap .progress-ring circle:last-child { transition: stroke-dashoffset 0.6s ease-out; }
+.stat-ring-value {
+  position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+  font-size: 0.92rem; font-weight: 800; color: var(--text);
+}
+
 .quick-links { display: grid; grid-template-columns: repeat(auto-fit, minmax(90px, 1fr)); gap: 10px; margin-top: 4px; }
 .quick-link {
   background: var(--surface);
@@ -305,6 +326,8 @@ a { color: inherit; text-decoration: none; }
 .qi { display: block; font-size: 1.4rem; margin-bottom: 4px; }
 
 .onboard { padding-top: 10px; }
+.onboard-hero-image { border-radius: var(--radius); overflow: hidden; margin-bottom: 14px; box-shadow: var(--shadow); }
+.onboard-hero-image img { display: block; width: 100%; height: auto; max-height: 320px; object-fit: cover; }
 .onboard-brand { display: flex; align-items: center; gap: 10px; margin-bottom: 2px; }
 .onboard-brand img { width: 44px; height: 44px; border-radius: 11px; box-shadow: 0 3px 12px rgba(0,0,0,0.2); }
 .onboard h1 { color: var(--navy); margin: 0; }
@@ -666,7 +689,7 @@ a { color: inherit; text-decoration: none; }
 /* ---------- Entrance animation for cards + gentle button feedback ---------- */
 @media (prefers-reduced-motion: no-preference) {
   @keyframes cardIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-  #app > .card, #app > section.card, #app > .hero, #app > .quick-links, #app > .badge-toast {
+  #app > .card, #app > section.card, #app > .hero, #app > .quick-links, #app > .stat-grid, #app > .badge-toast {
     animation: cardIn 0.35s cubic-bezier(.16,.8,.3,1) backwards;
   }
   #app > *:nth-child(1) { animation-delay: 0s; }
@@ -708,12 +731,28 @@ a { color: inherit; text-decoration: none; }
 .badge-toast-row span { display: block; font-size: 0.76rem; color: var(--text-muted); }
 
 /* ---------- Badges grid (Postępy) ---------- */
-.badge-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(78px, 1fr)); gap: 10px; margin-top: 10px; }
-.badge-item { text-align: center; padding: 10px 4px; border-radius: 12px; background: var(--bg); opacity: 0.4; }
-.badge-item.earned { opacity: 1; background: linear-gradient(160deg, rgba(201,162,39,0.15), transparent); }
-.badge-item-icon { font-size: 1.6rem; }
-.badge-item-name { font-size: 0.68rem; margin-top: 4px; color: var(--text-muted); line-height: 1.2; }
+.badge-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(78px, 1fr)); gap: 12px 10px; margin-top: 10px; }
+.badge-item { text-align: center; display: flex; flex-direction: column; align-items: center; gap: 6px; opacity: 0.45; }
+.badge-item.earned { opacity: 1; }
+.badge-item-icon-wrap {
+  width: 52px; height: 52px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  background: var(--bg); border: 2px solid var(--border); transition: transform 0.15s ease;
+}
+.badge-item.earned .badge-item-icon-wrap {
+  border-color: var(--gold); background: linear-gradient(160deg, color-mix(in srgb, var(--gold) 22%, var(--surface)), var(--surface));
+  box-shadow: 0 3px 12px color-mix(in srgb, var(--gold) 35%, transparent);
+}
+.badge-item-icon { font-size: 1.5rem; }
+.badge-item-name { font-size: 0.68rem; color: var(--text-muted); line-height: 1.2; }
 .badge-item.earned .badge-item-name { color: var(--text); font-weight: 600; }
+
+/* ---------- Karta postępu programu (Postępy) — pierścień + statystyki ---------- */
+.progress-hero-card { display: flex; flex-wrap: wrap; align-items: center; gap: 14px; }
+.stat-ring-wrap-lg { width: 88px; height: 88px; flex-shrink: 0; }
+.stat-ring-value-lg { font-size: 1.25rem; }
+.progress-hero-info { display: flex; flex-direction: column; gap: 2px; }
+.progress-hero-info strong { font-size: 1.05rem; }
+.progress-hero-card .btn-row { width: 100%; }
 
 /* ---------- Readiness / difficulty suggestion cards ---------- */
 .readiness-score { display: flex; align-items: baseline; gap: 6px; margin: 4px 0 8px; }
