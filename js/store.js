@@ -279,6 +279,42 @@ const Store = (() => {
     return water;
   }
 
+  // ---------- Prognoza ukończenia programu ----------
+  // Tempo liczone z ostatnich 14 dni KALENDARZOWYCH (nie sesji) — realistyczna projekcja
+  // uwzględniająca przerwy, nie scenariusz "gdyby ćwiczyć bez przerwy od dziś".
+  function computeCompletionForecast(profile) {
+    const completedCount = profile.progress.completedDays.length;
+    if (completedCount >= 60) return { done: true };
+    const remaining = 60 - completedCount;
+    const sessions = profile.progress.sessions || [];
+    if (sessions.length < 3) return null;
+    const now = Date.now();
+    const windowDays = 14;
+    const recentCount = sessions.filter(s => s.completedAt && (now - s.completedAt) <= windowDays * 86400000).length;
+    const pace = recentCount / windowDays;
+    if (pace <= 0) return { stalled: true };
+    const daysNeeded = Math.ceil(remaining / pace);
+    const finishDate = new Date(now + daysNeeded * 86400000).toISOString().slice(0, 10);
+    return { daysNeeded, finishDate, pace };
+  }
+
+  // ---------- Trend formy (pierwsze vs ostatnie sesje) ----------
+  // Prosty sygnał "łatwiej mi teraz niż na starcie", niezależny od computeDifficultySuggestion
+  // (ta patrzy tylko na ostatnie 3-5 sesji, nie na cały przebyty dystans).
+  function computeFormTrend(profile) {
+    const sessions = profile.progress.sessions || [];
+    if (sessions.length < 6) return null;
+    const early = sessions.slice(0, 3);
+    const recent = sessions.slice(-3);
+    const avg = (arr, key) => arr.reduce((s, x) => s + (x[key] || 3), 0) / arr.length;
+    return {
+      earlyDifficulty: avg(early, 'difficulty'),
+      recentDifficulty: avg(recent, 'difficulty'),
+      earlyFeeling: avg(early, 'feeling'),
+      recentFeeling: avg(recent, 'feeling'),
+    };
+  }
+
   // ---------- Adaptacja poziomu trudności ----------
   // Prosta, przejrzysta reguła (nie "czarna skrzynka") oparta o ostatnie 3-5 sesji.
   function computeDifficultySuggestion(profile) {
@@ -413,6 +449,7 @@ const Store = (() => {
     computeReadiness, setReadinessInput, getReadinessInput,
     getDailyLog, setEatingLog, addWaterLog,
     computeDifficultySuggestion,
+    computeCompletionForecast, computeFormTrend,
     computePhaseTrend, getPhaseOverride, setPhaseOverride, dismissPhaseTrend,
     getReminderSettings, setReminderSettings,
     getTheme, setTheme, exportData, importData

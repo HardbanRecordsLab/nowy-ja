@@ -314,6 +314,29 @@ a { color: inherit; text-decoration: none; }
   position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
   font-size: 0.92rem; font-weight: 800; color: var(--text);
 }
+.stat-grid-4 { grid-template-columns: repeat(4, 1fr); }
+.stat-card.accent-water .stat-card-icon { background: color-mix(in srgb, #3a7bd5 16%, transparent); }
+@media (max-width: 420px) {
+  .stat-grid-4 { grid-template-columns: repeat(2, 1fr); }
+}
+
+/* ---------- Mapa programu (Postępy) — 60 dni na jednym ekranie ---------- */
+.heatmap-grid { display: grid; grid-template-columns: repeat(10, 1fr); gap: 5px; margin-top: 10px; }
+.heatmap-cell { aspect-ratio: 1; border-radius: 5px; display: block; background: var(--bg); }
+.heatmap-done { background: var(--success); }
+.heatmap-today { background: var(--surface); border: 2px solid var(--navy); }
+.heatmap-missed { background: color-mix(in srgb, var(--danger) 55%, transparent); }
+.heatmap-rest { background: var(--border); }
+.heatmap-future { background: var(--bg); border: 1px solid var(--border); }
+.heatmap-legend { display: flex; flex-wrap: wrap; gap: 10px 14px; margin-top: 12px; font-size: 0.72rem; color: var(--text-muted); }
+.heatmap-legend span { display: inline-flex; align-items: center; gap: 5px; }
+.heatmap-dot { width: 10px; height: 10px; border-radius: 3px; display: inline-block; }
+
+/* ---------- Narzędzia (Postępy) ---------- */
+.tools-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin-top: 10px; }
+.tool-card { background: var(--bg); border-radius: var(--radius); padding: 14px; }
+.tool-card-icon { font-size: 1.3rem; }
+.tool-card h4 { margin: 6px 0 8px; font-size: 0.92rem; }
 
 .quick-links { display: grid; grid-template-columns: repeat(auto-fit, minmax(90px, 1fr)); gap: 10px; margin-top: 4px; }
 .quick-link {
@@ -408,6 +431,9 @@ a { color: inherit; text-decoration: none; }
 
 /* Workout ("Trening teraz") full-screen mode */
 .workout-root { display: flex; flex-direction: column; min-height: calc(100vh - 56px - env(safe-area-inset-top)); padding: 6px 4px 20px; }
+.workout-media-row { display: flex; gap: 6px; padding: 4px; margin-bottom: 4px; }
+.workout-media-slot-item { flex: 1; min-width: 0; aspect-ratio: 4 / 3; border-radius: 10px; overflow: hidden; background: var(--bg); }
+.workout-media-slot-item img, .workout-media-slot-item video { width: 100%; height: 100%; object-fit: cover; display: block; }
 .workout-header { display: flex; align-items: center; justify-content: space-between; padding: 6px 4px 12px; }
 .workout-header-actions { display: flex; gap: 8px; }
 .icon-btn { background: var(--surface); border: 1px solid var(--border); border-radius: 999px; width: 40px; height: 40px; font-size: 1.1rem; cursor: pointer; color: var(--text); }

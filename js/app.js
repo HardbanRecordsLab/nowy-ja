@@ -883,7 +883,7 @@ function currentPhaseReps(ex, phaseId) {
 
 // ---------- Workout ("Trening teraz") ----------
 function viewWorkoutShell() {
-  return `<div class="workout-root"><div id="workout-body"><p class="muted">Ładowanie…</p></div></div>`;
+  return `<div class="workout-root"><div id="workout-media-slot" class="workout-media-row" hidden></div><div id="workout-body"><p class="muted">Ładowanie…</p></div></div>`;
 }
 
 // Nie pozwala ekranowi zgasnąć w trakcie treningu (inaczej wizualny timer/animacja by się zatrzymały).
@@ -988,6 +988,26 @@ function renderWorkoutBody(runner, day, profile) {
     </div>
     ${Music.isEnabled() && Music.isPlaying() ? `<p class="muted small workout-track-label" data-action="workout-next-track">🎧 ${esc(Music.currentTitle())} · zmień ›</p>` : ''}
     ${inner}`;
+
+  // Slot na infografikę/wideo ćwiczenia — CELOWO poza tym, co wyżej nadpisujemy co ~1s podczas
+  // odliczania. Aktualizujemy go osobno i TYLKO gdy zmienia się ćwiczenie, inaczej <video>
+  // restartowałoby się od nowa (i migotało) przy każdym tyknięciu zegara.
+  const mediaSlot = document.getElementById('workout-media-slot');
+  const step = runner.currentStep;
+  const showMedia = !dayInfo.rest && s.stage !== STAGE.FEEDBACK && s.stage !== STAGE.DONE && step;
+  if (mediaSlot) {
+    if (showMedia) {
+      if (runner._mediaCode !== step.exercise.code) {
+        runner._mediaCode = step.exercise.code;
+        mediaSlot.hidden = false;
+        loadWorkoutMedia(step.exercise.code);
+      }
+    } else if (runner._mediaCode) {
+      runner._mediaCode = null;
+      mediaSlot.hidden = true;
+      mediaSlot.innerHTML = '';
+    }
+  }
 }
 
 // Wypowiada nazwę ćwiczenia, odliczanie 3-2-1, komunikaty odpoczynku i motywacyjne —
@@ -1511,6 +1531,30 @@ async function loadMediaInto(code) {
   }
 }
 
+// Infografika + wideo widoczne PODCZAS wykonywania ćwiczenia w trybie prowadzonym (nie tylko
+// w bibliotece). Wideo bez controls/bez wiązania z lektorem — to cichy, zapętlony podgląd
+// ruchu w tle, workout ma już własne komunikaty głosowe (announceWorkout).
+async function loadWorkoutMedia(code) {
+  const slot = document.getElementById('workout-media-slot');
+  if (!slot) return;
+  const ex = exByCode[code];
+  if (!ex) { slot.hidden = true; return; }
+
+  const [imgUrl, vidUrl] = await Promise.all([MediaStore.getURL(code, 'image'), MediaStore.getURL(code, 'video')]);
+  if (code !== activeWorkoutRunner?._mediaCode) return; // ćwiczenie zmieniło się, zanim zdążyliśmy pobrać URL-e
+
+  const imgSrc = imgUrl || `assets/exercises/${code}.png`;
+  const vidSrc = vidUrl || `assets/exercises/${code}.mp4`;
+
+  slot.innerHTML = `
+    <div class="workout-media-slot-item" id="workout-media-img-wrap">
+      <img src="${imgSrc}" alt="Infografika ${esc(code)}" onerror="this.parentElement.remove()">
+    </div>
+    <div class="workout-media-slot-item" id="workout-media-vid-wrap">
+      <video src="${vidSrc}" muted loop autoplay playsinline onerror="this.parentElement.remove()"></video>
+    </div>`;
+}
+
 // ---------- Schedule ----------
 let scheduleViewMode = 'list';
 let calendarMonthOffset = 0;
@@ -1647,12 +1691,103 @@ function filterLibrary() {
   document.getElementById('lib-results').innerHTML = libraryCards(list);
 }
 
-// ---------- Progress ----------
+// ---------- Progress / Centrum ----------
+function viewMonitoringGrid(profile) {
+  const completedCount = profile.progress.completedDays.length;
+  const pct = Math.round((completedCount / 60) * 100);
+  const streak = Store.currentStreak(profile);
+  const readiness = Store.computeReadiness(profile);
+  const readinessColor = readiness >= 70 ? 'var(--success)' : readiness >= 45 ? 'var(--gold)' : 'var(--danger)';
+  const water = Store.getDailyLog(profile).water || 0;
+  return `
+  <section class="stat-grid stat-grid-4">
+    <div class="stat-card accent-program">
+      <span class="stat-ring-wrap">${progressRingSVG(pct, { color: 'var(--navy)' })}<span class="stat-ring-value">${pct}%</span></span>
+      <span class="stat-card-label">program</span>
+    </div>
+    <div class="stat-card accent-flame">
+      <span class="stat-card-icon">🔥</span>
+      <strong class="stat-card-value">${streak}</strong>
+      <span class="stat-card-label">${streak === 1 ? 'dzień serii' : 'dni serii'}</span>
+    </div>
+    <div class="stat-card accent-readiness">
+      <span class="stat-ring-wrap">${progressRingSVG(readiness, { color: readinessColor })}<span class="stat-ring-value">${readiness}</span></span>
+      <span class="stat-card-label">gotowość</span>
+    </div>
+    <div class="stat-card accent-water">
+      <span class="stat-card-icon">💧</span>
+      <strong class="stat-card-value">${water}</strong>
+      <span class="stat-card-label">${water === 1 ? 'szklanka dziś' : 'szklanek dziś'}</span>
+    </div>
+  </section>`;
+}
+
+// Mapa całego programu na jednym ekranie — gęstszy, "monitoringowy" widok niż kalendarz
+// miesięczny w Harmonogramie (ten pokazuje wszystkie 60 dni naraz, bez nawigacji miesiącami).
+function viewProgramHeatmap(profile) {
+  const completed = new Set(profile.progress.completedDays);
+  const today = Store.currentDayNumber(profile);
+  let cells = '';
+  for (let day = 1; day <= 60; day++) {
+    const info = getDayInfo(day);
+    let cls;
+    if (completed.has(day)) cls = 'done';
+    else if (day === today) cls = 'today';
+    else if (info.rest) cls = 'rest';
+    else if (day < today) cls = 'missed';
+    else cls = 'future';
+    cells += `<a href="#/day/${day}" class="heatmap-cell heatmap-${cls}" title="Dzień ${day}: ${esc(dayTypeLabel(info))}"></a>`;
+  }
+  return `
+  <section class="card">
+    <h3 style="margin-top:0">Mapa programu</h3>
+    <div class="heatmap-grid">${cells}</div>
+    <div class="heatmap-legend">
+      <span><i class="heatmap-dot heatmap-done"></i>ukończony</span>
+      <span><i class="heatmap-dot heatmap-today"></i>dzisiaj</span>
+      <span><i class="heatmap-dot heatmap-missed"></i>pominięty</span>
+      <span><i class="heatmap-dot heatmap-rest"></i>odpoczynek</span>
+      <span><i class="heatmap-dot heatmap-future"></i>nadchodzący</span>
+    </div>
+  </section>`;
+}
+
+// Dwa narzędzia liczone z danych, które appka już i tak zbiera — bez nowego śledzenia,
+// bez fałszywej precyzji (prognoza jawnie pokazuje tempo, na którym się opiera).
+function viewProgressTools(profile) {
+  const forecast = Store.computeCompletionForecast(profile);
+  const trend = Store.computeFormTrend(profile);
+  const parts = [];
+
+  if (forecast) {
+    let body;
+    if (forecast.done) body = '<p class="muted small" style="margin:0">Program ukończony — brawo!</p>';
+    else if (forecast.stalled) body = '<p class="muted small" style="margin:0">Brak ukończonych treningów w ostatnich 14 dniach — wróć dziś, żeby odświeżyć prognozę.</p>';
+    else body = `<p style="margin:0;font-weight:700">${fmtDate(forecast.finishDate)}</p><p class="muted small" style="margin:4px 0 0">przy obecnym tempie (~${forecast.pace.toFixed(1)} treningu/dzień z ostatnich 2 tygodni)</p>`;
+    parts.push(`<div class="tool-card"><span class="tool-card-icon">🗓️</span><h4>Prognoza ukończenia</h4>${body}</div>`);
+  }
+
+  if (trend) {
+    const diffDelta = trend.earlyDifficulty - trend.recentDifficulty;
+    const feelDelta = trend.recentFeeling - trend.earlyFeeling;
+    let msg;
+    if (diffDelta > 0.4) msg = 'Treningi, które na starcie były trudne, teraz idą Ci wyraźnie łatwiej.';
+    else if (feelDelta > 0.4) msg = 'Twoje samopoczucie po treningu poprawiło się od pierwszych dni.';
+    else msg = 'Forma stabilna od początku programu — konsekwencja robi swoje.';
+    parts.push(`<div class="tool-card"><span class="tool-card-icon">📈</span><h4>Trend formy</h4><p style="margin:0">${esc(msg)}</p></div>`);
+  }
+
+  if (!parts.length) return '';
+  return `
+  <section class="card">
+    <h3 style="margin-top:0">Narzędzia</h3>
+    <div class="tools-grid">${parts.join('')}</div>
+  </section>`;
+}
+
 function viewProgress(profile) {
   const p = profile.progress;
   const completedCount = p.completedDays.length;
-  const pct = Math.round((completedCount / 60) * 100);
-  const streak = computeStreak(p.completedDays);
   const weightRows = [...p.weightLog].reverse().slice(0, 8);
   const measureRows = [...p.measurements].reverse().slice(0, 8);
   const sparkline = weightSparkline(p.weightLog);
@@ -1662,21 +1797,18 @@ function viewProgress(profile) {
 
   return `
   <h2 class="page-title">Postępy</h2>
-  <section class="card progress-hero-card">
-    <div class="stat-ring-wrap stat-ring-wrap-lg">
-      ${progressRingSVG(pct, { size: 88, stroke: 8, color: 'var(--navy)' })}
-      <span class="stat-ring-value stat-ring-value-lg">${pct}%</span>
-    </div>
-    <div class="progress-hero-info">
-      <strong>${completedCount}/60 dni ukończonych</strong>
-      <span class="muted small">seria: ${streak} ${streak === 1 ? 'dzień' : 'dni'} z rzędu</span>
-    </div>
-    <div class="btn-row" style="margin-top:10px">
+
+  ${viewMonitoringGrid(profile)}
+
+  <section class="card" style="text-align:center">
+    <div class="btn-row" style="justify-content:center">
       <button type="button" class="btn small ghost" data-action="share-progress">📤 Udostępnij postęp</button>
       ${completedCount >= 60 ? `<button type="button" class="btn small primary" data-action="share-certificate">🏆 Pobierz certyfikat</button>` : ''}
     </div>
   </section>
 
+  ${viewProgramHeatmap(profile)}
+  ${viewProgressTools(profile)}
   ${viewWeeklySummary(profile)}
 
   <section class="card">
