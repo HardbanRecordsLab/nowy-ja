@@ -1372,17 +1372,18 @@ function viewExercise(profile, code) {
 //   A9 (unoszenie bioder, reverse crunch) świadomie pominięte: ruch to "kilka centymetrów"
 //   z własnej instrukcji ćwiczenia — zbyt subtelne, żeby ufać, że kamera telefonu odróżni to
 //   od szumu pomiaru szkieletu.
-// - 'curl' (C4, C10) — pierwszy tryb patrzący na RAMIĘ: kąt w łokciu (uniwersalny, bez kalibracji)
-//   do liczenia powtórzeń + kalibrowana stabilność tułowia, żeby wykryć "huśtanie" ciała zamiast
-//   pracy samym łokciem — dokładnie to, przed czym ostrzega opis obu ćwiczeń.
+// - 'curl' (C4, C5, C10) — pierwszy tryb patrzący na RAMIĘ: kąt w łokciu (uniwersalny, bez
+//   kalibracji) do liczenia powtórzeń + kalibrowana stabilność tułowia (wykrywa "huśtanie" ciała).
+//   Dla C5 (wyprost nad głową) NIE łapiemy jej właściwej wskazówki bezpieczeństwa ("łokcie blisko
+//   głowy") — to ruch łokcia w bok/w głąb kadru, którego 2D kamera z boku nie widzi wiarygodnie;
+//   liczenie powtórzeń + ogólna stabilność wciąż są realną wartością, ale to częściowe pokrycie.
 //   C3 (izometryczny ucisk) i C12 (krążenia nadgarstków) świadomie pominięte: brak mierzalnego
-//   ruchu / zbyt drobny staw. C5-C9, C11 wymagają kamery OD PRZODU (inna oś ruchu ramion) —
-//   osobny krok.
+//   ruchu / zbyt drobny staw. C6-C9, C11 wymagają kamery OD PRZODU lub innej osi ruchu — osobny krok.
 // Świadomie pominięte na razie: ruchy jednostronne (donkey kicks, clamshell, kopnięcia).
 const FORM_CHECK_KIND = {
   B1: 'squat', B2: 'squat', B3: 'squat', E3: 'hinge', E8: 'squat', B13: 'squat',
   A2: 'plank', E5: 'plank', C1: 'pushup', C2: 'pushup',
-  B9: 'wall-sit', B4: 'bridge', C4: 'curl', C10: 'curl',
+  B9: 'wall-sit', B4: 'bridge', C4: 'curl', C10: 'curl', C5: 'curl',
 };
 
 function groupLabel(g) {
