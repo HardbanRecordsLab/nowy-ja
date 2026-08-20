@@ -9,6 +9,11 @@ Music.onTrackChange(() => {
   if (activeWorkoutRunner) renderWorkoutBody(activeWorkoutRunner);
 });
 
+// Not supported on iOS Safari at all — always guarded, silently no-ops there.
+function vibrate(pattern) {
+  try { navigator.vibrate?.(pattern); } catch {}
+}
+
 function esc(s) {
   return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 }
@@ -114,6 +119,7 @@ function checkReminder() {
 }
 
 function showBadgeToast(badges) {
+  vibrate([40, 30, 80]);
   const el = document.createElement('div');
   el.className = 'badge-toast';
   el.innerHTML = badges.map(b => `
@@ -124,6 +130,98 @@ function showBadgeToast(badges) {
   document.body.appendChild(el);
   setTimeout(() => el.classList.add('show'), 20);
   setTimeout(() => { el.classList.remove('show'); setTimeout(() => el.remove(), 400); }, 5000);
+}
+
+// ---------- Shareable achievement images (canvas, fully client-side) ----------
+function loadImageEl(src) {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.onload = () => resolve(img);
+    img.onerror = reject;
+    img.src = src;
+  });
+}
+
+function wrapCanvasText(ctx, text, x, y, maxWidth, lineHeight) {
+  const words = text.split(' ');
+  let line = '';
+  let cy = y;
+  for (const word of words) {
+    const test = line ? line + ' ' + word : word;
+    if (ctx.measureText(test).width > maxWidth && line) {
+      ctx.fillText(line, x, cy);
+      line = word;
+      cy += lineHeight;
+    } else {
+      line = test;
+    }
+  }
+  if (line) ctx.fillText(line, x, cy);
+  return cy;
+}
+
+async function renderShareCanvas({ title, stat, subtitle }) {
+  const canvas = document.createElement('canvas');
+  canvas.width = 1080;
+  canvas.height = 1080;
+  const ctx = canvas.getContext('2d');
+
+  const grad = ctx.createLinearGradient(0, 0, 1080, 1080);
+  grad.addColorStop(0, '#141B24');
+  grad.addColorStop(1, '#0A0F17');
+  ctx.fillStyle = grad;
+  ctx.fillRect(0, 0, 1080, 1080);
+
+  try {
+    const logo = await loadImageEl('icons/icon-192.png');
+    ctx.drawImage(logo, 460, 110, 160, 160);
+  } catch {}
+
+  ctx.textAlign = 'center';
+  ctx.fillStyle = '#EAF1F8';
+  ctx.font = 'bold 56px -apple-system, "Segoe UI", Roboto, sans-serif';
+  wrapCanvasText(ctx, title, 540, 400, 880, 66);
+
+  if (stat) {
+    ctx.fillStyle = '#E8636E';
+    ctx.font = 'bold 200px -apple-system, "Segoe UI", Roboto, sans-serif';
+    ctx.fillText(stat, 540, 680);
+  }
+
+  if (subtitle) {
+    ctx.fillStyle = '#9DB1C2';
+    ctx.font = '38px -apple-system, "Segoe UI", Roboto, sans-serif';
+    ctx.fillText(subtitle, 540, 760);
+  }
+
+  ctx.fillStyle = '#9AC94A';
+  ctx.font = 'bold 42px -apple-system, "Segoe UI", Roboto, sans-serif';
+  ctx.fillText('Nowa Ja', 540, 970);
+
+  return canvas;
+}
+
+function canvasToPngBlob(canvas) {
+  return new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
+}
+
+async function shareAchievementImage(opts, filename) {
+  const canvas = await renderShareCanvas(opts);
+  const blob = await canvasToPngBlob(canvas);
+  if (!blob) return;
+  const file = new File([blob], filename, { type: 'image/png' });
+  if (navigator.canShare && navigator.canShare({ files: [file] })) {
+    try {
+      await navigator.share({ files: [file], title: opts.title, text: opts.subtitle || '' });
+      return;
+    } catch (e) {
+      if (e.name === 'AbortError') return;
+    }
+  }
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = filename;
+  a.click();
 }
 
 function showReminderBanner(text) {
@@ -259,6 +357,7 @@ function viewOnboarding() {
   <div class="onboard">
     <div class="onboard-brand"><img src="icons/icon-192.png" alt=""><h1>Nowa Ja</h1></div>
     <p class="tagline">Twój 60-dniowy plan treningowy w domu — dopasowany do Ciebie.</p>
+    <button type="button" class="onboard-quickstart" data-action="onboard-quickstart">Zacznij od razu, dostosuję później →</button>
     <div class="onboard-progress" role="progressbar" aria-valuemin="1" aria-valuemax="${ONBOARD_STEPS}" aria-valuenow="1">
       ${Array.from({ length: ONBOARD_STEPS }, (_, i) => `<span class="onboard-progress-seg${i === 0 ? ' active' : ''}" data-seg="${i}"></span>`).join('')}
     </div>
@@ -415,8 +514,10 @@ function bindSafety() {
   btn.addEventListener('click', () => {
     const profile = Store.getActiveProfile();
     Store.acceptSafetyConsent(profile.id);
+    const newBadges = Store.checkNewBadges(profile.id);
     navigate('/today');
     render();
+    if (newBadges.length) showBadgeToast(newBadges);
   });
 }
 
@@ -517,6 +618,32 @@ function painLabel(p) {
 function dayTypeLabel(info) {
   if (info.rest) return 'R — Odpoczynek';
   return `${info.type} — ${info.typeName}`;
+}
+
+function icsEscape(s) {
+  return String(s || '').replace(/\\/g, '\\\\').replace(/;/g, '\\;').replace(/,/g, '\\,').replace(/\n/g, '\\n');
+}
+
+function generateIcsCalendar(profile) {
+  const start = new Date(profile.startDate + 'T00:00:00');
+  const stamp = new Date().toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
+  const lines = ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//Nowa Ja//nowa-ja.vercel.app//PL', 'CALSCALE:GREGORIAN'];
+  for (let day = 1; day <= 60; day++) {
+    const info = getDayInfo(day);
+    const d = new Date(start);
+    d.setDate(d.getDate() + (day - 1));
+    const dateStr = `${d.getFullYear()}${String(d.getMonth() + 1).padStart(2, '0')}${String(d.getDate()).padStart(2, '0')}`;
+    const summary = `Nowa Ja — dzień ${day}/60: ${dayTypeLabel(info)}`;
+    lines.push('BEGIN:VEVENT');
+    lines.push(`UID:nowaja-${profile.id}-day${day}@nowa-ja.vercel.app`);
+    lines.push(`DTSTAMP:${stamp}`);
+    lines.push(`DTSTART;VALUE=DATE:${dateStr}`);
+    lines.push(`SUMMARY:${icsEscape(summary)}`);
+    if (!info.rest) lines.push(`DESCRIPTION:${icsEscape('Partie: ' + info.muscles)}`);
+    lines.push('END:VEVENT');
+  }
+  lines.push('END:VCALENDAR');
+  return lines.join('\r\n');
 }
 
 // ---------- Day detail ----------
@@ -1219,6 +1346,10 @@ function viewProgress(profile) {
   <section class="card">
     <div class="progress-bar"><div class="progress-bar-fill" style="width:${pct}%"></div></div>
     <p>${completedCount}/60 dni ukończonych (${pct}%) · seria: ${streak} dni</p>
+    <div class="btn-row" style="margin-top:10px">
+      <button type="button" class="btn small ghost" data-action="share-progress">📤 Udostępnij postęp</button>
+      ${completedCount >= 60 ? `<button type="button" class="btn small primary" data-action="share-certificate">🏆 Pobierz certyfikat</button>` : ''}
+    </div>
   </section>
 
   ${viewWeeklySummary(profile)}
@@ -1550,6 +1681,12 @@ function viewSettings(profile) {
   </section>
 
   <section class="card">
+    <h3>Kalendarz</h3>
+    <p class="muted small">Eksportuj cały 60-dniowy harmonogram jako plik .ics — wciągniesz go do Google Calendar, Apple Calendar albo Outlooka.</p>
+    <button class="btn small" data-action="export-ics">Eksportuj do kalendarza</button>
+  </section>
+
+  <section class="card">
     <h3>Reset</h3>
     <button class="btn danger small" data-action="reset-progress">Wyzeruj postępy tego profilu</button>
   </section>`;
@@ -1741,6 +1878,15 @@ document.addEventListener('click', async e => {
       calendarMonthOffset += 1;
       render();
       break;
+    case 'onboard-quickstart': {
+      const form = document.getElementById('form-onboard');
+      if (form) {
+        const nameField = form.querySelector('[name=name]');
+        if (nameField && !nameField.value.trim()) nameField.value = 'Ty';
+        form.requestSubmit();
+      }
+      break;
+    }
     case 'onboard-next': {
       const form = document.getElementById('form-onboard');
       showOnboardStep(form, Number(form.dataset.step) + 1);
@@ -1782,6 +1928,7 @@ document.addEventListener('click', async e => {
       }
       break;
     case 'workout-done':
+      vibrate(40);
       activeWorkoutRunner?.completeSetManually();
       break;
     case 'workout-skip':
@@ -1938,6 +2085,32 @@ document.addEventListener('click', async e => {
       }
       Store.setReminderSettings({ ...Store.getReminderSettings(), hour, minute, enabled });
       alert('Zapisano ustawienia przypomnienia.');
+      break;
+    }
+    case 'share-progress': {
+      const streak = Store.currentStreak(profile);
+      const completedCount = profile.progress.completedDays.length;
+      shareAchievementImage({
+        title: 'Mój postęp w programie',
+        stat: `${completedCount}/60`,
+        subtitle: `dni ukończonych · seria ${streak} ${streak === 1 ? 'dzień' : 'dni'} z rzędu`,
+      }, `nowa-ja-postep-dzien-${completedCount}.png`);
+      break;
+    }
+    case 'share-certificate': {
+      shareAchievementImage({
+        title: 'Program ukończony!',
+        stat: '60/60',
+        subtitle: '60 dni treningu w domu — od zera do nawyku',
+      }, 'nowa-ja-certyfikat.png');
+      break;
+    }
+    case 'export-ics': {
+      const blob = new Blob([generateIcsCalendar(profile)], { type: 'text/calendar;charset=utf-8' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'nowa-ja-harmonogram.ics';
+      a.click();
       break;
     }
     case 'export-data': {

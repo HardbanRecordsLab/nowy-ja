@@ -300,6 +300,11 @@ a { color: inherit; text-decoration: none; }
 .onboard h1 { color: var(--navy); margin: 0; }
 [data-theme="dark"] .onboard h1, [data-theme="auto"] .onboard h1 { color: var(--gold); }
 .tagline { color: var(--text-muted); margin-top: 0; }
+.onboard-quickstart {
+  background: none; border: none; color: var(--navy); font-weight: 700;
+  font-size: 0.85rem; padding: 0; margin-bottom: 14px; cursor: pointer;
+}
+[data-theme="dark"] .onboard-quickstart, [data-theme="auto"] .onboard-quickstart { color: var(--gold); }
 
 .onboard-progress { display: flex; gap: 6px; margin: 16px 0 18px; }
 .onboard-progress-seg {

@@ -148,6 +148,7 @@ const Store = (() => {
 
   // ---------- Gamifikacja ----------
   const BADGES = [
+    { id: 'profile_created', icon: '🌱', name: 'Zaczynasz podróż', desc: 'Uzupełnij profil i zaakceptuj zasady bezpieczeństwa', check: p => !!p.safetyConsentAcceptedAt },
     { id: 'first_day', icon: '🎉', name: 'Pierwszy krok', desc: 'Ukończ pierwszy dzień programu', check: p => p.progress.completedDays.length >= 1 },
     { id: 'streak_3', icon: '🔥', name: '3 dni z rzędu', desc: 'Utrzymaj serię 3 dni', check: p => currentStreak(p) >= 3 },
     { id: 'streak_7', icon: '🔥', name: 'Tydzień w ogniu', desc: 'Seria 7 dni z rzędu', check: p => currentStreak(p) >= 7 },

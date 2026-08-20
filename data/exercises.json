@@ -989,5 +989,66 @@
     },
     "infographicPrompt": "Clean flat-vector fitness infographic, square format, showing a friendly plus-size adult demonstrating \"low-impact jump rope motion without a rope\" in 3 sequential steps (start position, mid-movement, end position), front angle, minimalist home-gym background, soft blue-and-white color palette, bold sans-serif captions in Polish labeling: nazwa ćwiczenia \"Skakanka bez sznura (low-impact)\", partia mięśniowa \"Kardio, koordynacja\", oraz jedna wskazówka bezpieczeństwa: \"Ruch niskiego wpływu — bezpieczny dla większości, w tym dla osób z wrażliwymi stawami.\". Numbered arrows indicating movement direction, dashed alignment guide lines on knees/spine, no spelling errors, high contrast, flat illustration style, no photorealism, inclusive and body-positive character design.",
     "videoPrompt": "10-15 second instructional fitness demo video, static camera, front angle, a calm plus-size adult mimicking a jump rope wrist motion with alternating light heel raises with correct form on a non-slip mat in a bright home setting, steady low-impact rhythmic tempo, subtle on-screen Polish captions fade in: \"Skakanka bez sznura (low-impact)\", \"Kardio, koordynacja\", and safety cue \"Ruch niskiego wpływu — bezpieczny dla większości, w tym dla osób z wrażliwymi stawami.\", soft ambient background music, seamless loop, photorealistic, steady well-lit shot, encouraging non-judgmental tone suitable for beginners with a larger body size."
+  },
+  {
+    "code": "B13",
+    "name": "Przysiad z taśmą nad kolanami",
+    "group": "B",
+    "muscle": "Uda, pośladek średni, biodra",
+    "steps": [
+      "Załóż taśmę oporową tuż nad kolanami, stopy na szerokości bioder.",
+      "Wykonaj przysiad jak w B1/B2, przez cały czas delikatnie napierając kolanami na taśmę na zewnątrz.",
+      "Wróć do pozycji startowej, nie pozwalając kolanom zapaść się do środka."
+    ],
+    "safety": "Kolana podążają w linii ze stopami — taśma ma pomóc utrzymać tę linię, nie ją zaburzać.",
+    "reps": {
+      "faza1": "2 × 10",
+      "faza2": "3 × 12",
+      "faza3": "3 × 15",
+      "faza4": "4 × 15-18"
+    },
+    "infographicPrompt": "Clean flat-vector fitness infographic, square format, showing a friendly plus-size adult demonstrating \"squat with a resistance band above the knees\" in 3 sequential steps (start position, mid-movement, end position), front angle, minimalist home-gym background, soft blue-and-white color palette, bold sans-serif captions in Polish labeling: nazwa ćwiczenia \"Przysiad z taśmą nad kolanami\", partia mięśniowa \"Uda, pośladek średni, biodra\", oraz jedna wskazówka bezpieczeństwa: \"Kolana podążają w linii ze stopami — taśma ma pomóc utrzymać tę linię, nie ją zaburzać.\". Numbered arrows indicating movement direction, dashed alignment guide lines on knees/spine, no spelling errors, high contrast, flat illustration style, no photorealism, inclusive and body-positive character design.",
+    "videoPrompt": "10-15 second instructional fitness demo video, static camera, front angle, a calm plus-size adult performing a squat with a resistance band looped above the knees, correct form on a non-slip mat in a bright home setting, slow controlled tempo, visible outward knee pressure against the band, subtle on-screen Polish captions fade in: \"Przysiad z taśmą nad kolanami\", \"Uda, pośladek średni, biodra\", and safety cue \"Kolana podążają w linii ze stopami — taśma ma pomóc utrzymać tę linię, nie ją zaburzać.\", soft ambient background music, seamless loop, photorealistic, steady well-lit shot, encouraging non-judgmental tone suitable for beginners with a larger body size."
+  },
+  {
+    "code": "C13",
+    "name": "Wiosłowanie z taśmą oporową",
+    "group": "C",
+    "muscle": "Plecy (mięsień najszerszy, czworoboczny), ramiona",
+    "steps": [
+      "Usiądź na podłodze z nogami wyprostowanymi, taśmę zapnij wokół stóp.",
+      "Chwyć oba końce taśmy, plecy proste, tułów lekko odchylony do tyłu.",
+      "Przyciągnij taśmę do brzucha, łokcie blisko ciała, ściśnij łopatki.",
+      "Kontrolowany powrót do pozycji wyjściowej."
+    ],
+    "safety": "Plecy proste przez cały ruch — jeśli trudno utrzymać, zegnij lekko kolana.",
+    "reps": {
+      "faza1": "2 × 10",
+      "faza2": "3 × 12",
+      "faza3": "3 × 15",
+      "faza4": "4 × 15-18"
+    },
+    "infographicPrompt": "Clean flat-vector fitness infographic, square format, showing a friendly plus-size adult demonstrating \"seated resistance band row\" in 3 sequential steps (start position, mid-movement, end position), side angle, minimalist home-gym background with a resistance band looped around the feet, soft blue-and-white color palette, bold sans-serif captions in Polish labeling: nazwa ćwiczenia \"Wiosłowanie z taśmą oporową\", partia mięśniowa \"Plecy (mięsień najszerszy, czworoboczny), ramiona\", oraz jedna wskazówka bezpieczeństwa: \"Plecy proste przez cały ruch — jeśli trudno utrzymać, zegnij lekko kolana.\". Numbered arrows indicating movement direction, dashed alignment guide lines on knees/spine, no spelling errors, high contrast, flat illustration style, no photorealism, inclusive and body-positive character design.",
+    "videoPrompt": "10-15 second instructional fitness demo video, static camera, side angle, a calm plus-size adult sitting on the floor performing a seated row with a resistance band looped around the feet, correct form in a bright home setting, slow controlled tempo with a brief squeeze at the top, subtle on-screen Polish captions fade in: \"Wiosłowanie z taśmą oporową\", \"Plecy (mięsień najszerszy, czworoboczny), ramiona\", and safety cue \"Plecy proste przez cały ruch — jeśli trudno utrzymać, zegnij lekko kolana.\", soft ambient background music, seamless loop, photorealistic, steady well-lit shot, encouraging non-judgmental tone suitable for beginners with a larger body size."
+  },
+  {
+    "code": "C14",
+    "name": "Wyciskanie taśmy nad głowę",
+    "group": "C",
+    "muscle": "Barki, ramiona",
+    "steps": [
+      "Stań na środku taśmy stopami rozstawionymi na szerokość barków, chwyć oba końce na wysokości barków.",
+      "Wyciśnij taśmę pionowo nad głowę, aż ręce będą wyprostowane.",
+      "Kontrolowany powrót do pozycji startowej."
+    ],
+    "safety": "Nie odchylaj tułowia do tyłu, żeby \"pomóc\" ruchowi — jeśli musisz, wybierz słabszy opór taśmy.",
+    "reps": {
+      "faza1": "2 × 8",
+      "faza2": "3 × 10",
+      "faza3": "3 × 12",
+      "faza4": "4 × 12-15"
+    },
+    "infographicPrompt": "Clean flat-vector fitness infographic, square format, showing a friendly plus-size adult demonstrating \"standing resistance band overhead press\" in 3 sequential steps (start position, mid-movement, end position), front angle, minimalist home-gym background with a resistance band underfoot, soft blue-and-white color palette, bold sans-serif captions in Polish labeling: nazwa ćwiczenia \"Wyciskanie taśmy nad głowę\", partia mięśniowa \"Barki, ramiona\", oraz jedna wskazówka bezpieczeństwa: \"Nie odchylaj tułowia do tyłu, żeby \\\"pomóc\\\" ruchowi — jeśli musisz, wybierz słabszy opór taśmy.\". Numbered arrows indicating movement direction, dashed alignment guide lines on knees/spine, no spelling errors, high contrast, flat illustration style, no photorealism, inclusive and body-positive character design.",
+    "videoPrompt": "10-15 second instructional fitness demo video, static camera, front angle, a calm plus-size adult standing on a resistance band and pressing it overhead with correct form in a bright home setting, slow controlled tempo with a brief pause at the top, subtle on-screen Polish captions fade in: \"Wyciskanie taśmy nad głowę\", \"Barki, ramiona\", and safety cue \"Nie odchylaj tułowia do tyłu, aby pomóc ruchowi — jeśli musisz, wybierz słabszy opór taśmy.\", soft ambient background music, seamless loop, photorealistic, steady well-lit shot, encouraging non-judgmental tone suitable for beginners with a larger body size."
   }
 ]
