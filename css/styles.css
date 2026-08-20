@@ -85,7 +85,12 @@ a { color: inherit; text-decoration: none; }
 
 .header-left { display: flex; align-items: center; gap: 10px; min-width: 0; }
 .brand { display: inline-flex; align-items: center; gap: 8px; font-weight: 800; font-size: 1.15rem; letter-spacing: 0.3px; }
-.brand span { color: var(--gold); }
+/* Gradient białe→koralowe, nie zielone — .brand żyje na nagłówku o tle var(--navy) (zielonym),
+   więc zielony koniec gradientu zlewałby się z tłem. */
+.brand span {
+  background: linear-gradient(120deg, #fff 0%, var(--gold) 100%);
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+}
 .brand-logo { width: 30px; height: 30px; border-radius: 7px; display: block; }
 
 .icon-btn-plain {
@@ -270,7 +275,7 @@ a { color: inherit; text-decoration: none; }
   background: var(--border);
   color: var(--text);
 }
-.btn.primary { background: var(--navy); color: #fff; }
+.btn.primary { background: linear-gradient(120deg, var(--gold) 0%, var(--navy) 100%); color: #fff; box-shadow: 0 3px 10px color-mix(in srgb, var(--navy) 35%, transparent); }
 .btn.secondary { background: var(--gold); color: #2A0A0E; }
 .btn.ghost { background: transparent; border: 1px solid var(--border); }
 .btn.danger { background: var(--danger); color: #fff; }

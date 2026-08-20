@@ -214,7 +214,7 @@ section { position: relative; }
   white-space: nowrap;
 }
 .btn-primary {
-  background: var(--gold);
+  background: linear-gradient(120deg, var(--gold) 0%, var(--navy) 100%);
   color: #2A0A0E;
   box-shadow: 0 10px 24px -8px rgba(201, 162, 39, 0.55);
 }
@@ -279,7 +279,10 @@ section { position: relative; }
   text-decoration: none;
   color: var(--panel-ink);
 }
-.brand span { color: var(--gold); }
+.brand span {
+  background: linear-gradient(120deg, var(--gold) 0%, var(--navy) 100%);
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+}
 .brand-logo { width: 44px; height: 44px; border-radius: 11px; display: block; box-shadow: 0 2px 10px rgba(0,0,0,0.25); }
 
 .hero-badge {
@@ -480,6 +483,30 @@ section { position: relative; }
   font-size: 0.82rem;
   color: var(--text-muted);
   font-weight: 600;
+}
+
+/* ============================================================
+   TRANSFORM SHOWCASE
+   ============================================================ */
+.transform-showcase { padding-block: 90px 20px; }
+.transform-showcase-inner {
+  display: grid;
+  grid-template-columns: minmax(0, 380px) 1fr;
+  align-items: center;
+  gap: clamp(28px, 5vw, 64px);
+}
+.transform-showcase-media {
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-lg);
+  aspect-ratio: 1 / 1;
+}
+.transform-showcase-media img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.transform-showcase-copy h2 { margin-bottom: 14px; }
+.transform-showcase-cta { display: inline-flex; margin-top: 20px; }
+@media (max-width: 720px) {
+  .transform-showcase-inner { grid-template-columns: 1fr; }
+  .transform-showcase-media { max-width: 320px; margin-inline: auto; }
 }
 
 /* ============================================================
@@ -785,6 +812,20 @@ html.js-reveal .reveal.is-visible {
       <div class="stat"><span class="stat-num">38</span><span class="stat-label">ćwiczeń w bazie</span></div>
       <div class="stat"><span class="stat-num">4</span><span class="stat-label">fazy progresji</span></div>
       <div class="stat"><span class="stat-num">0 zł</span><span class="stat-label">zawsze za darmo</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="transform-showcase">
+  <div class="wrap transform-showcase-inner">
+    <div class="transform-showcase-media reveal">
+      <img src="assets/brand-transformation.jpg" alt="Nowa Ja — Twoja przemiana w 60 dni" loading="lazy" width="900" height="900">
+    </div>
+    <div class="transform-showcase-copy reveal reveal-delay-1">
+      <p class="eyebrow">Efekt</p>
+      <h2>To nie jest obietnica bez pokrycia.</h2>
+      <p class="section-sub">60 dni konsekwencji, prowadzonych krok po kroku, wystarczy, żeby poczuć realną różnicę. Program dopasowuje się do Ciebie każdego dnia — nie odwrotnie.</p>
+      <a href="app.html" class="btn btn-primary transform-showcase-cta">Rozpocznij za darmo</a>
     </div>
   </div>
 </section>
