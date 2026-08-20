@@ -1097,6 +1097,9 @@ function viewFormCheck(code) {
     </div>
     <div class="workout-center"><p class="muted">Ta przeglądarka nie obsługuje analizy kamery na urządzeniu. Spróbuj w aktualnej wersji Chrome lub Safari.</p></div>`;
   }
+  const setupHint = kind === 'plank'
+    ? 'Ustaw telefon z boku, ok. 1,5 metra od siebie, tak żeby było widać całą sylwetkę od ramion po kostki.'
+    : 'Ustaw telefon z boku, ok. 2 metry od siebie, tak żeby było widać całą sylwetkę od stóp po ramiona.';
   return `
   <div class="workout-header">
     <button type="button" class="icon-btn" data-action="exit-form-check" data-code="${code}" aria-label="Zamknij">✕</button>
@@ -1108,7 +1111,7 @@ function viewFormCheck(code) {
       <video id="fc-video" playsinline muted></video>
       <canvas id="fc-canvas"></canvas>
     </div>
-    <p class="muted small" id="fc-status">Ustaw telefon z boku, ok. 2 metry od siebie, tak żeby było widać całą sylwetkę od stóp po ramiona.</p>
+    <p class="muted small" id="fc-status">${setupHint}</p>
     <div class="btn-row" id="fc-controls">
       <button type="button" class="btn primary" id="fc-btn-start">Uruchom kamerę</button>
     </div>
@@ -1133,6 +1136,13 @@ function bindFormCheck(code) {
     setControls('<button type="button" class="btn primary" disabled>Uruchamianie…</button>');
     statusEl.textContent = 'Uruchamianie kamery i (przy pierwszym użyciu) pobieranie modelu analizy — to może chwilę potrwać…';
 
+    function attachStop() {
+      document.getElementById('fc-btn-stop')?.addEventListener('click', () => {
+        PoseCheck.stop();
+        navigate(`#/exercise/${code}`);
+      });
+    }
+
     await PoseCheck.start({
       video, canvas, kind,
       onSpeak: (text) => Voice.speak(text, { interrupt: true }),
@@ -1141,6 +1151,10 @@ function bindFormCheck(code) {
           statusEl.textContent = s.message;
           setControls('<button type="button" class="btn primary" id="fc-btn-retry">Spróbuj ponownie</button>');
           document.getElementById('fc-btn-retry')?.addEventListener('click', () => bindFormCheck(code));
+        } else if (s.phase === 'ready' && kind === 'plank') {
+          statusEl.textContent = 'Widzę obraz z kamery. Wejdź w pozycję deski, gdy będziesz gotowa/y — analiza już działa.';
+          setControls('<button type="button" class="btn ghost" id="fc-btn-stop">Zakończ analizę</button>');
+          attachStop();
         } else if (s.phase === 'ready') {
           statusEl.textContent = 'Widzę obraz z kamery. Stań prosto w kadrze, żeby skalibrować pozycję neutralną.';
           setControls('<button type="button" class="btn primary" id="fc-btn-calibrate">Kalibruj (stój prosto ok. 3 s)</button>');
@@ -1149,12 +1163,9 @@ function bindFormCheck(code) {
             statusEl.textContent = 'Stój prosto i nieruchomo przez chwilę…';
             const ok = await PoseCheck.calibrate();
             if (ok) {
-              statusEl.textContent = `Kalibracja gotowa. Zacznij ${kind === 'hinge' ? 'martwy ciąg' : 'przysiad / wykrok'} — będę podpowiadać na głos.`;
+              statusEl.textContent = `Kalibracja gotowa. Zacznij ${kind === 'hinge' ? 'martwy ciąg' : 'przysiad / wykrok'} — będę liczyć powtórzenia i podpowiadać na głos.`;
               setControls('<button type="button" class="btn ghost" id="fc-btn-stop">Zakończ analizę</button>');
-              document.getElementById('fc-btn-stop')?.addEventListener('click', () => {
-                PoseCheck.stop();
-                navigate(`#/exercise/${code}`);
-              });
+              attachStop();
             } else {
               statusEl.textContent = 'Nie udało się wykryć całej sylwetki — sprawdź, czy mieścisz się w kadrze, i spróbuj ponownie.';
               setControls('<button type="button" class="btn primary" id="fc-btn-calibrate2">Kalibruj ponownie</button>');
@@ -1163,10 +1174,13 @@ function bindFormCheck(code) {
           });
         } else if (s.phase === 'tracking-lost') {
           statusEl.textContent = 'Nie widzę całej sylwetki — cofnij się lub popraw ustawienie telefonu.';
+        } else if (s.phase === 'analyzing' && kind === 'plank') {
+          const mm = String(Math.floor((s.holdSeconds || 0) / 60)).padStart(2, '0');
+          const ss = String((s.holdSeconds || 0) % 60).padStart(2, '0');
+          statusEl.textContent = (s.ok ? '✅ ' : '⚠️ ') + `${mm}:${ss} — ` + (s.ok ? 'dobra forma.' : (s.issues.includes('sag') ? 'biodra opadają.' : 'biodra za wysoko.'));
         } else if (s.phase === 'analyzing') {
-          statusEl.textContent = s.ok
-            ? '✅ Forma wygląda dobrze.'
-            : '⚠️ ' + (s.issues.includes('back') ? 'Sprawdź plecy / tułów.' : s.issues.includes('knee') ? 'Sprawdź pozycję kolan.' : 'Zwiększ zakres pochylenia w biodrach.');
+          const repLabel = `Powtórzenia: ${s.repCount || 0}`;
+          statusEl.textContent = (s.ok ? `✅ ${repLabel} — forma wygląda dobrze.` : `⚠️ ${repLabel} — ` + (s.issues.includes('back') ? 'sprawdź plecy / tułów.' : s.issues.includes('knee') ? 'sprawdź pozycję kolan.' : 'zwiększ zakres pochylenia w biodrach.'));
         }
       },
     });
@@ -1274,7 +1288,9 @@ function viewExercise(profile, code) {
   ${FORM_CHECK_KIND[ex.code] ? `
   <section class="card" style="border-left:4px solid var(--gold)">
     <h3 style="margin-top:0">🎥 Sprawdzian formy (beta)</h3>
-    <p class="muted small">Kamera na Twoim urządzeniu orientacyjnie sprawdza pochylenie tułowia i pozycję kolan — obraz nigdy nie opuszcza telefonu/komputera. To pomoc, nie ocena eksperta — nie zastępuje wskazówek bezpieczeństwa powyżej.</p>
+    <p class="muted small">${FORM_CHECK_KIND[ex.code] === 'plank'
+      ? 'Kamera na Twoim urządzeniu orientacyjnie sprawdza, czy biodra nie opadają ani nie unoszą się za wysoko — obraz nigdy nie opuszcza telefonu/komputera.'
+      : 'Kamera na Twoim urządzeniu orientacyjnie sprawdza pochylenie tułowia i pozycję kolan, a przy okazji liczy powtórzenia — obraz nigdy nie opuszcza telefonu/komputera.'} To pomoc, nie ocena eksperta — nie zastępuje wskazówek bezpieczeństwa powyżej.</p>
     <a class="btn small primary" href="#/form-check/${ex.code}">Uruchom kamerę</a>
   </section>` : ''}
 
@@ -1304,11 +1320,13 @@ function viewExercise(profile, code) {
   </details>`;
 }
 
-// Ćwiczenia z ruchem przysiadu/wykroku/zawiasu biodrowego — jedyne, dla których heurystyka
-// "odchylenie od pozycji stojącej" ma sens. B9 (przysiad izometryczny przy ścianie) celowo
-// pominięty — to statyczny wytrzym w ugięciu, więc odchylenie od stania jest tam z założenia
-// duże i nie oznacza błędu formy.
-const FORM_CHECK_KIND = { B1: 'squat', B2: 'squat', B3: 'squat', E3: 'hinge', E8: 'squat', B13: 'squat' };
+// Ćwiczenia obsługiwane przez sprawdzian formy (kamera). 'squat'/'hinge' — ruch przysiadu/
+// wykroku/zawiasu biodrowego, gdzie heurystyka "odchylenie od pozycji stojącej" ma sens
+// (B9, przysiad izometryczny przy ścianie, celowo pominięty — to statyczny wytrzym w ugięciu,
+// więc odchylenie od stania jest tam z założenia duże i nie oznacza błędu formy).
+// 'plank' — czysto geometryczny test prostej linii ciała, bez kalibracji (A7, deska boczna,
+// pominięta — wymagałaby ustawienia kamery od przodu/tyłu zamiast z boku).
+const FORM_CHECK_KIND = { B1: 'squat', B2: 'squat', B3: 'squat', E3: 'hinge', E8: 'squat', B13: 'squat', A2: 'plank', E5: 'plank' };
 
 function groupLabel(g) {
   return { A: 'Brzuch + Biodra', B: 'Uda + Pośladki', C: 'Klatka + Ramiona', D: 'Aktywność / mobilność', E: 'Bonus (opona, plecak, skakanka)' }[g] || g;

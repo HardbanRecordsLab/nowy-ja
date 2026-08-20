@@ -6,10 +6,16 @@
 // są w pamięci podręcznej przeglądarki) — ale samo przetwarzanie obrazu z kamery dzieje się
 // WYŁĄCZNIE lokalnie. Żadna klatka wideo nigdzie nie jest wysyłana ani zapisywana.
 //
-// Metoda: zamiast sztywnych progów kąta (różne proporcje ciała = różne "normalne" kąty),
-// kalibrujemy się do pozycji stojącej użytkownika, a potem patrzymy na ODCHYLENIE od tej
-// bazy w trakcie ruchu. To orientacyjna pomoc/wskazówka, NIE ocena eksperta — uzupełnia,
-// a nie zastępuje, pisemnych wskazówek bezpieczeństwa przy każdym ćwiczeniu.
+// Dwa tryby analizy:
+// - 'squat' / 'hinge' — kalibrujemy się do pozycji stojącej użytkownika, a potem patrzymy na
+//   ODCHYLENIE od tej bazy w trakcie ruchu (nie na sztywne progi kąta — różne proporcje ciała
+//   dają różne "normalne" kąty). Przy okazji liczymy powtórzenia z oscylacji wysokości bioder
+//   i porównujemy formę pierwszych i ostatnich powtórzeń w serii (wykrywanie zmęczenia formy).
+// - 'plank' — czysto geometryczny test (biodro powinno leżeć na prostej ramię-kostka), bez
+//   kalibracji, bo "prosta linia ciała" jest kryterium niezależnym od proporcji użytkownika.
+//
+// To orientacyjna pomoc/wskazówka, NIE ocena eksperta — uzupełnia, a nie zastępuje, pisemnych
+// wskazówek bezpieczeństwa przy każdym ćwiczeniu.
 const PoseCheck = (() => {
   const CDN_JS = 'https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@latest/vision_bundle.mjs';
   const CDN_WASM = 'https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@latest/wasm';
@@ -19,6 +25,8 @@ const PoseCheck = (() => {
   const IDX = { LSH: 11, RSH: 12, LHIP: 23, RHIP: 24, LKNEE: 25, RKNEE: 26, LANK: 27, RANK: 28 };
   const SKELETON_PAIRS = [[11, 12], [11, 23], [12, 24], [23, 24], [23, 25], [25, 27], [24, 26], [26, 28], [11, 13], [13, 15], [12, 14], [14, 16]];
   const MIN_DETECT_INTERVAL_MS = 120; // ~8 analiz/s wystarcza do oceny formy, oszczędza baterię
+  const DOWN_THRESHOLD = 0.9; // próg opuszczenia bioder (znorm. szerokością bioder) uznawany za "dół" powtórzenia
+  const UP_THRESHOLD = 0.35;  // powrót poniżej tego progu = koniec powtórzenia
 
   let landmarker = null;
   let loadingPromise = null;
@@ -29,16 +37,29 @@ const PoseCheck = (() => {
   let lastDetectAt = 0;
   let running = false;
   let calibrating = false;
-  let baseline = null; // { torsoLean, kneeOffset }
+  let baseline = null; // { torsoLean, kneeOffset, hipY, hipWidth }
   let recentSamples = [];
   let lastSpokenAt = 0;
   let lastSpokenState = null;
+  let holdStartAt = 0;
+  let lastHoldAnnounceSec = 0;
+
+  // Stan liczenia powtórzeń + wykrywania zmęczenia formy (tylko 'squat'/'hinge')
+  let repPhase = 'up';
+  let repCount = 0;
+  let repPeak = null; // { torso, knee } — najgorsze odchylenie w trakcie bieżącego "dołu"
+  let repHistory = [];
+  let fatigueWarned = false;
 
   function isSupported() {
     return !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia && window.WebAssembly);
   }
 
   function isRunning() { return running; }
+
+  function vibrate(pattern) {
+    try { navigator.vibrate?.(pattern); } catch {}
+  }
 
   async function ensureLandmarker() {
     if (landmarker) return landmarker;
@@ -65,6 +86,16 @@ const PoseCheck = (() => {
     return Math.atan2(Math.abs(dx), Math.abs(dy)) * 180 / Math.PI;
   }
 
+  // Odchylenie biodra od prostej ramię-kostka, liczone WYŁĄCZNIE na osi pionowej (y rośnie w dół
+  // w układzie obrazu) — dzięki temu wynik nie zależy od tego, czy osoba stoi bokiem w lewo czy
+  // w prawo. Dodatnie = biodro NIŻEJ niż linia prosta (zapadanie), ujemne = WYŻEJ ("górka").
+  function plankHipDeviation(shoulder, hip, ankle, segLen) {
+    if (Math.abs(ankle.x - shoulder.x) < 1e-4) return 0;
+    const t = (hip.x - shoulder.x) / (ankle.x - shoulder.x);
+    const expectedY = shoulder.y + t * (ankle.y - shoulder.y);
+    return (hip.y - expectedY) / segLen;
+  }
+
   function readSample(landmarks) {
     const need = [IDX.LSH, IDX.RSH, IDX.LHIP, IDX.RHIP, IDX.LKNEE, IDX.RKNEE, IDX.LANK, IDX.RANK];
     if (need.some(i => !landmarks[i] || (landmarks[i].visibility ?? 1) < 0.5)) return null;
@@ -76,7 +107,14 @@ const PoseCheck = (() => {
       landmarks[IDX.LHIP].x - landmarks[IDX.RHIP].x,
       landmarks[IDX.LHIP].y - landmarks[IDX.RHIP].y
     ) || 0.08;
-    return { torsoLean: torsoLeanDeg(shoulder, hip), kneeOffset: (knee.x - ankle.x) / hipWidth };
+    const segLen = Math.hypot(ankle.x - shoulder.x, ankle.y - shoulder.y) || 0.3;
+    return {
+      torsoLean: torsoLeanDeg(shoulder, hip),
+      kneeOffset: (knee.x - ankle.x) / hipWidth,
+      hipY: hip.y,
+      hipWidth,
+      plankDeviation: plankHipDeviation(shoulder, hip, ankle, segLen),
+    };
   }
 
   function drawOverlay(landmarks) {
@@ -106,6 +144,93 @@ const PoseCheck = (() => {
     });
   }
 
+  function speakThrottled(text, state, onSpeak, minGapMs = 6000) {
+    const nowMs = Date.now();
+    if (!onSpeak || (state === lastSpokenState && nowMs - lastSpokenAt < minGapMs)) return;
+    lastSpokenState = state;
+    lastSpokenAt = nowMs;
+    onSpeak(text);
+  }
+
+  function analyzePlankFrame(sample, onStatus, onSpeak) {
+    recentSamples.push(sample);
+    if (recentSamples.length > 8) recentSamples.shift();
+    if (recentSamples.length < 5) return;
+
+    const avgDev = recentSamples.reduce((s, x) => s + x.plankDeviation, 0) / recentSamples.length;
+    const holdSeconds = Math.floor((Date.now() - holdStartAt) / 1000);
+    let issue = null;
+    if (avgDev > 0.09) issue = 'sag';
+    else if (avgDev < -0.09) issue = 'pike';
+
+    onStatus({ phase: 'analyzing', ok: !issue, issues: issue ? [issue] : [], holdSeconds });
+
+    if (issue === 'sag') speakThrottled('Biodra opadają — unieś je odrobinę, napnij brzuch.', 'sag', onSpeak);
+    else if (issue === 'pike') speakThrottled('Biodra są za wysoko — opuść je do linii prostej.', 'pike', onSpeak);
+    else if (holdSeconds > 0 && holdSeconds % 15 === 0 && holdSeconds !== lastHoldAnnounceSec) {
+      lastHoldAnnounceSec = holdSeconds;
+      speakThrottled(`${holdSeconds} sekund, dobra forma.`, 'ok-' + holdSeconds, onSpeak, 0);
+    }
+  }
+
+  function analyzeSquatFrame(kind, sample, onStatus, onSpeak) {
+    recentSamples.push(sample);
+    if (recentSamples.length > 10) recentSamples.shift();
+    if (recentSamples.length < 6) return;
+
+    const avgTorso = recentSamples.reduce((s, x) => s + x.torsoLean, 0) / recentSamples.length;
+    const avgKnee = recentSamples.reduce((s, x) => s + x.kneeOffset, 0) / recentSamples.length;
+    const avgHipY = recentSamples.reduce((s, x) => s + x.hipY, 0) / recentSamples.length;
+    const avgHipWidth = recentSamples.reduce((s, x) => s + x.hipWidth, 0) / recentSamples.length;
+    const torsoDelta = avgTorso - baseline.torsoLean;
+    const kneeDelta = Math.abs(avgKnee - baseline.kneeOffset);
+    const hipDrop = (avgHipY - baseline.hipY) / avgHipWidth;
+
+    const issues = [];
+    if (kind === 'squat' && torsoDelta > 35) issues.push('back');
+    if (kind === 'hinge' && torsoDelta < 15) issues.push('hinge_shallow');
+    if (kneeDelta > 0.55) issues.push('knee');
+
+    // Licznik powtórzeń: prosty automat stanów na podstawie oscylacji wysokości bioder.
+    if (repPhase === 'up' && hipDrop > DOWN_THRESHOLD) {
+      repPhase = 'down';
+      repPeak = { torso: torsoDelta, knee: kneeDelta };
+    } else if (repPhase === 'down') {
+      if (repPeak) {
+        repPeak.torso = Math.max(repPeak.torso, torsoDelta);
+        repPeak.knee = Math.max(repPeak.knee, kneeDelta);
+      }
+      if (hipDrop < UP_THRESHOLD) {
+        repPhase = 'up';
+        repCount++;
+        vibrate(30);
+        if (repPeak) repHistory.push(repPeak);
+        repPeak = null;
+
+        if (repCount > 0 && repCount % 5 === 0) {
+          speakThrottled(`${repCount} powtórzeń.`, 'rep-' + repCount, onSpeak, 0);
+        }
+        if (!fatigueWarned && repHistory.length >= 4) {
+          const early = repHistory.slice(0, 2);
+          const earlyTorso = early.reduce((s, x) => s + x.torso, 0) / early.length;
+          const earlyKnee = early.reduce((s, x) => s + x.knee, 0) / early.length;
+          const latest = repHistory[repHistory.length - 1];
+          if (latest.torso > earlyTorso + 15 || latest.knee > earlyKnee + 0.3) {
+            fatigueWarned = true;
+            speakThrottled('Widać, że forma zaczyna się pogarszać — rozważ krótszą przerwę albo koniec tej serii.', 'fatigue', onSpeak, 0);
+          }
+        }
+      }
+    }
+
+    onStatus({ phase: 'analyzing', ok: !issues.length, issues, repCount });
+
+    const state = issues.length ? issues.join('+') : 'ok';
+    if (issues.includes('back')) speakThrottled('Zwróć uwagę na plecy — spróbuj trzymać tułów bardziej pionowo.', state, onSpeak);
+    else if (issues.includes('hinge_shallow')) speakThrottled('Pochyl się bardziej w biodrach, żeby poczuć pracę tylnej taśmy.', state, onSpeak);
+    else if (issues.includes('knee')) speakThrottled('Sprawdź kolana — nie powinny mocno wychodzić przed linię stóp.', state, onSpeak);
+  }
+
   function loop(kind, onStatus, onSpeak) {
     if (!running) return;
     rafId = requestAnimationFrame(() => loop(kind, onStatus, onSpeak));
@@ -122,39 +247,19 @@ const PoseCheck = (() => {
     drawOverlay(landmarks);
     const sample = landmarks ? readSample(landmarks) : null;
 
+    if (kind === 'plank') {
+      if (!sample) { onStatus({ phase: 'tracking-lost' }); return; }
+      analyzePlankFrame(sample, onStatus, onSpeak);
+      return;
+    }
+
     if (calibrating) {
       if (sample) recentSamples.push(sample);
       return;
     }
     if (!baseline) return;
     if (!sample) { onStatus({ phase: 'tracking-lost' }); return; }
-
-    recentSamples.push(sample);
-    if (recentSamples.length > 10) recentSamples.shift();
-    if (recentSamples.length < 6) return;
-
-    const avgTorso = recentSamples.reduce((s, x) => s + x.torsoLean, 0) / recentSamples.length;
-    const avgKnee = recentSamples.reduce((s, x) => s + x.kneeOffset, 0) / recentSamples.length;
-    const torsoDelta = avgTorso - baseline.torsoLean;
-    const kneeDelta = Math.abs(avgKnee - baseline.kneeOffset);
-
-    const issues = [];
-    if (kind === 'squat' && torsoDelta > 35) issues.push('back');
-    if (kind === 'hinge' && torsoDelta < 15) issues.push('hinge_shallow');
-    if (kneeDelta > 0.55) issues.push('knee');
-
-    onStatus({ phase: 'analyzing', ok: !issues.length, issues });
-
-    const state = issues.length ? issues.join('+') : 'ok';
-    const nowMs = Date.now();
-    if (onSpeak && (state !== lastSpokenState || nowMs - lastSpokenAt > 6000)) {
-      lastSpokenState = state;
-      lastSpokenAt = nowMs;
-      if (issues.includes('back')) onSpeak('Zwróć uwagę na plecy — spróbuj trzymać tułów bardziej pionowo.');
-      else if (issues.includes('hinge_shallow')) onSpeak('Pochyl się bardziej w biodrach, żeby poczuć pracę tylnej taśmy.');
-      else if (issues.includes('knee')) onSpeak('Sprawdź kolana — nie powinny mocno wychodzić przed linię stóp.');
-      else onSpeak('Dobra forma, tak trzymaj.');
-    }
+    analyzeSquatFrame(kind, sample, onStatus, onSpeak);
   }
 
   async function start({ video, canvas, kind, onStatus, onSpeak }) {
@@ -163,6 +268,8 @@ const PoseCheck = (() => {
     videoEl = video; canvasEl = canvas;
     baseline = null; recentSamples = []; calibrating = false;
     lastSpokenState = null; lastSpokenAt = 0;
+    repPhase = 'up'; repCount = 0; repPeak = null; repHistory = []; fatigueWarned = false;
+    holdStartAt = 0; lastHoldAnnounceSec = 0;
 
     try {
       stream = await navigator.mediaDevices.getUserMedia({
@@ -185,10 +292,13 @@ const PoseCheck = (() => {
     }
 
     running = true;
+    if (kind === 'plank') holdStartAt = Date.now();
     onStatus({ phase: 'ready' });
     loop(kind, onStatus, onSpeak);
   }
 
+  // Kalibracja pozycji stojącej — tylko dla 'squat'/'hinge'. Dla 'plank' analiza geometryczna
+  // nie wymaga kalibracji (prosta linia ciała to kryterium niezależne od proporcji użytkownika).
   function calibrate(durationMs = 2500) {
     return new Promise(resolve => {
       calibrating = true;
@@ -199,6 +309,7 @@ const PoseCheck = (() => {
           baseline = {
             torsoLean: recentSamples.reduce((s, x) => s + x.torsoLean, 0) / recentSamples.length,
             kneeOffset: recentSamples.reduce((s, x) => s + x.kneeOffset, 0) / recentSamples.length,
+            hipY: recentSamples.reduce((s, x) => s + x.hipY, 0) / recentSamples.length,
           };
           recentSamples = [];
           resolve(true);
