@@ -23,9 +23,10 @@
 //   nadgarstek) do liczenia powtórzeń i głębokości zgięcia (kąt to wartość uniwersalna, nie
 //   wymaga kalibracji per-osoba) + kalibrowana stabilność tułowia, żeby wykryć "huśtanie" ciała
 //   zamiast pracy samym łokciem.
-// - 'lateral-raise' — JEDYNY tryb kalibrowany PRZODEM do kamery (ruch w bok jest niewidoczny
-//   z profilu). Śledzi wysokość nadgarstka względem barku OSOBNO dla lewej i prawej ręki, żeby
-//   wykryć nierówne unoszenie rąk — klasyczny błąd tego ćwiczenia izolowanego.
+// - 'lateral-raise' / 'band-pull' — kalibrowane PRZODEM do kamery (ruch w bok jest niewidoczny
+//   z profilu). 'lateral-raise' śledzi wysokość nadgarstka względem barku OSOBNO dla lewej
+//   i prawej ręki (nierówne unoszenie rąk). 'band-pull' śledzi rozstaw nadgarstków (ręce razem
+//   → rozciągnięcie na boki) i wysokość rąk względem barków (czy nie "opadają" w trakcie ruchu).
 //
 // To orientacyjna pomoc/wskazówka, NIE ocena eksperta — uzupełnia, a nie zastępuje, pisemnych
 // wskazówek bezpieczeństwa przy każdym ćwiczeniu.
@@ -52,6 +53,10 @@ const PoseCheck = (() => {
   const LATERAL_UP_THRESHOLD = 0.6;  // wzrost (nad poziom kalibrowany) uznawany za "górę" powtórzenia
   const LATERAL_DOWN_THRESHOLD = 0.2; // powrót poniżej tego progu = koniec powtórzenia (ręce znów przy tułowiu)
   const LATERAL_ASYMMETRY_LIMIT = 0.25; // różnica lewa/prawa na szczycie, powyżej której zgłaszamy nierówność
+  // Progi dla rozciągania taśmy przed klatką (band pull-apart) — znorm. szerokością barków.
+  const BAND_APART_THRESHOLD = 0.9;  // wzrost rozstawu nadgarstków (nad poziom kalibrowany) uznawany za "rozciągnięcie"
+  const BAND_TOGETHER_THRESHOLD = 0.3; // powrót poniżej tego progu = koniec powtórzenia (ręce znów blisko siebie)
+  const BAND_HEIGHT_DRIFT_LIMIT = 0.35; // odchylenie wysokości rąk od poziomu barków na szczycie, powyżej którego zgłaszamy uwagę
 
   let landmarker = null;
   let loadingPromise = null;
@@ -92,6 +97,11 @@ const PoseCheck = (() => {
   let lateralPhase = 'down'; // 'down' | 'up'
   let lateralPeakAsymmetry = 0;
   let lateralLastResult = { ok: true, issues: [] };
+
+  // Stan liczenia powtórzeń dla rozciągania taśmy przed klatką (tylko 'band-pull').
+  let bandPhase = 'together'; // 'together' | 'apart'
+  let bandPeakHeightDrift = 0;
+  let bandLastResult = { ok: true, issues: [] };
 
   function isSupported() {
     return !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia && window.WebAssembly);
@@ -204,6 +214,27 @@ const PoseCheck = (() => {
     return {
       raiseLeft: (landmarks[IDX.LSH].y - landmarks[IDX.LWRIST].y) / shoulderWidth,
       raiseRight: (landmarks[IDX.RSH].y - landmarks[IDX.RWRIST].y) / shoulderWidth,
+    };
+  }
+
+  // Rozciąganie taśmy przed klatką (band pull-apart) — też kamera OD PRZODU. Śledzi rozstaw
+  // nadgarstków (ręce razem → rozciągnięcie na boki) oraz wysokość rąk względem barków, żeby
+  // wyłapać "opadanie" ramion podczas ruchu zamiast czystego rozciągania w poziomie.
+  function readBandSample(landmarks) {
+    const need = [IDX.LSH, IDX.RSH, IDX.LWRIST, IDX.RWRIST];
+    if (need.some(i => !landmarks[i] || (landmarks[i].visibility ?? 1) < 0.5)) return null;
+    const shoulderWidth = Math.hypot(
+      landmarks[IDX.LSH].x - landmarks[IDX.RSH].x,
+      landmarks[IDX.LSH].y - landmarks[IDX.RSH].y
+    ) || 0.15;
+    const shoulder = mid(landmarks[IDX.LSH], landmarks[IDX.RSH]);
+    const wristMidY = (landmarks[IDX.LWRIST].y + landmarks[IDX.RWRIST].y) / 2;
+    return {
+      wristSeparation: Math.hypot(
+        landmarks[IDX.LWRIST].x - landmarks[IDX.RWRIST].x,
+        landmarks[IDX.LWRIST].y - landmarks[IDX.RWRIST].y
+      ) / shoulderWidth,
+      heightDrift: (wristMidY - shoulder.y) / shoulderWidth,
     };
   }
 
@@ -473,6 +504,41 @@ const PoseCheck = (() => {
     onStatus({ phase: 'analyzing', ok: lateralLastResult.ok, issues: lateralLastResult.issues, repCount });
   }
 
+  // Rozciąganie taśmy przed klatką — baseline.separation to rozstaw nadgarstków przy rękach
+  // złączonych przed klatką, baseline.heightDrift to ich wysokość względem barków w tej pozycji.
+  function analyzeBandFrame(sample, onStatus, onSpeak) {
+    recentSamples.push(sample);
+    if (recentSamples.length > 8) recentSamples.shift();
+    if (recentSamples.length < 5) return;
+
+    const avgSeparation = recentSamples.reduce((s, x) => s + x.wristSeparation, 0) / recentSamples.length;
+    const avgHeightDrift = recentSamples.reduce((s, x) => s + x.heightDrift, 0) / recentSamples.length;
+    const spread = avgSeparation - baseline.separation;
+    const heightDelta = Math.abs(avgHeightDrift - baseline.heightDrift);
+
+    if (bandPhase === 'together' && spread > BAND_APART_THRESHOLD) {
+      bandPhase = 'apart';
+      bandPeakHeightDrift = heightDelta;
+    } else if (bandPhase === 'apart') {
+      bandPeakHeightDrift = Math.max(bandPeakHeightDrift, heightDelta);
+      if (spread < BAND_TOGETHER_THRESHOLD) {
+        bandPhase = 'together';
+        repCount++;
+        vibrate(30);
+        const issue = bandPeakHeightDrift > BAND_HEIGHT_DRIFT_LIMIT ? 'height_drift' : null;
+        bandLastResult = { ok: !issue, issues: issue ? [issue] : [] };
+        bandPeakHeightDrift = 0;
+
+        onStatus({ phase: 'analyzing', ok: bandLastResult.ok, issues: bandLastResult.issues, repCount });
+        if (repCount > 0 && repCount % 5 === 0) speakThrottled(`${repCount} powtórzeń.`, 'rep-' + repCount, onSpeak, 0);
+        if (issue === 'height_drift') speakThrottled('Utrzymaj ręce na wysokości barków przez cały ruch.', 'height_drift', onSpeak);
+        return;
+      }
+    }
+
+    onStatus({ phase: 'analyzing', ok: bandLastResult.ok, issues: bandLastResult.issues, repCount });
+  }
+
   function loop(kind, onStatus, onSpeak) {
     if (!running) return;
     rafId = requestAnimationFrame(() => loop(kind, onStatus, onSpeak));
@@ -488,7 +554,10 @@ const PoseCheck = (() => {
     const landmarks = result?.landmarks?.[0] || null;
     drawOverlay(landmarks);
     const sample = landmarks
-      ? (kind === 'curl' ? readCurlSample(landmarks) : kind === 'lateral-raise' ? readLateralSample(landmarks) : readSample(landmarks))
+      ? (kind === 'curl' ? readCurlSample(landmarks)
+        : kind === 'lateral-raise' ? readLateralSample(landmarks)
+        : kind === 'band-pull' ? readBandSample(landmarks)
+        : readSample(landmarks))
       : null;
 
     if (kind === 'plank' || kind === 'pushup') {
@@ -514,6 +583,7 @@ const PoseCheck = (() => {
     if (kind === 'bridge') { analyzeBridgeFrame(sample, onStatus, onSpeak); return; }
     if (kind === 'curl') { analyzeCurlFrame(sample, onStatus, onSpeak); return; }
     if (kind === 'lateral-raise') { analyzeLateralFrame(sample, onStatus, onSpeak); return; }
+    if (kind === 'band-pull') { analyzeBandFrame(sample, onStatus, onSpeak); return; }
     analyzeSquatFrame(kind, sample, onStatus, onSpeak);
   }
 
@@ -528,6 +598,7 @@ const PoseCheck = (() => {
     bridgePhase = 'down'; bridgePeakDev = 0; bridgeLastResult = { ok: true, issues: [] };
     curlPhase = 'extended'; curlPeakSwing = 0; curlLastResult = { ok: true, issues: [] };
     lateralPhase = 'down'; lateralPeakAsymmetry = 0; lateralLastResult = { ok: true, issues: [] };
+    bandPhase = 'together'; bandPeakHeightDrift = 0; bandLastResult = { ok: true, issues: [] };
 
     try {
       stream = await navigator.mediaDevices.getUserMedia({
@@ -571,6 +642,8 @@ const PoseCheck = (() => {
             kneeOffset: recentSamples.reduce((s, x) => s + (x.kneeOffset || 0), 0) / recentSamples.length,
             hipY: recentSamples.reduce((s, x) => s + (x.hipY || 0), 0) / recentSamples.length,
             raise: recentSamples.reduce((s, x) => s + (((x.raiseLeft || 0) + (x.raiseRight || 0)) / 2), 0) / recentSamples.length,
+            separation: recentSamples.reduce((s, x) => s + (x.wristSeparation || 0), 0) / recentSamples.length,
+            heightDrift: recentSamples.reduce((s, x) => s + (x.heightDrift || 0), 0) / recentSamples.length,
           };
           recentSamples = [];
           resolve(true);
