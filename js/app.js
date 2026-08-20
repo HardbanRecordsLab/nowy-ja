@@ -606,7 +606,10 @@ function viewToday(profile) {
       <span class="pill">${esc(info.phaseName)}</span>
       <span class="pill pill-outline">Dzień ${day} / 60</span>
     </div>
-    <p class="muted" style="margin:0 0 2px">Cześć, ${esc(profile.name)} 👋</p>
+    <div class="hero-greeting">
+      <span class="hero-avatar">${esc((profile.name || '?').trim().charAt(0).toUpperCase() || '?')}</span>
+      <p class="muted" style="margin:0">Cześć, ${esc(profile.name)} 👋</p>
+    </div>
     <h2>${esc(dayTypeLabel(info))}</h2>
     <p class="muted">${esc(info.muscles)}</p>
     ${done ? '<p class="done-badge">✓ Ukończono dzisiejszy trening</p>' : ''}

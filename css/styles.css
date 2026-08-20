@@ -170,9 +170,12 @@ a { color: inherit; text-decoration: none; }
   padding-bottom: env(safe-area-inset-bottom);
   background: var(--surface);
   border-top: 1px solid var(--border);
+  border-radius: 22px 22px 0 0;
+  box-shadow: 0 -6px 24px rgba(20, 35, 47, 0.10);
   display: flex;
   z-index: 20;
 }
+[data-theme="dark"] #nav, [data-theme="auto"] #nav { box-shadow: 0 -6px 24px rgba(0, 0, 0, 0.3); }
 
 #nav a {
   flex: 1;
@@ -181,15 +184,27 @@ a { color: inherit; text-decoration: none; }
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 2px;
-  font-size: 0.7rem;
+  gap: 3px;
+  font-size: 0.68rem;
   color: var(--text-muted);
 }
 
 #nav a.active { color: var(--navy); font-weight: 700; }
 [data-theme="dark"] #nav a.active,
 [data-theme="auto"] #nav a.active { color: var(--gold); }
-.nav-icon { font-size: 1.25rem; }
+.nav-icon {
+  font-size: 1.1rem;
+  width: 32px; height: 32px;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 50%;
+  transition: background 0.18s ease, transform 0.18s ease;
+}
+#nav a.active .nav-icon {
+  background: color-mix(in srgb, var(--navy) 16%, transparent);
+  transform: translateY(-1px);
+}
+[data-theme="dark"] #nav a.active .nav-icon,
+[data-theme="auto"] #nav a.active .nav-icon { background: color-mix(in srgb, var(--gold) 20%, transparent); }
 
 .card {
   background: var(--surface);
@@ -222,6 +237,13 @@ a { color: inherit; text-decoration: none; }
   pointer-events: none;
 }
 .hero.card h2 { color: #fff; font-size: 1.5rem; }
+.hero-greeting { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+.hero-avatar {
+  width: 34px; height: 34px; border-radius: 50%; flex-shrink: 0;
+  background: rgba(255,255,255,0.22); color: #fff;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 800; font-size: 0.95rem;
+}
 .hero.card .muted { color: rgba(255,255,255,0.8); }
 .hero.card .pill { background: rgba(255,255,255,0.22); }
 .hero.card .pill-outline { border-color: rgba(255,255,255,0.5); color: #fff; }
@@ -316,6 +338,10 @@ a { color: inherit; text-decoration: none; }
 }
 .stat-grid-4 { grid-template-columns: repeat(4, 1fr); }
 .stat-card.accent-water .stat-card-icon { background: color-mix(in srgb, #3a7bd5 16%, transparent); }
+.stat-card.accent-flame { background: color-mix(in srgb, var(--gold) 7%, var(--surface)); }
+.stat-card.accent-program { background: color-mix(in srgb, var(--navy) 7%, var(--surface)); }
+.stat-card.accent-readiness { background: color-mix(in srgb, var(--success) 7%, var(--surface)); }
+.stat-card.accent-water { background: color-mix(in srgb, #3a7bd5 7%, var(--surface)); }
 @media (max-width: 420px) {
   .stat-grid-4 { grid-template-columns: repeat(2, 1fr); }
 }
