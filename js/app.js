@@ -1103,6 +1103,8 @@ function viewFormCheck(code) {
     ? 'Ustaw telefon z boku, tak żeby było widać całą sylwetkę przy ścianie — od ramion po stopy.'
     : kind === 'bridge'
     ? 'Ustaw telefon nisko, z boku (na wysokości podłogi), tak żeby leżąc na plecach było widać całą sylwetkę od barków po kolana.'
+    : kind === 'curl'
+    ? 'Ustaw telefon z boku, ok. 2 metry od siebie, tak żeby było widać całą sylwetkę — ręce, tułów i biodra.'
     : 'Ustaw telefon z boku, ok. 2 metry od siebie, tak żeby było widać całą sylwetkę od stóp po ramiona.';
   return `
   <div class="workout-header">
@@ -1175,7 +1177,7 @@ function bindFormCheck(code) {
             statusEl.textContent = `${calibPose} i nieruchomo przez chwilę…`;
             const ok = await PoseCheck.calibrate();
             if (ok) {
-              const startLabel = kind === 'hinge' ? 'martwy ciąg' : kind === 'bridge' ? 'mostek biodrowy' : 'przysiad / wykrok';
+              const startLabel = kind === 'hinge' ? 'martwy ciąg' : kind === 'bridge' ? 'mostek biodrowy' : kind === 'curl' ? 'uginanie ramion' : 'przysiad / wykrok';
               statusEl.textContent = `Kalibracja gotowa. Zacznij ${startLabel} — będę liczyć powtórzenia i podpowiadać na głos.`;
               setControls('<button type="button" class="btn ghost" id="fc-btn-stop">Zakończ analizę</button>');
               attachStop();
@@ -1205,6 +1207,9 @@ function bindFormCheck(code) {
         } else if (s.phase === 'analyzing' && kind === 'bridge') {
           const repLabel = `Powtórzenia: ${s.repCount || 0}`;
           statusEl.textContent = (s.ok ? `✅ ${repLabel} — forma wygląda dobrze.` : `⚠️ ${repLabel} — ` + (s.issues.includes('overarch') ? 'nie przeginaj dolnej części pleców.' : 'unieś biodra trochę wyżej.'));
+        } else if (s.phase === 'analyzing' && kind === 'curl') {
+          const repLabel = `Powtórzenia: ${s.repCount || 0}`;
+          statusEl.textContent = (s.ok ? `✅ ${repLabel} — forma wygląda dobrze.` : `⚠️ ${repLabel} — nie huśtaj tułowiem, ruch tylko w łokciach.`);
         } else if (s.phase === 'analyzing') {
           const repLabel = `Powtórzenia: ${s.repCount || 0}`;
           statusEl.textContent = (s.ok ? `✅ ${repLabel} — forma wygląda dobrze.` : `⚠️ ${repLabel} — ` + (s.issues.includes('back') ? 'sprawdź plecy / tułów.' : s.issues.includes('knee') ? 'sprawdź pozycję kolan.' : 'zwiększ zakres pochylenia w biodrach.'));
@@ -1320,6 +1325,7 @@ function viewExercise(profile, code) {
       pushup: 'Kamera na Twoim urządzeniu orientacyjnie sprawdza, czy biodra nie opadają ani nie unoszą się za wysoko podczas ruchu — obraz nigdy nie opuszcza telefonu/komputera.',
       'wall-sit': 'Kamera na Twoim urządzeniu orientacyjnie pilnuje, czy nie zjeżdżasz ani nie prostujesz nóg podczas trzymania pozycji — obraz nigdy nie opuszcza telefonu/komputera.',
       bridge: 'Kamera na Twoim urządzeniu orientacyjnie sprawdza, czy biodra są uniesione wystarczająco wysoko i czy nie przeginasz dolnej części pleców, a przy okazji liczy powtórzenia — obraz nigdy nie opuszcza telefonu/komputera.',
+      curl: 'Kamera na Twoim urządzeniu orientacyjnie pilnuje, czy nie huśtasz tułowiem, żeby "pomóc" ruchowi, a przy okazji liczy powtórzenia — obraz nigdy nie opuszcza telefonu/komputera.',
     })[FORM_CHECK_KIND[ex.code]] || 'Kamera na Twoim urządzeniu orientacyjnie sprawdza pochylenie tułowia i pozycję kolan, a przy okazji liczy powtórzenia — obraz nigdy nie opuszcza telefonu/komputera.'} To pomoc, nie ocena eksperta — nie zastępuje wskazówek bezpieczeństwa powyżej.</p>
     <a class="btn small primary" href="#/form-check/${ex.code}">Uruchom kamerę</a>
   </section>` : ''}
@@ -1366,12 +1372,17 @@ function viewExercise(profile, code) {
 //   A9 (unoszenie bioder, reverse crunch) świadomie pominięte: ruch to "kilka centymetrów"
 //   z własnej instrukcji ćwiczenia — zbyt subtelne, żeby ufać, że kamera telefonu odróżni to
 //   od szumu pomiaru szkieletu.
-// Świadomie pominięte na razie: izolacja ramion, ruchy jednostronne (donkey kicks, clamshell)
-// — wymagają osobnych, jeszcze niezbudowanych heurystyk.
+// - 'curl' (C4, C10) — pierwszy tryb patrzący na RAMIĘ: kąt w łokciu (uniwersalny, bez kalibracji)
+//   do liczenia powtórzeń + kalibrowana stabilność tułowia, żeby wykryć "huśtanie" ciała zamiast
+//   pracy samym łokciem — dokładnie to, przed czym ostrzega opis obu ćwiczeń.
+//   C3 (izometryczny ucisk) i C12 (krążenia nadgarstków) świadomie pominięte: brak mierzalnego
+//   ruchu / zbyt drobny staw. C5-C9, C11 wymagają kamery OD PRZODU (inna oś ruchu ramion) —
+//   osobny krok.
+// Świadomie pominięte na razie: ruchy jednostronne (donkey kicks, clamshell, kopnięcia).
 const FORM_CHECK_KIND = {
   B1: 'squat', B2: 'squat', B3: 'squat', E3: 'hinge', E8: 'squat', B13: 'squat',
   A2: 'plank', E5: 'plank', C1: 'pushup', C2: 'pushup',
-  B9: 'wall-sit', B4: 'bridge',
+  B9: 'wall-sit', B4: 'bridge', C4: 'curl', C10: 'curl',
 };
 
 function groupLabel(g) {

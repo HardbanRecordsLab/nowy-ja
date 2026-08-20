@@ -6,7 +6,7 @@
 // są w pamięci podręcznej przeglądarki) — ale samo przetwarzanie obrazu z kamery dzieje się
 // WYŁĄCZNIE lokalnie. Żadna klatka wideo nigdzie nie jest wysyłana ani zapisywana.
 //
-// Cztery tryby analizy (parametr `kind`):
+// Tryby analizy (parametr `kind`):
 // - 'squat' / 'hinge' — kalibrujemy się do pozycji stojącej użytkownika, a potem patrzymy na
 //   ODCHYLENIE od tej bazy w trakcie ruchu (nie na sztywne progi kąta — różne proporcje ciała
 //   dają różne "normalne" kąty). Przy okazji liczymy powtórzenia z oscylacji wysokości bioder
@@ -17,6 +17,12 @@
 //   licznik czasu trzymania; pompki: bez licznika, bo to ćwiczenie na powtórzenia, nie hold).
 // - 'wall-sit' — hold w ugięciu bez ruchu od stania: referencja głębokości ustalana raz po
 //   wejściu w pozycję, dalej pilnowana stabilność (nie zjeżdżanie/prostowanie nóg).
+// - 'bridge' — kalibracja to leżenie na plecach (nie stanie); liczy powtórzenia z unoszenia
+//   bioder, na szczycie sprawdza linię bark-biodro-KOLANO.
+// - 'curl' — PIERWSZY tryb patrzący na RAMIĘ zamiast na tułów/biodra: kąt w łokciu (bark-łokieć-
+//   nadgarstek) do liczenia powtórzeń i głębokości zgięcia (kąt to wartość uniwersalna, nie
+//   wymaga kalibracji per-osoba) + kalibrowana stabilność tułowia, żeby wykryć "huśtanie" ciała
+//   zamiast pracy samym łokciem.
 //
 // To orientacyjna pomoc/wskazówka, NIE ocena eksperta — uzupełnia, a nie zastępuje, pisemnych
 // wskazówek bezpieczeństwa przy każdym ćwiczeniu.
@@ -26,7 +32,7 @@ const PoseCheck = (() => {
   const MODEL_URL = 'https://storage.googleapis.com/mediapipe-models/pose_landmarker/pose_landmarker_lite/float16/1/pose_landmarker_lite.task';
 
   // Indeksy punktów szkieletu BlazePose (33 punkty) używane do analizy sylwetki z boku.
-  const IDX = { LSH: 11, RSH: 12, LHIP: 23, RHIP: 24, LKNEE: 25, RKNEE: 26, LANK: 27, RANK: 28 };
+  const IDX = { LSH: 11, RSH: 12, LELBOW: 13, RELBOW: 14, LWRIST: 15, RWRIST: 16, LHIP: 23, RHIP: 24, LKNEE: 25, RKNEE: 26, LANK: 27, RANK: 28 };
   const SKELETON_PAIRS = [[11, 12], [11, 23], [12, 24], [23, 24], [23, 25], [25, 27], [24, 26], [26, 28], [11, 13], [13, 15], [12, 14], [14, 16]];
   const MIN_DETECT_INTERVAL_MS = 120; // ~8 analiz/s wystarcza do oceny formy, oszczędza baterię
   const DOWN_THRESHOLD = 0.9; // próg opuszczenia bioder (znorm. szerokością bioder) uznawany za "dół" powtórzenia
@@ -35,6 +41,10 @@ const PoseCheck = (() => {
   const BRIDGE_UP_THRESHOLD = 0.35;   // uniesienie bioder (znorm. szerokością bioder) uznawane za "górę" powtórzenia
   const BRIDGE_DOWN_THRESHOLD = 0.12; // powrót poniżej tego progu = koniec powtórzenia (biodra znów nisko)
   const BRIDGE_DEVIATION_LIMIT = 0.12; // odchylenie biodra od linii bark-kolano na szczycie, powyżej którego zgłaszamy uwagę
+  // Progi dla uginania ramion (biceps/hammer curl) — kąt w łokciu w stopniach (180° = ręka prosta).
+  const CURL_FLEX_THRESHOLD = 70;    // poniżej tego kąta uznajemy rękę za zgiętą ("górę" powtórzenia)
+  const CURL_EXTEND_THRESHOLD = 150; // powrót powyżej tego kąta = koniec powtórzenia (ręka znów prosta)
+  const CURL_SWING_LIMIT = 12;       // dopuszczalne odchylenie tułowia (stopnie) od kalibrowanej postawy, zanim ostrzegamy o "huśtaniu"
 
   let landmarker = null;
   let loadingPromise = null;
@@ -65,6 +75,11 @@ const PoseCheck = (() => {
   let bridgePhase = 'down';
   let bridgePeakDev = 0;
   let bridgeLastResult = { ok: true, issues: [] }; // wynik ostatniego ukończonego powtórzenia — pokazywany, dopóki nie skończy się kolejne
+
+  // Stan liczenia powtórzeń dla uginania ramion (tylko 'curl').
+  let curlPhase = 'extended'; // 'extended' | 'flexed'
+  let curlPeakSwing = 0;
+  let curlLastResult = { ok: true, issues: [] };
 
   function isSupported() {
     return !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia && window.WebAssembly);
@@ -101,6 +116,18 @@ const PoseCheck = (() => {
     return Math.atan2(Math.abs(dx), Math.abs(dy)) * 180 / Math.PI;
   }
 
+  // Kąt (w stopniach) w wierzchołku `vertex` między punktami `a` i `b` — 180° = wyprostowany,
+  // mniej = bardziej zgięty. W przeciwieństwie do torsoLean/kneeOffset nie wymaga kalibracji:
+  // kąt stawu to wartość uniwersalna, niezależna od proporcji ciała czy ustawienia kamery.
+  function angleAtVertex(a, vertex, b) {
+    const v1x = a.x - vertex.x, v1y = a.y - vertex.y;
+    const v2x = b.x - vertex.x, v2y = b.y - vertex.y;
+    const mag1 = Math.hypot(v1x, v1y), mag2 = Math.hypot(v2x, v2y);
+    if (mag1 < 1e-6 || mag2 < 1e-6) return 180;
+    const cos = Math.max(-1, Math.min(1, (v1x * v2x + v1y * v2y) / (mag1 * mag2)));
+    return Math.acos(cos) * 180 / Math.PI;
+  }
+
   // Odchylenie biodra od prostej ramię-kostka, liczone WYŁĄCZNIE na osi pionowej (y rośnie w dół
   // w układzie obrazu) — dzięki temu wynik nie zależy od tego, czy osoba stoi bokiem w lewo czy
   // w prawo. Dodatnie = biodro NIŻEJ niż linia prosta (zapadanie), ujemne = WYŻEJ ("górka").
@@ -133,6 +160,22 @@ const PoseCheck = (() => {
       // Ta sama matematyka co plankDeviation, ale liczona do KOLANA zamiast kostki — przy
       // mostku biodrowym na szczycie ruchu prawidłowa linia to bark-biodro-kolano (nogi ugięte).
       bridgeDeviation: plankHipDeviation(shoulder, hip, knee, segLenKnee),
+    };
+  }
+
+  // Osobny sampler dla ćwiczeń ramion (biceps/hammer curl) — potrzebuje łokci/nadgarstków,
+  // których readSample() w ogóle nie sprawdza (a nie chcemy wymagać ich widoczności przy
+  // przysiadach/desce, gdzie ręce mogą być poza kadrem albo nieistotne).
+  function readCurlSample(landmarks) {
+    const need = [IDX.LSH, IDX.RSH, IDX.LHIP, IDX.RHIP, IDX.LELBOW, IDX.RELBOW, IDX.LWRIST, IDX.RWRIST];
+    if (need.some(i => !landmarks[i] || (landmarks[i].visibility ?? 1) < 0.5)) return null;
+    const shoulder = mid(landmarks[IDX.LSH], landmarks[IDX.RSH]);
+    const hip = mid(landmarks[IDX.LHIP], landmarks[IDX.RHIP]);
+    const leftAngle = angleAtVertex(landmarks[IDX.LSH], landmarks[IDX.LELBOW], landmarks[IDX.LWRIST]);
+    const rightAngle = angleAtVertex(landmarks[IDX.RSH], landmarks[IDX.RELBOW], landmarks[IDX.RWRIST]);
+    return {
+      elbowAngle: (leftAngle + rightAngle) / 2,
+      torsoLean: torsoLeanDeg(shoulder, hip),
     };
   }
 
@@ -331,6 +374,41 @@ const PoseCheck = (() => {
     onStatus({ phase: 'analyzing', ok: bridgeLastResult.ok, issues: bridgeLastResult.issues, repCount });
   }
 
+  // Uginanie ramion (biceps/hammer curl) — kąt łokcia nie wymaga kalibracji (uniwersalna
+  // geometria), ale kalibrujemy stabilność tułowia ("stój prosto"), żeby wykryć huśtanie ciała —
+  // dokładnie ten błąd formy, przed którym ostrzega opis obu ćwiczeń w bibliotece.
+  function analyzeCurlFrame(sample, onStatus, onSpeak) {
+    recentSamples.push(sample);
+    if (recentSamples.length > 8) recentSamples.shift();
+    if (recentSamples.length < 5) return;
+
+    const avgAngle = recentSamples.reduce((s, x) => s + x.elbowAngle, 0) / recentSamples.length;
+    const avgTorso = recentSamples.reduce((s, x) => s + x.torsoLean, 0) / recentSamples.length;
+    const swing = Math.abs(avgTorso - baseline.torsoLean);
+
+    if (curlPhase === 'extended' && avgAngle < CURL_FLEX_THRESHOLD) {
+      curlPhase = 'flexed';
+      curlPeakSwing = swing;
+    } else if (curlPhase === 'flexed') {
+      curlPeakSwing = Math.max(curlPeakSwing, swing);
+      if (avgAngle > CURL_EXTEND_THRESHOLD) {
+        curlPhase = 'extended';
+        repCount++;
+        vibrate(30);
+        const issue = curlPeakSwing > CURL_SWING_LIMIT ? 'swing' : null;
+        curlLastResult = { ok: !issue, issues: issue ? [issue] : [] };
+        curlPeakSwing = 0;
+
+        onStatus({ phase: 'analyzing', ok: curlLastResult.ok, issues: curlLastResult.issues, repCount });
+        if (repCount > 0 && repCount % 5 === 0) speakThrottled(`${repCount} powtórzeń.`, 'rep-' + repCount, onSpeak, 0);
+        if (issue === 'swing') speakThrottled('Nie huśtaj tułowiem — wykonuj ruch tylko w łokciach.', 'swing', onSpeak);
+        return;
+      }
+    }
+
+    onStatus({ phase: 'analyzing', ok: curlLastResult.ok, issues: curlLastResult.issues, repCount });
+  }
+
   function loop(kind, onStatus, onSpeak) {
     if (!running) return;
     rafId = requestAnimationFrame(() => loop(kind, onStatus, onSpeak));
@@ -345,7 +423,7 @@ const PoseCheck = (() => {
 
     const landmarks = result?.landmarks?.[0] || null;
     drawOverlay(landmarks);
-    const sample = landmarks ? readSample(landmarks) : null;
+    const sample = landmarks ? (kind === 'curl' ? readCurlSample(landmarks) : readSample(landmarks)) : null;
 
     if (kind === 'plank' || kind === 'pushup') {
       // Ten sam geometryczny test (biodro na prostej ramię-kostka) działa identycznie w ruchu
@@ -368,6 +446,7 @@ const PoseCheck = (() => {
     if (!baseline) return;
     if (!sample) { onStatus({ phase: 'tracking-lost' }); return; }
     if (kind === 'bridge') { analyzeBridgeFrame(sample, onStatus, onSpeak); return; }
+    if (kind === 'curl') { analyzeCurlFrame(sample, onStatus, onSpeak); return; }
     analyzeSquatFrame(kind, sample, onStatus, onSpeak);
   }
 
@@ -380,6 +459,7 @@ const PoseCheck = (() => {
     repPhase = 'up'; repCount = 0; repPeak = null; repHistory = []; fatigueWarned = false;
     holdStartAt = 0; lastHoldAnnounceSec = 0; wallSitRef = null;
     bridgePhase = 'down'; bridgePeakDev = 0; bridgeLastResult = { ok: true, issues: [] };
+    curlPhase = 'extended'; curlPeakSwing = 0; curlLastResult = { ok: true, issues: [] };
 
     try {
       stream = await navigator.mediaDevices.getUserMedia({
