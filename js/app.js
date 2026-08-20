@@ -1097,15 +1097,14 @@ function viewFormCheck(code) {
     </div>
     <div class="workout-center"><p class="muted">Ta przeglądarka nie obsługuje analizy kamery na urządzeniu. Spróbuj w aktualnej wersji Chrome lub Safari.</p></div>`;
   }
-  const setupHint = kind === 'plank' || kind === 'pushup'
-    ? 'Ustaw telefon z boku, ok. 1,5 metra od siebie, tak żeby było widać całą sylwetkę od ramion po kostki.'
-    : kind === 'wall-sit'
-    ? 'Ustaw telefon z boku, tak żeby było widać całą sylwetkę przy ścianie — od ramion po stopy.'
-    : kind === 'bridge'
-    ? 'Ustaw telefon nisko, z boku (na wysokości podłogi), tak żeby leżąc na plecach było widać całą sylwetkę od barków po kolana.'
-    : kind === 'curl'
-    ? 'Ustaw telefon z boku, ok. 2 metry od siebie, tak żeby było widać całą sylwetkę — ręce, tułów i biodra.'
-    : 'Ustaw telefon z boku, ok. 2 metry od siebie, tak żeby było widać całą sylwetkę od stóp po ramiona.';
+  const setupHint = ({
+    plank: 'Ustaw telefon z boku, ok. 1,5 metra od siebie, tak żeby było widać całą sylwetkę od ramion po kostki.',
+    pushup: 'Ustaw telefon z boku, ok. 1,5 metra od siebie, tak żeby było widać całą sylwetkę od ramion po kostki.',
+    'wall-sit': 'Ustaw telefon z boku, tak żeby było widać całą sylwetkę przy ścianie — od ramion po stopy.',
+    bridge: 'Ustaw telefon nisko, z boku (na wysokości podłogi), tak żeby leżąc na plecach było widać całą sylwetkę od barków po kolana.',
+    curl: 'Ustaw telefon z boku, ok. 2 metry od siebie, tak żeby było widać całą sylwetkę — ręce, tułów i biodra.',
+    'lateral-raise': 'Ustaw telefon PRZODEM do siebie (nie z boku!), ok. 2 metry od siebie, tak żeby było widać całą sylwetkę od barków po biodra.',
+  })[kind] || 'Ustaw telefon z boku, ok. 2 metry od siebie, tak żeby było widać całą sylwetkę od stóp po ramiona.';
   return `
   <div class="workout-header">
     <button type="button" class="icon-btn" data-action="exit-form-check" data-code="${code}" aria-label="Zamknij">✕</button>
@@ -1169,7 +1168,9 @@ function bindFormCheck(code) {
           setControls('<button type="button" class="btn ghost" id="fc-btn-stop">Zakończ analizę</button>');
           attachStop();
         } else if (s.phase === 'ready') {
-          const calibPose = kind === 'bridge' ? 'Leż na plecach, biodra oparte o matę, rozluźnij się' : 'Stań prosto w kadrze';
+          const calibPose = kind === 'bridge' ? 'Leż na plecach, biodra oparte o matę, rozluźnij się'
+            : kind === 'lateral-raise' ? 'Stań prosto przodem do kamery, ręce swobodnie wzdłuż tułowia'
+            : 'Stań prosto w kadrze';
           statusEl.textContent = `Widzę obraz z kamery. ${calibPose}, żeby skalibrować pozycję neutralną.`;
           setControls(`<button type="button" class="btn primary" id="fc-btn-calibrate">Kalibruj (${kind === 'bridge' ? 'leż nieruchomo' : 'stój prosto'} ok. 3 s)</button>`);
           document.getElementById('fc-btn-calibrate')?.addEventListener('click', async () => {
@@ -1177,7 +1178,7 @@ function bindFormCheck(code) {
             statusEl.textContent = `${calibPose} i nieruchomo przez chwilę…`;
             const ok = await PoseCheck.calibrate();
             if (ok) {
-              const startLabel = kind === 'hinge' ? 'martwy ciąg' : kind === 'bridge' ? 'mostek biodrowy' : kind === 'curl' ? 'uginanie ramion' : 'przysiad / wykrok';
+              const startLabel = kind === 'hinge' ? 'martwy ciąg' : kind === 'bridge' ? 'mostek biodrowy' : kind === 'curl' ? 'uginanie ramion' : kind === 'lateral-raise' ? 'wznosy bokiem' : 'przysiad / wykrok';
               statusEl.textContent = `Kalibracja gotowa. Zacznij ${startLabel} — będę liczyć powtórzenia i podpowiadać na głos.`;
               setControls('<button type="button" class="btn ghost" id="fc-btn-stop">Zakończ analizę</button>');
               attachStop();
@@ -1210,6 +1211,9 @@ function bindFormCheck(code) {
         } else if (s.phase === 'analyzing' && kind === 'curl') {
           const repLabel = `Powtórzenia: ${s.repCount || 0}`;
           statusEl.textContent = (s.ok ? `✅ ${repLabel} — forma wygląda dobrze.` : `⚠️ ${repLabel} — nie huśtaj tułowiem, ruch tylko w łokciach.`);
+        } else if (s.phase === 'analyzing' && kind === 'lateral-raise') {
+          const repLabel = `Powtórzenia: ${s.repCount || 0}`;
+          statusEl.textContent = (s.ok ? `✅ ${repLabel} — forma wygląda dobrze.` : `⚠️ ${repLabel} — unoś ręce równo po obu stronach.`);
         } else if (s.phase === 'analyzing') {
           const repLabel = `Powtórzenia: ${s.repCount || 0}`;
           statusEl.textContent = (s.ok ? `✅ ${repLabel} — forma wygląda dobrze.` : `⚠️ ${repLabel} — ` + (s.issues.includes('back') ? 'sprawdź plecy / tułów.' : s.issues.includes('knee') ? 'sprawdź pozycję kolan.' : 'zwiększ zakres pochylenia w biodrach.'));
@@ -1326,6 +1330,7 @@ function viewExercise(profile, code) {
       'wall-sit': 'Kamera na Twoim urządzeniu orientacyjnie pilnuje, czy nie zjeżdżasz ani nie prostujesz nóg podczas trzymania pozycji — obraz nigdy nie opuszcza telefonu/komputera.',
       bridge: 'Kamera na Twoim urządzeniu orientacyjnie sprawdza, czy biodra są uniesione wystarczająco wysoko i czy nie przeginasz dolnej części pleców, a przy okazji liczy powtórzenia — obraz nigdy nie opuszcza telefonu/komputera.',
       curl: 'Kamera na Twoim urządzeniu orientacyjnie pilnuje, czy nie huśtasz tułowiem, żeby "pomóc" ruchowi, a przy okazji liczy powtórzenia — obraz nigdy nie opuszcza telefonu/komputera.',
+      'lateral-raise': 'Kamera na Twoim urządzeniu (ustawiona przodem) orientacyjnie sprawdza, czy unosisz obie ręce na tę samą wysokość, a przy okazji liczy powtórzenia — obraz nigdy nie opuszcza telefonu/komputera.',
     })[FORM_CHECK_KIND[ex.code]] || 'Kamera na Twoim urządzeniu orientacyjnie sprawdza pochylenie tułowia i pozycję kolan, a przy okazji liczy powtórzenia — obraz nigdy nie opuszcza telefonu/komputera.'} To pomoc, nie ocena eksperta — nie zastępuje wskazówek bezpieczeństwa powyżej.</p>
     <a class="btn small primary" href="#/form-check/${ex.code}">Uruchom kamerę</a>
   </section>` : ''}
@@ -1378,12 +1383,14 @@ function viewExercise(profile, code) {
 //   głowy") — to ruch łokcia w bok/w głąb kadru, którego 2D kamera z boku nie widzi wiarygodnie;
 //   liczenie powtórzeń + ogólna stabilność wciąż są realną wartością, ale to częściowe pokrycie.
 //   C3 (izometryczny ucisk) i C12 (krążenia nadgarstków) świadomie pominięte: brak mierzalnego
-//   ruchu / zbyt drobny staw. C6-C9, C11 wymagają kamery OD PRZODU lub innej osi ruchu — osobny krok.
+//   ruchu / zbyt drobny staw. C6, C8, C9, C11 wymagają innej osi ruchu — osobny krok.
+// - 'lateral-raise' (C7) — JEDYNE ćwiczenie wymagające kamery OD PRZODU (nie z boku): śledzi
+//   wysokość nadgarstka względem barku osobno dla lewej/prawej ręki, wykrywa nierówność.
 // Świadomie pominięte na razie: ruchy jednostronne (donkey kicks, clamshell, kopnięcia).
 const FORM_CHECK_KIND = {
   B1: 'squat', B2: 'squat', B3: 'squat', E3: 'hinge', E8: 'squat', B13: 'squat',
   A2: 'plank', E5: 'plank', C1: 'pushup', C2: 'pushup',
-  B9: 'wall-sit', B4: 'bridge', C4: 'curl', C10: 'curl', C5: 'curl',
+  B9: 'wall-sit', B4: 'bridge', C4: 'curl', C10: 'curl', C5: 'curl', C7: 'lateral-raise',
 };
 
 function groupLabel(g) {

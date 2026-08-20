@@ -23,6 +23,9 @@
 //   nadgarstek) do liczenia powtórzeń i głębokości zgięcia (kąt to wartość uniwersalna, nie
 //   wymaga kalibracji per-osoba) + kalibrowana stabilność tułowia, żeby wykryć "huśtanie" ciała
 //   zamiast pracy samym łokciem.
+// - 'lateral-raise' — JEDYNY tryb kalibrowany PRZODEM do kamery (ruch w bok jest niewidoczny
+//   z profilu). Śledzi wysokość nadgarstka względem barku OSOBNO dla lewej i prawej ręki, żeby
+//   wykryć nierówne unoszenie rąk — klasyczny błąd tego ćwiczenia izolowanego.
 //
 // To orientacyjna pomoc/wskazówka, NIE ocena eksperta — uzupełnia, a nie zastępuje, pisemnych
 // wskazówek bezpieczeństwa przy każdym ćwiczeniu.
@@ -45,6 +48,10 @@ const PoseCheck = (() => {
   const CURL_FLEX_THRESHOLD = 70;    // poniżej tego kąta uznajemy rękę za zgiętą ("górę" powtórzenia)
   const CURL_EXTEND_THRESHOLD = 150; // powrót powyżej tego kąta = koniec powtórzenia (ręka znów prosta)
   const CURL_SWING_LIMIT = 12;       // dopuszczalne odchylenie tułowia (stopnie) od kalibrowanej postawy, zanim ostrzegamy o "huśtaniu"
+  // Progi dla wznosów bokiem (lateral raise) — znorm. szerokością barków, przybliżone.
+  const LATERAL_UP_THRESHOLD = 0.6;  // wzrost (nad poziom kalibrowany) uznawany za "górę" powtórzenia
+  const LATERAL_DOWN_THRESHOLD = 0.2; // powrót poniżej tego progu = koniec powtórzenia (ręce znów przy tułowiu)
+  const LATERAL_ASYMMETRY_LIMIT = 0.25; // różnica lewa/prawa na szczycie, powyżej której zgłaszamy nierówność
 
   let landmarker = null;
   let loadingPromise = null;
@@ -80,6 +87,11 @@ const PoseCheck = (() => {
   let curlPhase = 'extended'; // 'extended' | 'flexed'
   let curlPeakSwing = 0;
   let curlLastResult = { ok: true, issues: [] };
+
+  // Stan liczenia powtórzeń dla wznosów bokiem (tylko 'lateral-raise').
+  let lateralPhase = 'down'; // 'down' | 'up'
+  let lateralPeakAsymmetry = 0;
+  let lateralLastResult = { ok: true, issues: [] };
 
   function isSupported() {
     return !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia && window.WebAssembly);
@@ -176,6 +188,22 @@ const PoseCheck = (() => {
     return {
       elbowAngle: (leftAngle + rightAngle) / 2,
       torsoLean: torsoLeanDeg(shoulder, hip),
+    };
+  }
+
+  // Wznosy bokiem (lateral raise) — JEDYNY tryb wymagający kamery OD PRZODU, nie z boku: ruch
+  // ramion w bok jest niewidoczny z profilu. Śledzimy wysokość nadgarstka względem barku, osobno
+  // dla lewej i prawej ręki (nie uśredniamy — chcemy wykryć nierówność, klasyczny błąd formy).
+  function readLateralSample(landmarks) {
+    const need = [IDX.LSH, IDX.RSH, IDX.LWRIST, IDX.RWRIST];
+    if (need.some(i => !landmarks[i] || (landmarks[i].visibility ?? 1) < 0.5)) return null;
+    const shoulderWidth = Math.hypot(
+      landmarks[IDX.LSH].x - landmarks[IDX.RSH].x,
+      landmarks[IDX.LSH].y - landmarks[IDX.RSH].y
+    ) || 0.15;
+    return {
+      raiseLeft: (landmarks[IDX.LSH].y - landmarks[IDX.LWRIST].y) / shoulderWidth,
+      raiseRight: (landmarks[IDX.RSH].y - landmarks[IDX.RWRIST].y) / shoulderWidth,
     };
   }
 
@@ -409,6 +437,42 @@ const PoseCheck = (() => {
     onStatus({ phase: 'analyzing', ok: curlLastResult.ok, issues: curlLastResult.issues, repCount });
   }
 
+  // Wznosy bokiem — jedyny tryb kalibrowany PRZODEM do kamery, nie bokiem. baseline.raise to
+  // wysokość nadgarstków względem barków przy rękach opuszczonych; śledzimy lewą i prawą stronę
+  // OSOBNO, żeby wykryć nierówne unoszenie rąk (klasyczny błąd tego ćwiczenia izolowanego).
+  function analyzeLateralFrame(sample, onStatus, onSpeak) {
+    recentSamples.push(sample);
+    if (recentSamples.length > 8) recentSamples.shift();
+    if (recentSamples.length < 5) return;
+
+    const avgLeft = recentSamples.reduce((s, x) => s + x.raiseLeft, 0) / recentSamples.length;
+    const avgRight = recentSamples.reduce((s, x) => s + x.raiseRight, 0) / recentSamples.length;
+    const avgRaise = (avgLeft + avgRight) / 2 - baseline.raise;
+    const asymmetry = Math.abs(avgLeft - avgRight);
+
+    if (lateralPhase === 'down' && avgRaise > LATERAL_UP_THRESHOLD) {
+      lateralPhase = 'up';
+      lateralPeakAsymmetry = asymmetry;
+    } else if (lateralPhase === 'up') {
+      lateralPeakAsymmetry = Math.max(lateralPeakAsymmetry, asymmetry);
+      if (avgRaise < LATERAL_DOWN_THRESHOLD) {
+        lateralPhase = 'down';
+        repCount++;
+        vibrate(30);
+        const issue = lateralPeakAsymmetry > LATERAL_ASYMMETRY_LIMIT ? 'asymmetry' : null;
+        lateralLastResult = { ok: !issue, issues: issue ? [issue] : [] };
+        lateralPeakAsymmetry = 0;
+
+        onStatus({ phase: 'analyzing', ok: lateralLastResult.ok, issues: lateralLastResult.issues, repCount });
+        if (repCount > 0 && repCount % 5 === 0) speakThrottled(`${repCount} powtórzeń.`, 'rep-' + repCount, onSpeak, 0);
+        if (issue === 'asymmetry') speakThrottled('Unoś ręce równo po obu stronach.', 'asymmetry', onSpeak);
+        return;
+      }
+    }
+
+    onStatus({ phase: 'analyzing', ok: lateralLastResult.ok, issues: lateralLastResult.issues, repCount });
+  }
+
   function loop(kind, onStatus, onSpeak) {
     if (!running) return;
     rafId = requestAnimationFrame(() => loop(kind, onStatus, onSpeak));
@@ -423,7 +487,9 @@ const PoseCheck = (() => {
 
     const landmarks = result?.landmarks?.[0] || null;
     drawOverlay(landmarks);
-    const sample = landmarks ? (kind === 'curl' ? readCurlSample(landmarks) : readSample(landmarks)) : null;
+    const sample = landmarks
+      ? (kind === 'curl' ? readCurlSample(landmarks) : kind === 'lateral-raise' ? readLateralSample(landmarks) : readSample(landmarks))
+      : null;
 
     if (kind === 'plank' || kind === 'pushup') {
       // Ten sam geometryczny test (biodro na prostej ramię-kostka) działa identycznie w ruchu
@@ -447,6 +513,7 @@ const PoseCheck = (() => {
     if (!sample) { onStatus({ phase: 'tracking-lost' }); return; }
     if (kind === 'bridge') { analyzeBridgeFrame(sample, onStatus, onSpeak); return; }
     if (kind === 'curl') { analyzeCurlFrame(sample, onStatus, onSpeak); return; }
+    if (kind === 'lateral-raise') { analyzeLateralFrame(sample, onStatus, onSpeak); return; }
     analyzeSquatFrame(kind, sample, onStatus, onSpeak);
   }
 
@@ -460,6 +527,7 @@ const PoseCheck = (() => {
     holdStartAt = 0; lastHoldAnnounceSec = 0; wallSitRef = null;
     bridgePhase = 'down'; bridgePeakDev = 0; bridgeLastResult = { ok: true, issues: [] };
     curlPhase = 'extended'; curlPeakSwing = 0; curlLastResult = { ok: true, issues: [] };
+    lateralPhase = 'down'; lateralPeakAsymmetry = 0; lateralLastResult = { ok: true, issues: [] };
 
     try {
       stream = await navigator.mediaDevices.getUserMedia({
@@ -499,9 +567,10 @@ const PoseCheck = (() => {
         calibrating = false;
         if (recentSamples.length >= 3) {
           baseline = {
-            torsoLean: recentSamples.reduce((s, x) => s + x.torsoLean, 0) / recentSamples.length,
-            kneeOffset: recentSamples.reduce((s, x) => s + x.kneeOffset, 0) / recentSamples.length,
-            hipY: recentSamples.reduce((s, x) => s + x.hipY, 0) / recentSamples.length,
+            torsoLean: recentSamples.reduce((s, x) => s + (x.torsoLean || 0), 0) / recentSamples.length,
+            kneeOffset: recentSamples.reduce((s, x) => s + (x.kneeOffset || 0), 0) / recentSamples.length,
+            hipY: recentSamples.reduce((s, x) => s + (x.hipY || 0), 0) / recentSamples.length,
+            raise: recentSamples.reduce((s, x) => s + (((x.raiseLeft || 0) + (x.raiseRight || 0)) / 2), 0) / recentSamples.length,
           };
           recentSamples = [];
           resolve(true);
