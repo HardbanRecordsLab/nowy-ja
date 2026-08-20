@@ -1097,8 +1097,10 @@ function viewFormCheck(code) {
     </div>
     <div class="workout-center"><p class="muted">Ta przeglądarka nie obsługuje analizy kamery na urządzeniu. Spróbuj w aktualnej wersji Chrome lub Safari.</p></div>`;
   }
-  const setupHint = kind === 'plank'
+  const setupHint = kind === 'plank' || kind === 'pushup'
     ? 'Ustaw telefon z boku, ok. 1,5 metra od siebie, tak żeby było widać całą sylwetkę od ramion po kostki.'
+    : kind === 'wall-sit'
+    ? 'Ustaw telefon z boku, tak żeby było widać całą sylwetkę przy ścianie — od ramion po stopy.'
     : 'Ustaw telefon z boku, ok. 2 metry od siebie, tak żeby było widać całą sylwetkę od stóp po ramiona.';
   return `
   <div class="workout-header">
@@ -1143,6 +1145,9 @@ function bindFormCheck(code) {
       });
     }
 
+    const skipsCalibration = kind === 'plank' || kind === 'wall-sit' || kind === 'pushup';
+    const showsHoldTimer = kind === 'plank' || kind === 'wall-sit';
+
     await PoseCheck.start({
       video, canvas, kind,
       onSpeak: (text) => Voice.speak(text, { interrupt: true }),
@@ -1151,8 +1156,12 @@ function bindFormCheck(code) {
           statusEl.textContent = s.message;
           setControls('<button type="button" class="btn primary" id="fc-btn-retry">Spróbuj ponownie</button>');
           document.getElementById('fc-btn-retry')?.addEventListener('click', () => bindFormCheck(code));
-        } else if (s.phase === 'ready' && kind === 'plank') {
-          statusEl.textContent = 'Widzę obraz z kamery. Wejdź w pozycję deski, gdy będziesz gotowa/y — analiza już działa.';
+        } else if (s.phase === 'ready' && skipsCalibration) {
+          statusEl.textContent = kind === 'wall-sit'
+            ? 'Widzę obraz z kamery. Wejdź w pozycję przysiadu przy ścianie, gdy będziesz gotowa/y — analiza już działa.'
+            : kind === 'pushup'
+            ? 'Widzę obraz z kamery. Zacznij pompki, gdy będziesz gotowa/y — analiza już działa.'
+            : 'Widzę obraz z kamery. Wejdź w pozycję deski, gdy będziesz gotowa/y — analiza już działa.';
           setControls('<button type="button" class="btn ghost" id="fc-btn-stop">Zakończ analizę</button>');
           attachStop();
         } else if (s.phase === 'ready') {
@@ -1174,10 +1183,21 @@ function bindFormCheck(code) {
           });
         } else if (s.phase === 'tracking-lost') {
           statusEl.textContent = 'Nie widzę całej sylwetki — cofnij się lub popraw ustawienie telefonu.';
-        } else if (s.phase === 'analyzing' && kind === 'plank') {
+        } else if (s.phase === 'analyzing' && showsHoldTimer) {
           const mm = String(Math.floor((s.holdSeconds || 0) / 60)).padStart(2, '0');
           const ss = String((s.holdSeconds || 0) % 60).padStart(2, '0');
-          statusEl.textContent = (s.ok ? '✅ ' : '⚠️ ') + `${mm}:${ss} — ` + (s.ok ? 'dobra forma.' : (s.issues.includes('sag') ? 'biodra opadają.' : 'biodra za wysoko.'));
+          let issueText = 'dobra forma.';
+          if (!s.ok) {
+            if (s.issues.includes('sag')) issueText = 'biodra opadają.';
+            else if (s.issues.includes('pike')) issueText = 'biodra za wysoko.';
+            else if (s.issues.includes('sliding_down')) issueText = 'zjeżdżasz w dół.';
+            else if (s.issues.includes('straightening')) issueText = 'prostujesz nogi.';
+          }
+          statusEl.textContent = (s.ok ? '✅ ' : '⚠️ ') + `${mm}:${ss} — ` + issueText;
+        } else if (s.phase === 'analyzing' && kind === 'pushup') {
+          statusEl.textContent = s.ok
+            ? '✅ Dobra forma — biodra w linii.'
+            : '⚠️ ' + (s.issues.includes('sag') ? 'Biodra opadają — napnij brzuch.' : 'Biodra za wysoko — opuść je do linii prostej.');
         } else if (s.phase === 'analyzing') {
           const repLabel = `Powtórzenia: ${s.repCount || 0}`;
           statusEl.textContent = (s.ok ? `✅ ${repLabel} — forma wygląda dobrze.` : `⚠️ ${repLabel} — ` + (s.issues.includes('back') ? 'sprawdź plecy / tułów.' : s.issues.includes('knee') ? 'sprawdź pozycję kolan.' : 'zwiększ zakres pochylenia w biodrach.'));
@@ -1288,9 +1308,11 @@ function viewExercise(profile, code) {
   ${FORM_CHECK_KIND[ex.code] ? `
   <section class="card" style="border-left:4px solid var(--gold)">
     <h3 style="margin-top:0">🎥 Sprawdzian formy (beta)</h3>
-    <p class="muted small">${FORM_CHECK_KIND[ex.code] === 'plank'
-      ? 'Kamera na Twoim urządzeniu orientacyjnie sprawdza, czy biodra nie opadają ani nie unoszą się za wysoko — obraz nigdy nie opuszcza telefonu/komputera.'
-      : 'Kamera na Twoim urządzeniu orientacyjnie sprawdza pochylenie tułowia i pozycję kolan, a przy okazji liczy powtórzenia — obraz nigdy nie opuszcza telefonu/komputera.'} To pomoc, nie ocena eksperta — nie zastępuje wskazówek bezpieczeństwa powyżej.</p>
+    <p class="muted small">${({
+      plank: 'Kamera na Twoim urządzeniu orientacyjnie sprawdza, czy biodra nie opadają ani nie unoszą się za wysoko — obraz nigdy nie opuszcza telefonu/komputera.',
+      pushup: 'Kamera na Twoim urządzeniu orientacyjnie sprawdza, czy biodra nie opadają ani nie unoszą się za wysoko podczas ruchu — obraz nigdy nie opuszcza telefonu/komputera.',
+      'wall-sit': 'Kamera na Twoim urządzeniu orientacyjnie pilnuje, czy nie zjeżdżasz ani nie prostujesz nóg podczas trzymania pozycji — obraz nigdy nie opuszcza telefonu/komputera.',
+    })[FORM_CHECK_KIND[ex.code]] || 'Kamera na Twoim urządzeniu orientacyjnie sprawdza pochylenie tułowia i pozycję kolan, a przy okazji liczy powtórzenia — obraz nigdy nie opuszcza telefonu/komputera.'} To pomoc, nie ocena eksperta — nie zastępuje wskazówek bezpieczeństwa powyżej.</p>
     <a class="btn small primary" href="#/form-check/${ex.code}">Uruchom kamerę</a>
   </section>` : ''}
 
@@ -1320,13 +1342,24 @@ function viewExercise(profile, code) {
   </details>`;
 }
 
-// Ćwiczenia obsługiwane przez sprawdzian formy (kamera). 'squat'/'hinge' — ruch przysiadu/
-// wykroku/zawiasu biodrowego, gdzie heurystyka "odchylenie od pozycji stojącej" ma sens
-// (B9, przysiad izometryczny przy ścianie, celowo pominięty — to statyczny wytrzym w ugięciu,
-// więc odchylenie od stania jest tam z założenia duże i nie oznacza błędu formy).
-// 'plank' — czysto geometryczny test prostej linii ciała, bez kalibracji (A7, deska boczna,
-// pominięta — wymagałaby ustawienia kamery od przodu/tyłu zamiast z boku).
-const FORM_CHECK_KIND = { B1: 'squat', B2: 'squat', B3: 'squat', E3: 'hinge', E8: 'squat', B13: 'squat', A2: 'plank', E5: 'plank' };
+// Ćwiczenia obsługiwane przez sprawdzian formy (kamera), wg heurystyki:
+// - 'squat'/'hinge' — ruch przysiadu/wykroku/zawiasu biodrowego: kalibracja do pozycji stojącej,
+//   potem odchylenie od tej bazy + auto-liczenie powtórzeń.
+// - 'plank' — czysto geometryczny test prostej linii ramię-biodro-KOSTKA, bez kalibracji
+//   (kryterium niezależne od proporcji ciała), prezentowany jako trzymana pozycja z licznikiem czasu.
+//   A7 (deska boczna, kolana ugięte) świadomie pominięta: tam prawidłowa linia to ramię-biodro-
+//   KOLANO, nie kostka (nogi ugięte) — obecna heurystyka liczyłaby błędnie przy tym wariancie.
+// - 'pushup' — DOKŁADNIE ta sama geometria co 'plank' (biodro nie powinno opadać/unosić się
+//   względem linii ramię-kostka), ale bez licznika czasu — to ćwiczenie na powtórzenia, nie hold.
+// - 'wall-sit' — hold w ugięciu bez ruchu od stania: referencja głębokości ustalana raz po
+//   wejściu w pozycję, dalej pilnowana stabilność (nie zjeżdżanie/prostowanie).
+// Świadomie pominięte na razie: ćwiczenia leżące na macie, izolacja ramion, ruchy jednostronne
+// (donkey kicks, clamshell) — wymagają osobnych, jeszcze niezbudowanych heurystyk.
+const FORM_CHECK_KIND = {
+  B1: 'squat', B2: 'squat', B3: 'squat', E3: 'hinge', E8: 'squat', B13: 'squat',
+  A2: 'plank', E5: 'plank', C1: 'pushup', C2: 'pushup',
+  B9: 'wall-sit',
+};
 
 function groupLabel(g) {
   return { A: 'Brzuch + Biodra', B: 'Uda + Pośladki', C: 'Klatka + Ramiona', D: 'Aktywność / mobilność', E: 'Bonus (opona, plecak, skakanka)' }[g] || g;

@@ -6,13 +6,17 @@
 // są w pamięci podręcznej przeglądarki) — ale samo przetwarzanie obrazu z kamery dzieje się
 // WYŁĄCZNIE lokalnie. Żadna klatka wideo nigdzie nie jest wysyłana ani zapisywana.
 //
-// Dwa tryby analizy:
+// Cztery tryby analizy (parametr `kind`):
 // - 'squat' / 'hinge' — kalibrujemy się do pozycji stojącej użytkownika, a potem patrzymy na
 //   ODCHYLENIE od tej bazy w trakcie ruchu (nie na sztywne progi kąta — różne proporcje ciała
 //   dają różne "normalne" kąty). Przy okazji liczymy powtórzenia z oscylacji wysokości bioder
 //   i porównujemy formę pierwszych i ostatnich powtórzeń w serii (wykrywanie zmęczenia formy).
-// - 'plank' — czysto geometryczny test (biodro powinno leżeć na prostej ramię-kostka), bez
-//   kalibracji, bo "prosta linia ciała" jest kryterium niezależnym od proporcji użytkownika.
+// - 'plank' / 'pushup' — czysto geometryczny test (biodro powinno leżeć na prostej ramię-kostka),
+//   bez kalibracji, bo "prosta linia ciała" jest kryterium niezależnym od proporcji użytkownika.
+//   Ta sama matematyka dla obu — różnica jest tylko w tym, jak app.js prezentuje wynik (deska:
+//   licznik czasu trzymania; pompki: bez licznika, bo to ćwiczenie na powtórzenia, nie hold).
+// - 'wall-sit' — hold w ugięciu bez ruchu od stania: referencja głębokości ustalana raz po
+//   wejściu w pozycję, dalej pilnowana stabilność (nie zjeżdżanie/prostowanie nóg).
 //
 // To orientacyjna pomoc/wskazówka, NIE ocena eksperta — uzupełnia, a nie zastępuje, pisemnych
 // wskazówek bezpieczeństwa przy każdym ćwiczeniu.
@@ -43,6 +47,7 @@ const PoseCheck = (() => {
   let lastSpokenState = null;
   let holdStartAt = 0;
   let lastHoldAnnounceSec = 0;
+  let wallSitRef = null; // { hipY, hipWidth } — referencja głębokości przysiadu przy ścianie, ustalana raz na starcie hold-u
 
   // Stan liczenia powtórzeń + wykrywania zmęczenia formy (tylko 'squat'/'hinge')
   let repPhase = 'up';
@@ -152,7 +157,7 @@ const PoseCheck = (() => {
     onSpeak(text);
   }
 
-  function analyzePlankFrame(sample, onStatus, onSpeak) {
+  function analyzePlankFrame(kind, sample, onStatus, onSpeak) {
     recentSamples.push(sample);
     if (recentSamples.length > 8) recentSamples.shift();
     if (recentSamples.length < 5) return;
@@ -167,9 +172,47 @@ const PoseCheck = (() => {
 
     if (issue === 'sag') speakThrottled('Biodra opadają — unieś je odrobinę, napnij brzuch.', 'sag', onSpeak);
     else if (issue === 'pike') speakThrottled('Biodra są za wysoko — opuść je do linii prostej.', 'pike', onSpeak);
-    else if (holdSeconds > 0 && holdSeconds % 15 === 0 && holdSeconds !== lastHoldAnnounceSec) {
+    else if (kind === 'plank' && holdSeconds > 0 && holdSeconds % 15 === 0 && holdSeconds !== lastHoldAnnounceSec) {
+      // Ogłaszanie upływu czasu ma sens tylko dla prawdziwego hold-u (deska) — pompki to
+      // ćwiczenie na powtórzenia, więc dla kind==='pushup' pomijamy ten komunikat.
       lastHoldAnnounceSec = holdSeconds;
       speakThrottled(`${holdSeconds} sekund, dobra forma.`, 'ok-' + holdSeconds, onSpeak, 0);
+    }
+  }
+
+  // Przysiad izometryczny przy ścianie — bez kalibracji do pozycji stojącej (to hold w ugięciu
+  // z założenia, nie ruch od stania). Referencja głębokości jest ustalana raz, na podstawie
+  // pierwszych stabilnych klatek po wejściu w pozycję — dalej pilnujemy, czy biodro nie
+  // "zjeżdża" niżej ani nie "prostuje się" wyżej od tej referencji.
+  function analyzeWallSitFrame(sample, onStatus, onSpeak) {
+    recentSamples.push(sample);
+    if (recentSamples.length > 8) recentSamples.shift();
+    if (recentSamples.length < 5) return;
+
+    if (!wallSitRef) {
+      wallSitRef = {
+        hipY: recentSamples.reduce((s, x) => s + x.hipY, 0) / recentSamples.length,
+        hipWidth: recentSamples.reduce((s, x) => s + x.hipWidth, 0) / recentSamples.length,
+      };
+      holdStartAt = Date.now();
+      return;
+    }
+
+    const avgHipY = recentSamples.reduce((s, x) => s + x.hipY, 0) / recentSamples.length;
+    const drift = (avgHipY - wallSitRef.hipY) / wallSitRef.hipWidth;
+    const holdSeconds = Math.floor((Date.now() - holdStartAt) / 1000);
+
+    let issue = null;
+    if (drift > 0.3) issue = 'sliding_down';
+    else if (drift < -0.3) issue = 'straightening';
+
+    onStatus({ phase: 'analyzing', ok: !issue, issues: issue ? [issue] : [], holdSeconds });
+
+    if (issue === 'sliding_down') speakThrottled('Zjeżdżasz w dół po ścianie — wróć do wyjściowej głębokości przysiadu.', 'sliding_down', onSpeak);
+    else if (issue === 'straightening') speakThrottled('Prostujesz nogi — wróć do głębszej pozycji.', 'straightening', onSpeak);
+    else if (holdSeconds > 0 && holdSeconds % 15 === 0 && holdSeconds !== lastHoldAnnounceSec) {
+      lastHoldAnnounceSec = holdSeconds;
+      speakThrottled(`${holdSeconds} sekund, dobra pozycja.`, 'ok-' + holdSeconds, onSpeak, 0);
     }
   }
 
@@ -247,9 +290,17 @@ const PoseCheck = (() => {
     drawOverlay(landmarks);
     const sample = landmarks ? readSample(landmarks) : null;
 
-    if (kind === 'plank') {
+    if (kind === 'plank' || kind === 'pushup') {
+      // Ten sam geometryczny test (biodro na prostej ramię-kostka) działa identycznie w ruchu
+      // (pompki) jak w bezruchu (deska) — różni się tylko to, jak app.js prezentuje wynik
+      // (deska: czas trzymania; pompki: bez licznika czasu, bo to ćwiczenie na powtórzenia).
       if (!sample) { onStatus({ phase: 'tracking-lost' }); return; }
-      analyzePlankFrame(sample, onStatus, onSpeak);
+      analyzePlankFrame(kind, sample, onStatus, onSpeak);
+      return;
+    }
+    if (kind === 'wall-sit') {
+      if (!sample) { onStatus({ phase: 'tracking-lost' }); return; }
+      analyzeWallSitFrame(sample, onStatus, onSpeak);
       return;
     }
 
@@ -269,7 +320,7 @@ const PoseCheck = (() => {
     baseline = null; recentSamples = []; calibrating = false;
     lastSpokenState = null; lastSpokenAt = 0;
     repPhase = 'up'; repCount = 0; repPeak = null; repHistory = []; fatigueWarned = false;
-    holdStartAt = 0; lastHoldAnnounceSec = 0;
+    holdStartAt = 0; lastHoldAnnounceSec = 0; wallSitRef = null;
 
     try {
       stream = await navigator.mediaDevices.getUserMedia({
@@ -292,7 +343,7 @@ const PoseCheck = (() => {
     }
 
     running = true;
-    if (kind === 'plank') holdStartAt = Date.now();
+    if (kind === 'plank' || kind === 'pushup') holdStartAt = Date.now();
     onStatus({ phase: 'ready' });
     loop(kind, onStatus, onSpeak);
   }
