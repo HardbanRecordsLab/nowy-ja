@@ -504,6 +504,7 @@ section { position: relative; }
 .transform-showcase-media img { display: block; width: 100%; height: 100%; object-fit: cover; }
 .transform-showcase-copy h2 { margin-bottom: 14px; }
 .transform-showcase-cta { display: inline-flex; margin-top: 20px; }
+.transform-showcase-note { margin: 12px 0 0; font-size: 0.88rem; font-weight: 700; color: var(--navy); }
 @media (max-width: 720px) {
   .transform-showcase-inner { grid-template-columns: 1fr; }
   .transform-showcase-media { max-width: 320px; margin-inline: auto; }
@@ -644,28 +645,6 @@ section { position: relative; }
 }
 
 /* ============================================================
-   FINAL CTA — fixed deep-navy panel
-   ============================================================ */
-.final-cta { padding-block: 110px; overflow: hidden; }
-.final-cta::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background-image: radial-gradient(circle at 1px 1px, rgba(255,255,255,0.06) 1px, transparent 0);
-  background-size: 26px 26px;
-  pointer-events: none;
-}
-.final-cta-inner {
-  text-align: center;
-  max-width: 640px;
-  margin-inline: auto;
-  position: relative;
-}
-.final-cta h2 { font-size: clamp(2rem, 1.6rem + 2vw, 3rem); margin-bottom: 18px; text-wrap: balance; }
-.final-cta p.lead { color: var(--panel-ink-muted); font-size: 1.1rem; margin: 0 0 32px; }
-.reassurance { margin: 18px 0 0; font-size: 0.9rem; color: var(--panel-ink-muted); }
-
-/* ============================================================
    FOOTER
    ============================================================ */
 .site-footer { padding-block: 56px; border-top: 1px solid var(--border); }
@@ -684,8 +663,24 @@ section { position: relative; }
   gap: 6px;
 }
 .footer-link:hover { text-decoration: underline; }
+.footer-links-row { display: flex; justify-content: center; gap: 18px; flex-wrap: wrap; margin-bottom: 6px; }
 .footer-legal { margin-top: 18px; }
 .footer-legal .footer-link { display: inline-flex; }
+.footer-owner { margin-top: 10px; font-size: 0.8rem; }
+
+/* ============================================================
+   CONTACT — mailto-based form (no backend: opens the visitor's mail client)
+   ============================================================ */
+.contact-section { padding-block: 90px; border-top: 1px solid var(--border); }
+.contact-inner { max-width: 520px; margin-inline: auto; text-align: center; }
+.contact-form { display: flex; flex-direction: column; gap: 14px; margin-top: 28px; text-align: left; }
+.contact-form label { font-size: 0.85rem; font-weight: 700; color: var(--text); }
+.contact-form input, .contact-form textarea {
+  display: block; width: 100%; margin-top: 6px; padding: 11px 14px;
+  border-radius: 10px; border: 1px solid var(--border); background: var(--surface);
+  color: var(--text); font-size: 0.95rem; font-family: inherit; resize: vertical;
+}
+.contact-form button { align-self: center; margin-top: 4px; }
 
 /* ============================================================
    MOTION — reveal on scroll, respects reduced motion
@@ -826,6 +821,7 @@ html.js-reveal .reveal.is-visible {
       <h2>To nie jest obietnica bez pokrycia.</h2>
       <p class="section-sub">60 dni konsekwencji, prowadzonych krok po kroku, wystarczy, żeby poczuć realną różnicę. Program dopasowuje się do Ciebie każdego dnia — nie odwrotnie.</p>
       <a href="app.html" class="btn btn-primary transform-showcase-cta">Rozpocznij za darmo</a>
+      <p class="transform-showcase-note">Zacznij dziś, zobacz po tygodniu, czy to dla Ciebie.</p>
     </div>
   </div>
 </section>
@@ -905,25 +901,30 @@ html.js-reveal .reveal.is-visible {
     </div>
   </section>
 
-  <section class="final-cta panel">
-    <div class="wrap final-cta-inner reveal">
-      <h2>Zacznij dziś, zobacz po tygodniu, czy to dla Ciebie.</h2>
-      <p class="lead">Otwórz aplikację, odpowiedz na kilka pytań o sobie — i masz gotowy dzień 1. Bez sprzętu, bez presji.</p>
-      <a href="app.html" class="btn btn-primary">Rozpocznij za darmo</a>
-      <p class="reassurance">Za darmo. Bez konta. Twoje dane zostają na Twoim urządzeniu.</p>
-    </div>
-  </section>
 
 </main>
+
+<section class="contact-section" id="kontakt">
+  <div class="wrap contact-inner reveal">
+    <p class="eyebrow">Kontakt</p>
+    <h2>Napisz do nas</h2>
+    <p class="section-sub">Pytanie, sugestia, zgłoszenie błędu? Odpowiadamy pod <a href="mailto:info@hardbanrecordslab.online" class="footer-link">info@hardbanrecordslab.online</a> — albo wyślij wiadomość bezpośrednio stąd.</p>
+    <form class="contact-form" action="mailto:info@hardbanrecordslab.online" method="post" enctype="text/plain">
+      <label>Imię<input type="text" name="Imię" autocomplete="name" required></label>
+      <label>Adres e-mail<input type="email" name="Adres e-mail" autocomplete="email" required></label>
+      <label>Wiadomość<textarea name="Wiadomość" rows="4" required></textarea></label>
+      <button type="submit" class="btn btn-primary">Wyślij wiadomość</button>
+    </form>
+  </div>
+</section>
 
 <footer class="site-footer">
   <div class="wrap footer-inner">
     <div class="footer-brand"><img src="icons/icon-192.png" alt="">Nowa <span>Ja</span></div>
-    <p class="footer-tag">Darmowy, 60-dniowy program treningowy w domu — zbudowany jako osobisty projekt.</p>
-    <a href="https://github.com/HardbanRecordsLab/nowa-ja" class="footer-link" target="_blank" rel="noopener">
-      Zobacz kod na GitHubie
-      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M8 7h9v9"/></svg>
-    </a>
+    <p class="footer-tag">Darmowy, 60-dniowy program treningowy w domu — produkt marki <strong>HardbanRecordsLab</strong>.</p>
+    <div class="footer-links-row">
+      <a href="instrukcja-uzycia.html" class="footer-link">Instrukcja użycia aplikacji</a>
+    </div>
     <p class="footer-tag footer-legal">
       <a href="polityka-prywatnosci.html" class="footer-link">Polityka prywatności</a>
       &nbsp;·&nbsp;
@@ -931,6 +932,7 @@ html.js-reveal .reveal.is-visible {
       &nbsp;·&nbsp;
       <a href="mailto:info@hardbanrecordslab.online" class="footer-link">info@hardbanrecordslab.online</a>
     </p>
+    <p class="footer-tag footer-owner">HardbanRecordsLab · Kamil Skomra · Wiercień, Polska</p>
   </div>
 </footer>
 
