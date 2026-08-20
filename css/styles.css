@@ -331,8 +331,8 @@ a { color: inherit; text-decoration: none; }
 .qi { display: block; font-size: 1.4rem; margin-bottom: 4px; }
 
 .onboard { padding-top: 10px; }
-.onboard-hero-image { border-radius: var(--radius); overflow: hidden; margin-bottom: 14px; box-shadow: var(--shadow); }
-.onboard-hero-image img { display: block; width: 100%; height: auto; max-height: 320px; object-fit: cover; }
+.onboard-hero-image { max-width: 260px; margin: 0 auto 14px; border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow); }
+.onboard-hero-image img { display: block; width: 100%; height: auto; }
 .onboard-brand { display: flex; align-items: center; gap: 10px; margin-bottom: 2px; }
 .onboard-brand img { width: 44px; height: 44px; border-radius: 11px; box-shadow: 0 3px 12px rgba(0,0,0,0.2); }
 .onboard h1 { color: var(--navy); margin: 0; }
