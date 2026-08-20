@@ -84,7 +84,7 @@ a { color: inherit; text-decoration: none; }
 }
 
 .header-left { display: flex; align-items: center; gap: 10px; min-width: 0; }
-.brand { display: inline-flex; align-items: center; gap: 8px; font-weight: 800; font-size: 1.15rem; letter-spacing: 0.3px; }
+.brand { display: inline-flex; align-items: center; gap: 8px; font-family: 'Pacifico', cursive; font-weight: 400; font-size: 1.35rem; letter-spacing: 0.3px; }
 /* Gradient białe→koralowe, nie zielone — .brand żyje na nagłówku o tle var(--navy) (zielonym),
    więc zielony koniec gradientu zlewałby się z tłem. */
 .brand span {

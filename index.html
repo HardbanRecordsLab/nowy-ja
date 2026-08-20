@@ -58,6 +58,9 @@ if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
   document.documentElement.classList.add('js-reveal');
 }
 </script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
 <style>
 
 /* ============================================================
@@ -273,8 +276,9 @@ section { position: relative; }
   display: inline-flex;
   align-items: center;
   gap: 10px;
-  font-weight: 800;
-  font-size: 1.2rem;
+  font-family: 'Pacifico', cursive;
+  font-weight: 400;
+  font-size: 1.4rem;
   letter-spacing: 0.2px;
   text-decoration: none;
   color: var(--panel-ink);
@@ -284,20 +288,6 @@ section { position: relative; }
   -webkit-background-clip: text; background-clip: text; color: transparent;
 }
 .brand-logo { width: 44px; height: 44px; border-radius: 11px; display: block; box-shadow: 0 2px 10px rgba(0,0,0,0.25); }
-
-.hero-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 12px;
-  background: rgba(255,255,255,0.06);
-  border: 1px solid rgba(255,255,255,0.12);
-  border-radius: 999px;
-  padding: 6px 18px 6px 6px;
-  margin-bottom: 22px;
-}
-.hero-badge img { width: 40px; height: 40px; border-radius: 10px; display: block; }
-.hero-badge span { font-weight: 700; font-size: 0.95rem; color: var(--panel-ink); }
-.hero-badge .accent-word { color: var(--gold); }
 
 .hero {
   padding-top: clamp(28px, 6vw, 56px);
@@ -385,70 +375,16 @@ section { position: relative; }
 /* --- hero visual --- */
 .hero-visual {
   width: 100%;
-  max-width: 560px;
+  max-width: 420px;
   margin-inline: auto;
   padding: 10px 4px 0;
 }
-/* Animated hero visual: a filling progress ring (pure CSS/SVG motion, no
-   screenshot) with the logo centered and stat badges floating around it. */
-.hero-motion {
-  position: relative;
+.hero-visual-img {
+  display: block;
   width: 100%;
-  max-width: 420px;
-  aspect-ratio: 1;
-  margin: 20px auto 0;
-}
-.hero-ring { width: 100%; height: 100%; transform: rotate(-90deg); }
-.hero-ring-track, .hero-ring-fill {
-  fill: none;
-  stroke-width: 10;
-  stroke-linecap: round;
-}
-.hero-ring-track { stroke: rgba(255,255,255,0.12); }
-.hero-ring-fill {
-  stroke: var(--gold);
-  stroke-dasharray: 603;
-  stroke-dashoffset: 603;
-}
-@media (prefers-reduced-motion: no-preference) {
-  .hero-ring-fill { animation: heroRingFill 1.6s 0.3s cubic-bezier(.16,.8,.3,1) forwards; }
-}
-@media (prefers-reduced-motion: reduce) {
-  .hero-ring-fill { stroke-dashoffset: 522; }
-}
-@keyframes heroRingFill { to { stroke-dashoffset: 522; } }
-.hero-motion-center {
-  position: absolute; inset: 0;
-  display: flex; flex-direction: column; align-items: center; justify-content: center;
-  gap: 4px;
-  text-align: center;
-}
-.hero-motion-center img { width: 56px; height: 56px; border-radius: 14px; margin-bottom: 6px; box-shadow: 0 6px 20px rgba(0,0,0,0.35); }
-.hero-motion-center strong { font-size: 1.6rem; color: var(--panel-ink); }
-.hero-motion-center span { font-size: 0.82rem; color: var(--panel-ink-muted); }
-.hero-float-chip {
-  position: absolute;
-  background: var(--surface);
-  color: var(--text);
-  font-weight: 800;
-  font-size: 0.8rem;
-  padding: 9px 14px;
-  border-radius: 999px;
-  box-shadow: 0 14px 30px -8px rgba(10,20,30,0.45);
-  white-space: nowrap;
-}
-.hero-float-1 { top: 6%; left: -4%; }
-.hero-float-2 { top: 46%; right: -8%; }
-.hero-float-3 { bottom: 4%; left: 6%; }
-@media (prefers-reduced-motion: no-preference) {
-  .hero-float-chip { animation: heroChipFloat 4.5s ease-in-out infinite; }
-  .hero-float-2 { animation-delay: 0.6s; }
-  .hero-float-3 { animation-delay: 1.2s; }
-}
-@keyframes heroChipFloat { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
-@media (max-width: 480px) {
-  .hero-float-1 { left: 0; }
-  .hero-float-2 { right: 0; }
+  height: auto;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
 }
 
 /* ---------- trust stat bar ---------- */
@@ -489,26 +425,10 @@ section { position: relative; }
    TRANSFORM SHOWCASE
    ============================================================ */
 .transform-showcase { padding-block: 90px 20px; }
-.transform-showcase-inner {
-  display: grid;
-  grid-template-columns: minmax(0, 380px) 1fr;
-  align-items: center;
-  gap: clamp(28px, 5vw, 64px);
-}
-.transform-showcase-media {
-  border-radius: var(--radius-lg);
-  overflow: hidden;
-  box-shadow: var(--shadow-lg);
-  aspect-ratio: 1 / 1;
-}
-.transform-showcase-media img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.transform-showcase-inner { max-width: 640px; margin-inline: auto; text-align: center; }
 .transform-showcase-copy h2 { margin-bottom: 14px; }
 .transform-showcase-cta { display: inline-flex; margin-top: 20px; }
 .transform-showcase-note { margin: 12px 0 0; font-size: 0.88rem; font-weight: 700; color: var(--navy); }
-@media (max-width: 720px) {
-  .transform-showcase-inner { grid-template-columns: 1fr; }
-  .transform-showcase-media { max-width: 320px; margin-inline: auto; }
-}
 
 /* ============================================================
    FEATURES
@@ -649,9 +569,16 @@ section { position: relative; }
    ============================================================ */
 .site-footer { padding-block: 56px; border-top: 1px solid var(--border); }
 .footer-inner { text-align: center; }
-.footer-brand { display: flex; align-items: center; justify-content: center; gap: 8px; font-weight: 800; font-size: 1.1rem; margin-bottom: 10px; }
+.footer-badge {
+  display: block; width: 96px; height: 96px; margin: 0 auto 14px;
+  border-radius: var(--radius-lg); box-shadow: var(--shadow-lg); object-fit: cover;
+}
+.footer-brand {
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  font-family: 'Pacifico', cursive; font-weight: 400; font-size: 1.4rem; margin-bottom: 10px;
+}
 .footer-brand span { color: var(--gold-ink); }
-.footer-brand img { width: 28px; height: 28px; border-radius: 7px; display: block; }
+.footer-copyright { font-size: 0.72rem; max-width: 52ch; }
 .footer-tag { color: var(--text-muted); font-size: 0.92rem; max-width: 46ch; margin: 0 auto 14px; }
 .footer-link {
   color: var(--navy);
@@ -766,7 +693,6 @@ html.js-reveal .reveal.is-visible {
     <div class="wrap hero-inner">
 
       <div class="hero-copy reveal">
-        <div class="hero-badge"><img src="icons/icon-192.png" alt=""><span>Nowa <span class="accent-word">Ja</span></span></div>
         <p class="hero-eyebrow"><span class="dot" aria-hidden="true"></span>60 dni · w domu · bez sprzętu</p>
         <h1 class="hero-title">Trening, który dopasowuje się do Ciebie.<span class="accent">Nie odwrotnie.</span></h1>
         <p class="hero-sub">60-dniowy program w domu. Zgłaszasz brak czasu, ból albo brak sprzętu — plan sam się dostosowuje na bieżąco. Prowadzony głosem, krok po kroku. Bez konta, bez karty.</p>
@@ -780,20 +706,7 @@ html.js-reveal .reveal.is-visible {
       </div>
 
       <div class="hero-visual reveal reveal-delay-1">
-        <div class="hero-motion" aria-hidden="true">
-          <svg class="hero-ring" viewBox="0 0 220 220">
-            <circle class="hero-ring-track" cx="110" cy="110" r="96"></circle>
-            <circle class="hero-ring-fill" cx="110" cy="110" r="96"></circle>
-          </svg>
-          <div class="hero-motion-center">
-            <img src="icons/icon-192.png" alt="">
-            <strong>60 dni</strong>
-            <span>od zera do nawyku</span>
-          </div>
-          <div class="hero-float-chip hero-float-1">💪 38 ćwiczeń</div>
-          <div class="hero-float-chip hero-float-2">🎯 4 fazy progresji</div>
-          <div class="hero-float-chip hero-float-3">0 zł · bez konta</div>
-        </div>
+        <img src="assets/brand-transformation.jpg" alt="Nowa Ja — Twoja przemiana w 60 dni" class="hero-visual-img" width="900" height="900">
       </div>
 
     </div>
@@ -813,10 +726,7 @@ html.js-reveal .reveal.is-visible {
 
 <section class="transform-showcase">
   <div class="wrap transform-showcase-inner">
-    <div class="transform-showcase-media reveal">
-      <img src="assets/brand-transformation.jpg" alt="Nowa Ja — Twoja przemiana w 60 dni" loading="lazy" width="900" height="900">
-    </div>
-    <div class="transform-showcase-copy reveal reveal-delay-1">
+    <div class="transform-showcase-copy reveal">
       <p class="eyebrow">Efekt</p>
       <h2>To nie jest obietnica bez pokrycia.</h2>
       <p class="section-sub">60 dni konsekwencji, prowadzonych krok po kroku, wystarczy, żeby poczuć realną różnicę. Program dopasowuje się do Ciebie każdego dnia — nie odwrotnie.</p>
@@ -920,7 +830,8 @@ html.js-reveal .reveal.is-visible {
 
 <footer class="site-footer">
   <div class="wrap footer-inner">
-    <div class="footer-brand"><img src="icons/icon-192.png" alt="">Nowa <span>Ja</span></div>
+    <img src="assets/brand-transformation.jpg" alt="Nowa Ja" class="footer-badge">
+    <div class="footer-brand">Nowa <span>Ja</span></div>
     <p class="footer-tag">Darmowy, 60-dniowy program treningowy w domu — produkt marki <strong>HardbanRecordsLab</strong>.</p>
     <div class="footer-links-row">
       <a href="instrukcja-uzycia.html" class="footer-link">Instrukcja użycia aplikacji</a>
@@ -933,6 +844,7 @@ html.js-reveal .reveal.is-visible {
       <a href="mailto:info@hardbanrecordslab.online" class="footer-link">info@hardbanrecordslab.online</a>
     </p>
     <p class="footer-tag footer-owner">HardbanRecordsLab · Kamil Skomra · Wiercień, Polska</p>
+    <p class="footer-tag footer-copyright">© 2026 HardbanRecordsLab. Wszystkie prawa zastrzeżone. Nazwa i logo „Nowa Ja” są własnością HardbanRecordsLab i podlegają ochronie prawnej.</p>
   </div>
 </footer>
 

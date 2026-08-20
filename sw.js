@@ -1,4 +1,4 @@
-const CACHE = 'forma60-v39';
+const CACHE = 'forma60-v40';
 const CORE = [
   './app.html',
   './css/styles.css',
