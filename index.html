@@ -579,6 +579,11 @@ section { position: relative; }
 }
 .footer-brand span { color: var(--gold-ink); }
 .footer-copyright { font-size: 0.72rem; max-width: 52ch; }
+.footer-owner-block { margin-top: 32px; padding-top: 28px; border-top: 1px solid var(--border); }
+.footer-owner-badge {
+  display: block; width: 72px; height: 72px; margin: 0 auto 12px;
+  border-radius: 50%; box-shadow: var(--shadow-lg); object-fit: cover;
+}
 .footer-tag { color: var(--text-muted); font-size: 0.92rem; max-width: 46ch; margin: 0 auto 14px; }
 .footer-link {
   color: var(--navy);
@@ -832,7 +837,7 @@ html.js-reveal .reveal.is-visible {
   <div class="wrap footer-inner">
     <img src="assets/brand-transformation.jpg" alt="Nowa Ja" class="footer-badge">
     <div class="footer-brand">Nowa <span>Ja</span></div>
-    <p class="footer-tag">Darmowy, 60-dniowy program treningowy w domu — produkt marki <strong>HardbanRecordsLab</strong>.</p>
+    <p class="footer-tag">Darmowy, 60-dniowy program treningowy w domu.</p>
     <div class="footer-links-row">
       <a href="instrukcja-uzycia.html" class="footer-link">Instrukcja użycia aplikacji</a>
     </div>
@@ -843,8 +848,13 @@ html.js-reveal .reveal.is-visible {
       &nbsp;·&nbsp;
       <a href="mailto:info@hardbanrecordslab.online" class="footer-link">info@hardbanrecordslab.online</a>
     </p>
-    <p class="footer-tag footer-owner">HardbanRecordsLab · Kamil Skomra · Wiercień, Polska</p>
-    <p class="footer-tag footer-copyright">© 2026 HardbanRecordsLab. Wszystkie prawa zastrzeżone. Nazwa i logo „Nowa Ja” są własnością HardbanRecordsLab i podlegają ochronie prawnej.</p>
+
+    <div class="footer-owner-block">
+      <img src="assets/hrl-badge.jpg" alt="HardbanRecordsLab" class="footer-owner-badge">
+      <p class="footer-tag">Produkt marki <strong>HardbanRecordsLab</strong></p>
+      <p class="footer-tag footer-owner">Kamil Skomra · Wiercień, Polska</p>
+      <p class="footer-tag footer-copyright">© 2026 HardbanRecordsLab. Wszystkie prawa zastrzeżone. Nazwa i logo „Nowa Ja” są własnością HardbanRecordsLab i podlegają ochronie prawnej.</p>
+    </div>
   </div>
 </footer>
 
