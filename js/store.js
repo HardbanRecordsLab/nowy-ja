@@ -119,6 +119,57 @@ const Store = (() => {
     saveProfiles(profiles);
   }
 
+  function setWeightGoal(profileId, goalKg) {
+    return updateProfile(profileId, { weightGoalKg: goalKg || null });
+  }
+
+  // Cel jest sensowny tylko względem punktu startowego — bez pierwszego wpisu wagi nie da się
+  // policzyć kierunku (chudnięcie vs przybieranie), więc funkcja po prostu nic nie zwraca.
+  function computeWeightGoalProgress(profile) {
+    const goal = profile.weightGoalKg;
+    const log = [...(profile.progress.weightLog || [])].sort((a, b) => new Date(a.date) - new Date(b.date));
+    if (!goal || !log.length) return null;
+    const start = log[0].weight;
+    const current = log[log.length - 1].weight;
+    const totalToGo = start - goal;
+    if (Math.abs(totalToGo) < 0.05) return { start, current, goal, pct: 100, remainingKg: 0 };
+    const done = start - current;
+    const pct = Math.max(0, Math.min(100, Math.round((done / totalToGo) * 100)));
+    return {
+      start, current, goal, pct,
+      remainingKg: Math.round(Math.abs(current - goal) * 10) / 10
+    };
+  }
+
+  // Rekordy zapisywane przy okazji sprawdzianu formy przez kamerę (js/poseCheck.js) — dane
+  // i tak są liczone na żywo do live-feedbacku, więc zachowanie najlepszego wyniku to tylko
+  // zapis, bez dodatkowego trackingu.
+  function getPersonalRecord(profile, code) {
+    return (profile.progress.personalRecords && profile.progress.personalRecords[code]) || null;
+  }
+
+  function getAllPersonalRecords(profile) {
+    return profile.progress.personalRecords || {};
+  }
+
+  function recordPersonalBest(profileId, code, { reps, holdSeconds }) {
+    const profiles = getProfiles();
+    const p = profiles.find(x => x.id === profileId);
+    if (!p) return null;
+    if (!p.progress.personalRecords) p.progress.personalRecords = {};
+    const existing = p.progress.personalRecords[code] || { reps: 0, holdSeconds: 0 };
+    const improvedReps = (reps || 0) > (existing.reps || 0);
+    const improvedHold = (holdSeconds || 0) > (existing.holdSeconds || 0);
+    if (!improvedReps && !improvedHold) return null;
+    p.progress.personalRecords[code] = {
+      reps: Math.max(reps || 0, existing.reps || 0),
+      holdSeconds: Math.max(holdSeconds || 0, existing.holdSeconds || 0),
+      updatedAt: Date.now()
+    };
+    saveProfiles(profiles);
+    return { improvedReps, improvedHold, record: p.progress.personalRecords[code] };
+  }
+
   function recordSession(profileId, session) {
     const profiles = getProfiles();
     const p = profiles.find(x => x.id === profileId);
@@ -443,7 +494,8 @@ const Store = (() => {
     getProfiles, getActiveId, setActiveId, getActiveProfile,
     createProfile, updateProfile, deleteProfile, acceptSafetyConsent,
     currentDayNumber, toggleDayComplete, setExerciseChecks, getExerciseChecks,
-    addMeasurement, addWeight, recordSession, getLastSession, currentStreak,
+    addMeasurement, addWeight, setWeightGoal, computeWeightGoalProgress, recordSession, getLastSession, currentStreak,
+    getPersonalRecord, getAllPersonalRecords, recordPersonalBest,
     logExercisePain, getExercisePainCount,
     checkNewBadges, getBadges,
     computeReadiness, setReadinessInput, getReadinessInput,

@@ -4,6 +4,7 @@ let EXERCISES = [];
 let exByCode = {};
 let activeWorkoutRunner = null;
 let activeWorkoutDay = null;
+let fcLastStatus = null;
 
 Music.onTrackChange(() => {
   if (activeWorkoutRunner) renderWorkoutBody(activeWorkoutRunner);
@@ -1224,6 +1225,7 @@ function bindFormCheck(code) {
     function attachStop() {
       document.getElementById('fc-btn-stop')?.addEventListener('click', () => {
         PoseCheck.stop();
+        finishFormCheckSession();
         navigate(`#/exercise/${code}`);
       });
     }
@@ -1235,6 +1237,10 @@ function bindFormCheck(code) {
       video, canvas, kind,
       onSpeak: (text) => Voice.speak(text, { interrupt: true }),
       onStatus: (s) => {
+        if (s.phase === 'analyzing') {
+          if (kind === 'plank' || kind === 'wall-sit') fcLastStatus = { code, holdSeconds: s.holdSeconds || 0, reps: 0 };
+          else if (kind !== 'pushup') fcLastStatus = { code, holdSeconds: 0, reps: s.repCount || 0 };
+        }
         if (s.phase === 'error') {
           statusEl.textContent = s.message;
           setControls('<button type="button" class="btn primary" id="fc-btn-retry">Spróbuj ponownie</button>');
@@ -1307,6 +1313,28 @@ function bindFormCheck(code) {
   });
 }
 
+function finishFormCheckSession() {
+  if (!fcLastStatus) return;
+  const { code, reps, holdSeconds } = fcLastStatus;
+  fcLastStatus = null;
+  if (!reps && !holdSeconds) return;
+  const profile = Store.getActiveProfile();
+  if (!profile) return;
+  const result = Store.recordPersonalBest(profile.id, code, { reps, holdSeconds });
+  if (result) showRecordToast(result);
+}
+
+function showRecordToast({ improvedHold, record }) {
+  vibrate([40, 30, 80]);
+  const label = improvedHold ? `${fmtSeconds(record.holdSeconds)} w utrzymaniu pozycji` : `${record.reps} powtórzeń`;
+  const el = document.createElement('div');
+  el.className = 'badge-toast';
+  el.innerHTML = `<div class="badge-toast-row"><span class="badge-toast-icon">🏆</span><span><strong>Nowy rekord!</strong><br>${esc(label)}</span></div>`;
+  document.body.appendChild(el);
+  setTimeout(() => el.classList.add('show'), 20);
+  setTimeout(() => { el.classList.remove('show'); setTimeout(() => el.remove(), 400); }, 5000);
+}
+
 function exitWorkout() {
   Voice.stop();
   Music.stop();
@@ -1351,6 +1379,13 @@ function viewExercise(profile, code) {
   if (!ex) return `<div class="empty-state"><p>Nie znaleziono ćwiczenia.</p><a class="link" href="#/library">Wróć do biblioteki</a></div>`;
 
   const repsRows = [1, 2, 3, 4].map(p => `<tr><td>Faza ${p}</td><td>${esc(ex.reps['faza' + p])}</td></tr>`).join('');
+
+  const fcKind = FORM_CHECK_KIND[ex.code];
+  const isHoldKind = fcKind === 'plank' || fcKind === 'wall-sit';
+  const pr = fcKind ? Store.getPersonalRecord(profile, ex.code) : null;
+  const prLine = pr && ((isHoldKind && pr.holdSeconds > 0) || (!isHoldKind && pr.reps > 0))
+    ? `<p class="muted small" style="margin:6px 0 0"><strong>🏆 Twój rekord:</strong> ${isHoldKind ? esc(fmtSeconds(pr.holdSeconds)) + ' w utrzymaniu pozycji' : pr.reps + ' powtórzeń'}</p>`
+    : '';
 
   return `
   <a class="link back" href="#/library">← Biblioteka ćwiczeń</a>
@@ -1417,6 +1452,7 @@ function viewExercise(profile, code) {
       'lateral-raise': 'Kamera na Twoim urządzeniu (ustawiona przodem) orientacyjnie sprawdza, czy unosisz obie ręce na tę samą wysokość, a przy okazji liczy powtórzenia — obraz nigdy nie opuszcza telefonu/komputera.',
       'band-pull': 'Kamera na Twoim urządzeniu (ustawiona przodem) orientacyjnie sprawdza, czy ręce nie opadają poniżej wysokości barków, a przy okazji liczy powtórzenia — obraz nigdy nie opuszcza telefonu/komputera.',
     })[FORM_CHECK_KIND[ex.code]] || 'Kamera na Twoim urządzeniu orientacyjnie sprawdza pochylenie tułowia i pozycję kolan, a przy okazji liczy powtórzenia — obraz nigdy nie opuszcza telefonu/komputera.'} To pomoc, nie ocena eksperta — nie zastępuje wskazówek bezpieczeństwa powyżej.</p>
+    ${prLine}
     <a class="btn small primary" href="#/form-check/${ex.code}">Uruchom kamerę</a>
   </section>` : ''}
 
@@ -1788,12 +1824,41 @@ function viewProgressTools(profile) {
   </section>`;
 }
 
+// Rekordy zebrane przy okazji sprawdzianów formy przez kamerę (repCount/holdSeconds z poseCheck.js) —
+// pokazujemy tylko to, co ma sens dla danego typu ćwiczenia (powtórzenia vs czas utrzymania pozycji).
+function viewPersonalRecords(profile) {
+  const records = Store.getAllPersonalRecords(profile);
+  const codes = Object.keys(records).filter(c => records[c].reps > 0 || records[c].holdSeconds > 0);
+  if (!codes.length) return '';
+  const rows = codes.map(code => {
+    const ex = exByCode[code];
+    const r = records[code];
+    const isHold = FORM_CHECK_KIND[code] === 'plank' || FORM_CHECK_KIND[code] === 'wall-sit';
+    const label = isHold ? `${fmtSeconds(r.holdSeconds)} w utrzymaniu` : `${r.reps} powtórzeń`;
+    return `<li>${esc(ex ? ex.code + ' — ' + ex.name : code)} — <strong>${esc(label)}</strong></li>`;
+  }).join('');
+  return `
+  <section class="card">
+    <h3 style="margin-top:0">🏆 Rekordy osobiste</h3>
+    <p class="muted small">Najlepsze wyniki ze sprawdzianów formy przez kamerę.</p>
+    <ul class="log-list">${rows}</ul>
+  </section>`;
+}
+
 function viewProgress(profile) {
   const p = profile.progress;
   const completedCount = p.completedDays.length;
   const weightRows = [...p.weightLog].reverse().slice(0, 8);
   const measureRows = [...p.measurements].reverse().slice(0, 8);
   const sparkline = weightSparkline(p.weightLog);
+
+  const goalProgress = Store.computeWeightGoalProgress(profile);
+  const weightGoalHtml = !goalProgress ? '' : goalProgress.remainingKg <= 0
+    ? `<p class="done-badge" style="margin:8px 0">🎯 Cel wagowy osiągnięty!</p>`
+    : `<div style="margin:10px 0">
+         <div class="progress-bar"><div class="progress-bar-fill" style="width:${goalProgress.pct}%"></div></div>
+         <p class="muted small" style="margin:4px 0 0">Zostało ${goalProgress.remainingKg} kg do celu ${goalProgress.goal} kg (${goalProgress.pct}%)</p>
+       </div>`;
 
   const badges = Store.getBadges(profile);
   const earnedCount = badges.filter(b => b.earned).length;
@@ -1825,17 +1890,24 @@ function viewProgress(profile) {
     </div>
   </section>
 
+  ${viewPersonalRecords(profile)}
+
   ${viewSessionHistory(profile)}
 
   <section class="card">
     <h3>Waga</h3>
     ${sparkline}
+    ${weightGoalHtml}
     <form id="form-weight" class="form-inline">
       <input type="number" step="0.1" name="weight" placeholder="kg" required>
       <input type="date" name="date" value="${new Date().toISOString().slice(0, 10)}">
       <button class="btn small primary" type="submit">Dodaj</button>
     </form>
     ${weightRows.length ? `<ul class="log-list">${weightRows.map(w => `<li>${fmtDate(w.date)} — <strong>${w.weight} kg</strong></li>`).join('')}</ul>` : '<p class="muted small">Brak wpisów.</p>'}
+    <form id="form-weight-goal" class="form-inline" style="margin-top:10px">
+      <input type="number" step="0.1" name="goal" placeholder="Cel wagi (kg)" value="${profile.weightGoalKg || ''}">
+      <button class="btn small ghost" type="submit">Ustaw cel</button>
+    </form>
   </section>
 
   <section class="card">
@@ -2389,6 +2461,7 @@ document.addEventListener('click', async e => {
     case 'exit-form-check':
       Voice.stop();
       if (typeof PoseCheck !== 'undefined') PoseCheck.stop();
+      finishFormCheckSession();
       navigate(`#/exercise/${target.dataset.code}`);
       break;
     case 'workout-toggle-voice':
@@ -2701,6 +2774,12 @@ document.addEventListener('submit', e => {
     e.preventDefault();
     const fd = new FormData(e.target);
     Store.addWeight(profile.id, Number(fd.get('weight')), fd.get('date'));
+    render();
+  }
+  if (e.target.id === 'form-weight-goal') {
+    e.preventDefault();
+    const fd = new FormData(e.target);
+    Store.setWeightGoal(profile.id, fd.get('goal') ? Number(fd.get('goal')) : null);
     render();
   }
   if (e.target.id === 'form-measure') {
