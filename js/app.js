@@ -6,6 +6,18 @@ let activeWorkoutRunner = null;
 let activeWorkoutDay = null;
 let fcLastStatus = null;
 
+// Odznaki z niestandardową grafiką (assets/badges/<id>.jpg) — reszta używa emoji jako fallback.
+const BADGE_ICON_IDS = new Set([
+  'profile_created', 'first_day', 'first_measurement', 'body_aware', 'five_sessions', 'streak_3',
+  'streak_7', 'explorer', 'weight_tracker', 'comeback', 'ten_sessions', 'quarter', 'streak_14',
+  'half', 'three_quarter', 'finisher'
+]);
+function badgeIconHtml(b, imgClass, emojiClass) {
+  return BADGE_ICON_IDS.has(b.id)
+    ? `<img src="assets/badges/${b.id}.jpg" alt="" class="${imgClass}">`
+    : `<span class="${emojiClass}">${b.icon}</span>`;
+}
+
 Music.onTrackChange(() => {
   if (activeWorkoutRunner) renderWorkoutBody(activeWorkoutRunner);
 });
@@ -137,7 +149,7 @@ function showBadgeToast(badges) {
   el.className = 'badge-toast';
   el.innerHTML = badges.map(b => `
     <div class="badge-toast-row">
-      <span class="badge-toast-icon">${b.icon}</span>
+      ${badgeIconHtml(b, 'badge-toast-icon-img', 'badge-toast-icon')}
       <span><strong>Nowa odznaka!</strong><br>${esc(b.name)}</span>
     </div>`).join('');
   document.body.appendChild(el);
@@ -1884,7 +1896,7 @@ function viewProgress(profile) {
     <div class="badge-grid">
       ${badges.map(b => `
         <div class="badge-item ${b.earned ? 'earned' : ''}" title="${esc(b.desc)}">
-          <span class="badge-item-icon-wrap"><span class="badge-item-icon">${b.icon}</span></span>
+          <span class="badge-item-icon-wrap">${badgeIconHtml(b, 'badge-item-icon-img', 'badge-item-icon')}</span>
           <span class="badge-item-name">${esc(b.name)}</span>
         </div>`).join('')}
     </div>
