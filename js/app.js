@@ -10,7 +10,7 @@ let fcLastStatus = null;
 const BADGE_ICON_IDS = new Set([
   'profile_created', 'first_day', 'first_measurement', 'body_aware', 'five_sessions', 'streak_3',
   'streak_7', 'explorer', 'weight_tracker', 'comeback', 'ten_sessions', 'quarter', 'streak_14',
-  'half', 'three_quarter', 'finisher'
+  'half', 'three_quarter', 'finisher', 'resilient'
 ]);
 function badgeIconHtml(b, imgClass, emojiClass) {
   return BADGE_ICON_IDS.has(b.id)

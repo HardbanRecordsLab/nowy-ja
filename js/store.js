@@ -226,6 +226,16 @@ const Store = (() => {
       }
     },
     {
+      id: 'resilient', icon: '💎', name: 'Niezłomna',
+      desc: 'Wróć do treningu po przerwie co najmniej 3 razy w trakcie programu — upadki się zdarzają, Ty zawsze wracasz',
+      check: p => {
+        const days = (p.progress.completedDays || []).slice().sort((a, b) => a - b);
+        let comebacks = 0;
+        for (let i = 1; i < days.length; i++) { if (days[i] - days[i - 1] >= 4) comebacks++; }
+        return comebacks >= 3;
+      }
+    },
+    {
       id: 'explorer', icon: '🧭', name: 'Odkrywca ćwiczeń',
       desc: 'Wykonaj co najmniej 20 różnych ćwiczeń z biblioteki',
       check: p => {
