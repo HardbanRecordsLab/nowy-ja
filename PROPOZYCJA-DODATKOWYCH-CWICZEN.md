@@ -287,3 +287,25 @@ wyszukiwania dla tych źródeł, podstawione pod angielskie hasło ćwiczenia:
 **Pobrany plik nazwij `<KOD>.mp4` (wideo) lub `<KOD>.png` (obraz/klatka)** i wrzuć
 do `assets/exercises/`. Nic więcej — fallback w aplikacji sam go wykryje.
 
+---
+
+## 6. Batch 3 — 26 ćwiczeń z gotową demonstracją (free-exercise-db, 2026-08-30)
+
+**Status: wpięte do `exercises.json` (95 ćwiczeń łącznie) razem z mediami — nic do dorobienia.**
+
+Źródło: **free-exercise-db** (github.com/yuhonas/free-exercise-db), licencja **Unlicense
+(domena publiczna)** — po 2 zdjęcia demonstracyjne (pozycja startowa i końcowa) na ćwiczenie.
+Dla każdego automatycznie zbudowano:
+- `assets/exercises/<KOD>.png` — infografika 2-panelowa (start | koniec ruchu)
+- `assets/exercises/<KOD>.mp4` — płynna pętla start→koniec→start (~3,4 s, wyciszona, ~720p)
+
+Grupy A/B/C/D/G już istniały, więc ćwiczenia wpięły się same do biblioteki i jako opcje „Zamień".
+
+Nowe kody: A14, A15, A17–A20 (brzuch) · B17, B19 (nogi) · C17–C22 (pompki, deska bokiem,
+rotacja) · D8, D10–D17 (mobilność i rozciąganie: krążenia ramion, rozciąganie łydki, tyłu uda,
+zginacza biodra, skłon biegacza, gąsienica, koci grzbiet klatki itd.) · G8–G10 (jump squat,
+spider crawl, żabie podskoki).
+
+Odrzucone przy kontroli: demonstracje na ławce lub mylące (flutter kicks, bench leg raise,
+quadruped kickback — dubluje B5, prone leg lift, hyperextension na ławce, close-up kostek).
+
