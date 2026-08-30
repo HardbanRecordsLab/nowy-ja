@@ -1651,8 +1651,9 @@ function viewExercise(profile, code) {
   </section>
 
   <details class="card">
-    <summary>Prompty AI (do wygenerowania infografiki / wideo)</summary>
-    <p class="muted small">Wklej w ChatGPT/DALL·E, Midjourney (obraz) lub Sora, Runway, Kling (wideo).</p>
+    <summary>Media ćwiczenia — gotowe wideo (darmowe) i prompty AI</summary>
+    ${freeMediaLinks(ex)}
+    <p class="muted small" style="margin:14px 0 4px">Albo wygeneruj własne — wklej w ChatGPT/DALL·E, Midjourney (obraz) lub Sora, Runway, Kling (wideo):</p>
     <div class="prompt-block">
       <div class="prompt-head"><strong>Infografika</strong><button class="btn tiny" data-action="copy-prompt" data-code="${ex.code}" data-kind="infographicPrompt">Kopiuj</button></div>
       <pre class="prompt-text">${esc(ex.infographicPrompt)}</pre>
@@ -1662,6 +1663,34 @@ function viewExercise(profile, code) {
       <pre class="prompt-text">${esc(ex.videoPrompt)}</pre>
     </div>
   </details>`;
+}
+
+// Angielskie hasło do wyszukania ćwiczenia w bankach wideo/zdjęć.
+function exSearchQuery(ex) {
+  if (ex.enName) return ex.enName;
+  const m = ex.name.match(/\(([^)]+)\)/);
+  if (m && /^[a-z0-9 ,'/-]+$/i.test(m[1]) &&
+      !/(wersj|delikatn|wspomagan|opcjonaln|siedząc|leżąc|skrócon|zmodyfikowan|asekuracj|przy krześle|przy ścianie|nad głową|w opadzie|na czworakach|niski)/i.test(m[1])) {
+    return m[1].trim();
+  }
+  return ex.name.replace(/\s*\([^)]*\)/g, '').trim();
+}
+
+// Linki do darmowych, royalty-free banków wideo/zdjęć z instruktażem ćwiczenia.
+// Wszystkie trzy: wolno użyć komercyjnie, bez podawania autora.
+function freeMediaLinks(ex) {
+  const term = exSearchQuery(ex);
+  const qVid = encodeURIComponent(term + ' exercise');
+  const qImg = encodeURIComponent(term + ' workout');
+  return `
+  <p class="muted small" style="margin:0 0 6px">Szukaj hasła <strong>„${esc(term)}"</strong> w darmowych bankach (licencja pozwala na użycie komercyjne, bez podawania autora):</p>
+  <div class="media-actions">
+    <a class="btn tiny ghost" href="https://www.pexels.com/search/videos/${qVid}/" target="_blank" rel="noopener">Pexels — wideo ↗</a>
+    <a class="btn tiny ghost" href="https://pixabay.com/videos/search/${qVid}/" target="_blank" rel="noopener">Pixabay — wideo ↗</a>
+    <a class="btn tiny ghost" href="https://mixkit.co/free-stock-video/?q=${encodeURIComponent(term)}" target="_blank" rel="noopener">Mixkit ↗</a>
+    <a class="btn tiny ghost" href="https://www.pexels.com/search/${qImg}/" target="_blank" rel="noopener">Pexels — zdjęcia ↗</a>
+  </div>
+  <p class="muted small" style="margin:6px 0 0">Po pobraniu pliku zapisz go jako <code>${esc(ex.code)}.mp4</code> / <code>${esc(ex.code)}.png</code> w folderze <code>assets/exercises/</code> — aplikacja podłączy go automatycznie.</p>`;
 }
 
 // Ćwiczenia obsługiwane przez sprawdzian formy (kamera), wg heurystyki:
@@ -1693,13 +1722,18 @@ function viewExercise(profile, code) {
 // Świadomie pominięte na razie: ruchy jednostronne (donkey kicks, clamshell, kopnięcia).
 const FORM_CHECK_KIND = {
   B1: 'squat', B2: 'squat', B3: 'squat', E3: 'hinge', E8: 'squat', B13: 'squat',
+  B14: 'squat', G6: 'squat',
   A2: 'plank', E5: 'plank', C1: 'pushup', C2: 'pushup',
   B9: 'wall-sit', B4: 'bridge', C4: 'curl', C10: 'curl', C5: 'curl',
   C7: 'lateral-raise', C11: 'band-pull',
 };
 
 function groupLabel(g) {
-  return { A: 'Brzuch + Biodra', B: 'Uda + Pośladki', C: 'Klatka + Ramiona', D: 'Aktywność / mobilność', E: 'Bonus (opona, plecak, skakanka)' }[g] || g;
+  return {
+    A: 'Brzuch + Biodra', B: 'Uda + Pośladki', C: 'Klatka + Ramiona',
+    D: 'Aktywność / mobilność', E: 'Bonus (opona, plecak, skakanka)',
+    G: 'Cardio / spalanie (bez sprzętu)',
+  }[g] || g;
 }
 
 const activeFlipbookIntervals = {};
@@ -1885,6 +1919,7 @@ function viewLibrary() {
       <button class="chip" data-group="B">Uda/Pośladki</button>
       <button class="chip" data-group="C">Klatka/Ramiona</button>
       <button class="chip" data-group="D">Mobilność</button>
+      <button class="chip" data-group="G">Cardio</button>
       <button class="chip" data-group="E">Bonus</button>
     </div>
   </div>

@@ -697,6 +697,7 @@ a { color: inherit; text-decoration: none; }
 .group-C { background: #c0392b; }
 .group-D { background: #8e6fce; }
 .group-E { background: var(--gold); color: #2A0A0E; }
+.group-G { background: #e0662a; }
 .lib-name { font-weight: 600; font-size: 0.88rem; }
 .lib-muscle { font-size: 0.75rem; }
 

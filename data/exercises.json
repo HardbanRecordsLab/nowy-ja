@@ -1050,5 +1050,379 @@
     },
     "infographicPrompt": "Clean flat-vector fitness infographic, square format, showing a friendly plus-size adult demonstrating \"standing resistance band overhead press\" in 3 sequential steps (start position, mid-movement, end position), front angle, minimalist home-gym background with a resistance band underfoot, soft blue-and-white color palette, bold sans-serif captions in Polish labeling: nazwa ćwiczenia \"Wyciskanie taśmy nad głowę\", partia mięśniowa \"Barki, ramiona\", oraz jedna wskazówka bezpieczeństwa: \"Nie odchylaj tułowia do tyłu, żeby \\\"pomóc\\\" ruchowi — jeśli musisz, wybierz słabszy opór taśmy.\". Numbered arrows indicating movement direction, dashed alignment guide lines on knees/spine, no spelling errors, high contrast, flat illustration style, no photorealism, inclusive and body-positive character design.",
     "videoPrompt": "10-15 second instructional fitness demo video, static camera, front angle, a calm plus-size adult standing on a resistance band and pressing it overhead with correct form in a bright home setting, slow controlled tempo with a brief pause at the top, subtle on-screen Polish captions fade in: \"Wyciskanie taśmy nad głowę\", \"Barki, ramiona\", and safety cue \"Nie odchylaj tułowia do tyłu, aby pomóc ruchowi — jeśli musisz, wybierz słabszy opór taśmy.\", soft ambient background music, seamless loop, photorealistic, steady well-lit shot, encouraging non-judgmental tone suitable for beginners with a larger body size."
+  },
+  {
+    "code": "G1",
+    "name": "Pajacyki (jumping jacks)",
+    "group": "G",
+    "muscle": "Kardio, całe ciało, barki, łydki",
+    "enName": "jumping jacks",
+    "steps": [
+      "Stań prosto, stopy razem, ręce wzdłuż ciała.",
+      "Jednym ruchem odbij się i rozstaw stopy szerzej niż barki, unosząc wyprostowane ręce nad głowę.",
+      "Wróć skokiem do pozycji startowej — stopy razem, ręce w dół.",
+      "Utrzymuj równy, sprężysty rytm; ląduj miękko na całych stopach."
+    ],
+    "safety": "Ląduj miękko na lekko ugiętych kolanach. Przy bólu kolan lub problemach ze stawami wybierz wariant bez wyskoku (G2).",
+    "reps": {
+      "faza1": "2 × 20 s",
+      "faza2": "3 × 25 s",
+      "faza3": "3 × 30 s",
+      "faza4": "4 × 30-40 s"
+    },
+    "infographicPrompt": "Clean flat-vector fitness infographic, square format, showing a friendly plus-size adult demonstrating \"jumping jacks\" in 3 sequential steps (start position, mid-movement, end position), front angle, minimalist home-gym background, soft blue-and-white color palette, bold sans-serif captions in Polish labeling: nazwa ćwiczenia \"Pajacyki (jumping jacks)\", partia mięśniowa \"Kardio, całe ciało, barki, łydki\", oraz jedna wskazówka bezpieczeństwa: \"Ląduj miękko na lekko ugiętych kolanach. Przy bólu kolan lub problemach ze stawami wybierz wariant bez wyskoku (G2).\". Numbered arrows indicating movement direction, dashed alignment guide lines on knees/spine, no spelling errors, high contrast, flat illustration style, no photorealism, inclusive and body-positive character design.",
+    "videoPrompt": "10-15 second instructional fitness demo video, static camera, front angle, a calm plus-size adult performing \"jumping jacks\" with correct form on a non-slip mat in a bright home setting, quick rhythmic tempo with soft, controlled landings, staying light on the feet, subtle on-screen Polish captions fade in: \"Pajacyki (jumping jacks)\", \"Kardio, całe ciało, barki, łydki\", and safety cue \"Ląduj miękko na lekko ugiętych kolanach. Przy bólu kolan lub problemach ze stawami wybierz wariant bez wyskoku (G2).\", soft ambient background music, seamless loop, photorealistic, steady well-lit shot, encouraging non-judgmental tone suitable for beginners with a larger body size."
+  },
+  {
+    "code": "G2",
+    "name": "Pajacyki bez wyskoku (step jacks)",
+    "group": "G",
+    "muscle": "Kardio o niskim wpływie na stawy, barki, nogi",
+    "enName": "low-impact step jacks",
+    "steps": [
+      "Stań prosto, stopy razem, ręce wzdłuż ciała.",
+      "Wykrocz jedną stopą w bok, jednocześnie unosząc wyprostowane ręce nad głowę.",
+      "Wróć stopą do środka i opuść ręce; powtórz na drugą nogę.",
+      "Zachowaj płynne, rytmiczne tempo — jedna stopa zawsze zostaje na podłodze."
+    ],
+    "safety": "Wariant przyjazny stawom i kręgosłupowi. Trzymaj tułów wyprostowany, nie odchylaj się do tyłu przy unoszeniu rąk.",
+    "reps": {
+      "faza1": "2 × 30 s",
+      "faza2": "3 × 30 s",
+      "faza3": "3 × 40 s",
+      "faza4": "4 × 40-45 s"
+    },
+    "infographicPrompt": "Clean flat-vector fitness infographic, square format, showing a friendly plus-size adult demonstrating \"low-impact step jacks\" in 3 sequential steps (start position, mid-movement, end position), front angle, minimalist home-gym background, soft blue-and-white color palette, bold sans-serif captions in Polish labeling: nazwa ćwiczenia \"Pajacyki bez wyskoku (step jacks)\", partia mięśniowa \"Kardio o niskim wpływie na stawy, barki, nogi\", oraz jedna wskazówka bezpieczeństwa: \"Wariant przyjazny stawom i kręgosłupowi. Trzymaj tułów wyprostowany, nie odchylaj się do tyłu przy unoszeniu rąk.\". Numbered arrows indicating movement direction, dashed alignment guide lines on knees/spine, no spelling errors, high contrast, flat illustration style, no photorealism, inclusive and body-positive character design.",
+    "videoPrompt": "10-15 second instructional fitness demo video, static camera, front angle, a calm plus-size adult performing \"low-impact step jacks\" with correct form on a non-slip mat in a bright home setting, quick rhythmic tempo with soft, controlled landings, staying light on the feet, subtle on-screen Polish captions fade in: \"Pajacyki bez wyskoku (step jacks)\", \"Kardio o niskim wpływie na stawy, barki, nogi\", and safety cue \"Wariant przyjazny stawom i kręgosłupowi. Trzymaj tułów wyprostowany, nie odchylaj się do tyłu przy unoszeniu rąk.\", soft ambient background music, seamless loop, photorealistic, steady well-lit shot, encouraging non-judgmental tone suitable for beginners with a larger body size."
+  },
+  {
+    "code": "G3",
+    "name": "Wspinaczka górska (mountain climbers)",
+    "group": "G",
+    "muscle": "Core, barki, nogi, kardio",
+    "enName": "mountain climbers",
+    "steps": [
+      "Przyjmij pozycję wysokiej deski: dłonie pod barkami, ciało w jednej linii.",
+      "Przyciągnij jedno kolano w stronę klatki piersiowej, nie unosząc bioder.",
+      "Wróć nogą i natychmiast przyciągnij drugie kolano.",
+      "Naprzemiennie, w tempie marszu lub truchtu — wolniej znaczy łatwiej i bezpieczniej dla nadgarstków."
+    ],
+    "safety": "Nie zadzieraj bioder do góry ani nie pozwól im opaść. Przy wrażliwych nadgarstkach oprzyj dłonie na książkach; wolne tempo w pełni się liczy.",
+    "reps": {
+      "faza1": "2 × 15 s",
+      "faza2": "3 × 20 s",
+      "faza3": "3 × 25-30 s",
+      "faza4": "4 × 30 s"
+    },
+    "infographicPrompt": "Clean flat-vector fitness infographic, square format, showing a friendly plus-size adult demonstrating \"mountain climbers\" in 3 sequential steps (start position, mid-movement, end position), 45-degree side angle, minimalist home-gym background, soft blue-and-white color palette, bold sans-serif captions in Polish labeling: nazwa ćwiczenia \"Wspinaczka górska (mountain climbers)\", partia mięśniowa \"Core, barki, nogi, kardio\", oraz jedna wskazówka bezpieczeństwa: \"Nie zadzieraj bioder do góry ani nie pozwól im opaść. Przy wrażliwych nadgarstkach oprzyj dłonie na książkach; wolne tempo w pełni się liczy.\". Numbered arrows indicating movement direction, dashed alignment guide lines on knees/spine, no spelling errors, high contrast, flat illustration style, no photorealism, inclusive and body-positive character design.",
+    "videoPrompt": "10-15 second instructional fitness demo video, static camera, 45-degree side angle, a calm plus-size adult performing \"mountain climbers\" with correct form on a non-slip mat in a bright home setting, quick rhythmic tempo with soft, controlled landings, staying light on the feet, subtle on-screen Polish captions fade in: \"Wspinaczka górska (mountain climbers)\", \"Core, barki, nogi, kardio\", and safety cue \"Nie zadzieraj bioder do góry ani nie pozwól im opaść. Przy wrażliwych nadgarstkach oprzyj dłonie na książkach; wolne tempo w pełni się liczy.\", soft ambient background music, seamless loop, photorealistic, steady well-lit shot, encouraging non-judgmental tone suitable for beginners with a larger body size."
+  },
+  {
+    "code": "G4",
+    "name": "Bieg z wysokim unoszeniem kolan (high knees)",
+    "group": "G",
+    "muscle": "Kardio, zginacze bioder, brzuch, łydki",
+    "enName": "high knees run in place",
+    "steps": [
+      "Stań prosto, ręce zgięte w łokciach jak do biegu.",
+      "Unieś jedno kolano do wysokości bioder, lekko odbijając się od podłoża.",
+      "Szybko zmień nogę, utrzymując wyprostowaną sylwetkę i napięty brzuch.",
+      "Wariant łagodniejszy: maszeruj w miejscu z wysokim unoszeniem kolan, bez fazy lotu."
+    ],
+    "safety": "Ląduj na przodostopiu, miękko uginając kolana. Przy bólu kolan lub bioder wykonuj wersję marszową, bez wyskoku.",
+    "reps": {
+      "faza1": "2 × 15 s",
+      "faza2": "3 × 20 s",
+      "faza3": "3 × 25 s",
+      "faza4": "4 × 30 s"
+    },
+    "infographicPrompt": "Clean flat-vector fitness infographic, square format, showing a friendly plus-size adult demonstrating \"high knees run in place\" in 3 sequential steps (start position, mid-movement, end position), front angle, minimalist home-gym background, soft blue-and-white color palette, bold sans-serif captions in Polish labeling: nazwa ćwiczenia \"Bieg z wysokim unoszeniem kolan (high knees)\", partia mięśniowa \"Kardio, zginacze bioder, brzuch, łydki\", oraz jedna wskazówka bezpieczeństwa: \"Ląduj na przodostopiu, miękko uginając kolana. Przy bólu kolan lub bioder wykonuj wersję marszową, bez wyskoku.\". Numbered arrows indicating movement direction, dashed alignment guide lines on knees/spine, no spelling errors, high contrast, flat illustration style, no photorealism, inclusive and body-positive character design.",
+    "videoPrompt": "10-15 second instructional fitness demo video, static camera, front angle, a calm plus-size adult performing \"high knees run in place\" with correct form on a non-slip mat in a bright home setting, quick rhythmic tempo with soft, controlled landings, staying light on the feet, subtle on-screen Polish captions fade in: \"Bieg z wysokim unoszeniem kolan (high knees)\", \"Kardio, zginacze bioder, brzuch, łydki\", and safety cue \"Ląduj na przodostopiu, miękko uginając kolana. Przy bólu kolan lub bioder wykonuj wersję marszową, bez wyskoku.\", soft ambient background music, seamless loop, photorealistic, steady well-lit shot, encouraging non-judgmental tone suitable for beginners with a larger body size."
+  },
+  {
+    "code": "G5",
+    "name": "Burpee bez wyskoku (walk-out burpee)",
+    "group": "G",
+    "muscle": "Całe ciało, klatka, nogi, core, kardio",
+    "enName": "step-back burpee without jump",
+    "steps": [
+      "Ze stania wykonaj przysiad i oprzyj dłonie na podłodze przed stopami.",
+      "Wykrocz nogami do tyłu, jedna po drugiej, do pozycji deski.",
+      "Opcjonalnie dołóż pompkę od podłogi lub od blatu.",
+      "Przekrocz stopami z powrotem pod klatkę, wstań i wyprostuj się — bez wyskoku."
+    ],
+    "safety": "Cofaj i przekraczaj nogi po kolei zamiast wyskoku, żeby oszczędzić stawy. Trzymaj proste plecy przy schodzeniu do dłoni; pomijaj przy bólu nadgarstków lub barków.",
+    "reps": {
+      "faza1": "2 × 5 powt.",
+      "faza2": "3 × 6",
+      "faza3": "3 × 8",
+      "faza4": "3-4 × 8-10"
+    },
+    "infographicPrompt": "Clean flat-vector fitness infographic, square format, showing a friendly plus-size adult demonstrating \"step-back burpee without jump\" in 3 sequential steps (start position, mid-movement, end position), side angle, minimalist home-gym background, soft blue-and-white color palette, bold sans-serif captions in Polish labeling: nazwa ćwiczenia \"Burpee bez wyskoku (walk-out burpee)\", partia mięśniowa \"Całe ciało, klatka, nogi, core, kardio\", oraz jedna wskazówka bezpieczeństwa: \"Cofaj i przekraczaj nogi po kolei zamiast wyskoku, żeby oszczędzić stawy. Trzymaj proste plecy przy schodzeniu do dłoni; pomijaj przy bólu nadgarstków lub barków.\". Numbered arrows indicating movement direction, dashed alignment guide lines on knees/spine, no spelling errors, high contrast, flat illustration style, no photorealism, inclusive and body-positive character design.",
+    "videoPrompt": "10-15 second instructional fitness demo video, static camera, side angle, a calm plus-size adult performing \"step-back burpee without jump\" with correct form on a non-slip mat in a bright home setting, steady controlled tempo, moving through each position deliberately without rushing, subtle on-screen Polish captions fade in: \"Burpee bez wyskoku (walk-out burpee)\", \"Całe ciało, klatka, nogi, core, kardio\", and safety cue \"Cofaj i przekraczaj nogi po kolei zamiast wyskoku, żeby oszczędzić stawy. Trzymaj proste plecy przy schodzeniu do dłoni; pomijaj przy bólu nadgarstków lub barków.\", soft ambient background music, seamless loop, photorealistic, steady well-lit shot, encouraging non-judgmental tone suitable for beginners with a larger body size."
+  },
+  {
+    "code": "G6",
+    "name": "Przysiad z wyskokiem (jump squats)",
+    "group": "G",
+    "muscle": "Uda, pośladki, łydki, moc, kardio",
+    "enName": "jump squats",
+    "steps": [
+      "Stań w rozkroku na szerokość barków, palce stóp lekko na zewnątrz.",
+      "Zejdź do przysiadu: biodra w tył, kolana w linii stóp, plecy proste.",
+      "Dynamicznie wybij się w górę, prostując biodra i kolana.",
+      "Ląduj miękko z powrotem w przysiadzie i płynnie przejdź do kolejnego powtórzenia."
+    ],
+    "safety": "Ćwiczenie zaawansowane — wchodź w nie dopiero, gdy zwykły przysiad wykonujesz bez bólu. Ląduj miękko na całych stopach, kolana nad palcami. Przy nadwadze lub dolegliwościach kolan zostań przy przysiadzie bez wyskoku (B1 / B2).",
+    "reps": {
+      "faza1": "2 × 6",
+      "faza2": "2 × 8",
+      "faza3": "3 × 10",
+      "faza4": "3 × 12-15"
+    },
+    "infographicPrompt": "Clean flat-vector fitness infographic, square format, showing a friendly plus-size adult demonstrating \"jump squats\" in 3 sequential steps (start position, mid-movement, end position), side angle, minimalist home-gym background, soft blue-and-white color palette, bold sans-serif captions in Polish labeling: nazwa ćwiczenia \"Przysiad z wyskokiem (jump squats)\", partia mięśniowa \"Uda, pośladki, łydki, moc, kardio\", oraz jedna wskazówka bezpieczeństwa: \"Ćwiczenie zaawansowane — wchodź w nie dopiero, gdy zwykły przysiad wykonujesz bez bólu. Ląduj miękko na całych stopach, kolana nad palcami. Przy nadwadze lub dolegliwościach kolan zostań przy przysiadzie bez wyskoku (B1 / B2).\". Numbered arrows indicating movement direction, dashed alignment guide lines on knees/spine, no spelling errors, high contrast, flat illustration style, no photorealism, inclusive and body-positive character design.",
+    "videoPrompt": "10-15 second instructional fitness demo video, static camera, side angle, a calm plus-size adult performing \"jump squats\" with correct form on a non-slip mat in a bright home setting, quick rhythmic tempo with soft, controlled landings, staying light on the feet, subtle on-screen Polish captions fade in: \"Przysiad z wyskokiem (jump squats)\", \"Uda, pośladki, łydki, moc, kardio\", and safety cue \"Ćwiczenie zaawansowane — wchodź w nie dopiero, gdy zwykły przysiad wykonujesz bez bólu. Ląduj miękko na całych stopach, kolana nad palcami. Przy nadwadze lub dolegliwościach kolan zostań przy przysiadzie bez wyskoku (B1 / B2).\", soft ambient background music, seamless loop, photorealistic, steady well-lit shot, encouraging non-judgmental tone suitable for beginners with a larger body size."
+  },
+  {
+    "code": "G7",
+    "name": "Łyżwiarz (skater hops)",
+    "group": "G",
+    "muscle": "Pośladki, uda, stabilizacja, kardio",
+    "enName": "lateral skater hops",
+    "steps": [
+      "Stań na jednej nodze, druga lekko uniesiona za tobą.",
+      "Odbij się w bok i wyląduj na drugiej nodze, przenosząc wolną nogę skośnie za piętę nogi podporowej.",
+      "Zatrzymaj się na moment w równowadze, po czym odbij w przeciwną stronę.",
+      "Wariant łagodniejszy: zamiast skoku rób szeroki krok w bok z dotknięciem palcami podłogi."
+    ],
+    "safety": "Ląduj miękko, kolano nad stopą, nie do środka. Zaczynaj od wersji krokowej, jeśli równowaga lub kolana są słabym punktem.",
+    "reps": {
+      "faza1": "2 × 20 s",
+      "faza2": "3 × 25 s",
+      "faza3": "3 × 30 s",
+      "faza4": "4 × 30-40 s"
+    },
+    "infographicPrompt": "Clean flat-vector fitness infographic, square format, showing a friendly plus-size adult demonstrating \"lateral skater hops\" in 3 sequential steps (start position, mid-movement, end position), front angle, minimalist home-gym background, soft blue-and-white color palette, bold sans-serif captions in Polish labeling: nazwa ćwiczenia \"Łyżwiarz (skater hops)\", partia mięśniowa \"Pośladki, uda, stabilizacja, kardio\", oraz jedna wskazówka bezpieczeństwa: \"Ląduj miękko, kolano nad stopą, nie do środka. Zaczynaj od wersji krokowej, jeśli równowaga lub kolana są słabym punktem.\". Numbered arrows indicating movement direction, dashed alignment guide lines on knees/spine, no spelling errors, high contrast, flat illustration style, no photorealism, inclusive and body-positive character design.",
+    "videoPrompt": "10-15 second instructional fitness demo video, static camera, front angle, a calm plus-size adult performing \"lateral skater hops\" with correct form on a non-slip mat in a bright home setting, quick rhythmic tempo with soft, controlled landings, staying light on the feet, subtle on-screen Polish captions fade in: \"Łyżwiarz (skater hops)\", \"Pośladki, uda, stabilizacja, kardio\", and safety cue \"Ląduj miękko, kolano nad stopą, nie do środka. Zaczynaj od wersji krokowej, jeśli równowaga lub kolana są słabym punktem.\", soft ambient background music, seamless loop, photorealistic, steady well-lit shot, encouraging non-judgmental tone suitable for beginners with a larger body size."
+  },
+  {
+    "code": "A10",
+    "name": "Rowerek (bicycle crunch)",
+    "group": "A",
+    "muscle": "Brzuch, mięśnie skośne",
+    "enName": "bicycle crunch",
+    "steps": [
+      "Połóż się na plecach, dłonie lekko przy skroniach, nogi uniesione, kolana zgięte pod kątem prostym.",
+      "Skręć tułów, prowadząc łokieć w stronę przeciwnego kolana, jednocześnie prostując drugą nogę.",
+      "Płynnie zmień stronę, jakbyś pedałowała na rowerze.",
+      "Ruch prowadź tułowiem i barkami, nie szarpiąc głową za rękami."
+    ],
+    "safety": "Dolny odcinek pleców trzymaj przyklejony do maty — im niżej opuszczasz prostowaną nogę, tym trudniej, więc zacznij wysoko. Nie ciągnij szyi.",
+    "reps": {
+      "faza1": "2 × 8/stronę",
+      "faza2": "3 × 10/stronę",
+      "faza3": "3 × 12/stronę",
+      "faza4": "3-4 × 15/stronę"
+    },
+    "infographicPrompt": "Clean flat-vector fitness infographic, square format, showing a friendly plus-size adult demonstrating \"bicycle crunch\" in 3 sequential steps (start position, mid-movement, end position), 45-degree elevated angle, minimalist home-gym background, soft blue-and-white color palette, bold sans-serif captions in Polish labeling: nazwa ćwiczenia \"Rowerek (bicycle crunch)\", partia mięśniowa \"Brzuch, mięśnie skośne\", oraz jedna wskazówka bezpieczeństwa: \"Dolny odcinek pleców trzymaj przyklejony do maty — im niżej opuszczasz prostowaną nogę, tym trudniej, więc zacznij wysoko. Nie ciągnij szyi.\". Numbered arrows indicating movement direction, dashed alignment guide lines on knees/spine, no spelling errors, high contrast, flat illustration style, no photorealism, inclusive and body-positive character design.",
+    "videoPrompt": "10-15 second instructional fitness demo video, static camera, 45-degree elevated angle, a calm plus-size adult performing \"bicycle crunch\" with correct form on a non-slip mat in a bright home setting, slow, controlled tempo with a brief pause at the point of peak muscle contraction, subtle on-screen Polish captions fade in: \"Rowerek (bicycle crunch)\", \"Brzuch, mięśnie skośne\", and safety cue \"Dolny odcinek pleców trzymaj przyklejony do maty — im niżej opuszczasz prostowaną nogę, tym trudniej, więc zacznij wysoko. Nie ciągnij szyi.\", soft ambient background music, seamless loop, photorealistic, steady well-lit shot, encouraging non-judgmental tone suitable for beginners with a larger body size."
+  },
+  {
+    "code": "A11",
+    "name": "Ptak-pies (bird-dog)",
+    "group": "A",
+    "muscle": "Głębokie mięśnie brzucha, pośladki, prostowniki grzbietu, stabilizacja",
+    "enName": "bird-dog",
+    "steps": [
+      "Uklęknij podparta na czworakach: dłonie pod barkami, kolana pod biodrami, plecy proste.",
+      "Wyciągnij jednocześnie prawą rękę w przód i lewą nogę w tył, do jednej linii z tułowiem.",
+      "Zatrzymaj się na 1-2 sekundy, nie rotując bioder ani barków.",
+      "Wróć kontrolowanie i powtórz po przeciwnej stronie."
+    ],
+    "safety": "Nie unoś ręki ani nogi wyżej niż linia tułowia i nie wyginaj pleców w dół. Napnij brzuch tak, jakby ktoś miał postawić Ci kubek na krzyżu.",
+    "reps": {
+      "faza1": "2 × 8/stronę",
+      "faza2": "3 × 10/stronę",
+      "faza3": "3 × 10/stronę z przytrzymaniem 2 s",
+      "faza4": "3 × 12/stronę"
+    },
+    "infographicPrompt": "Clean flat-vector fitness infographic, square format, showing a friendly plus-size adult demonstrating \"bird-dog\" in 3 sequential steps (start position, mid-movement, end position), side angle, minimalist home-gym background, soft blue-and-white color palette, bold sans-serif captions in Polish labeling: nazwa ćwiczenia \"Ptak-pies (bird-dog)\", partia mięśniowa \"Głębokie mięśnie brzucha, pośladki, prostowniki grzbietu, stabilizacja\", oraz jedna wskazówka bezpieczeństwa: \"Nie unoś ręki ani nogi wyżej niż linia tułowia i nie wyginaj pleców w dół. Napnij brzuch tak, jakby ktoś miał postawić Ci kubek na krzyżu.\". Numbered arrows indicating movement direction, dashed alignment guide lines on knees/spine, no spelling errors, high contrast, flat illustration style, no photorealism, inclusive and body-positive character design.",
+    "videoPrompt": "10-15 second instructional fitness demo video, static camera, side angle, a calm plus-size adult performing \"bird-dog\" with correct form on a non-slip mat in a bright home setting, slow, controlled tempo with a brief pause at the point of peak muscle contraction, subtle on-screen Polish captions fade in: \"Ptak-pies (bird-dog)\", \"Głębokie mięśnie brzucha, pośladki, prostowniki grzbietu, stabilizacja\", and safety cue \"Nie unoś ręki ani nogi wyżej niż linia tułowia i nie wyginaj pleców w dół. Napnij brzuch tak, jakby ktoś miał postawić Ci kubek na krzyżu.\", soft ambient background music, seamless loop, photorealistic, steady well-lit shot, encouraging non-judgmental tone suitable for beginners with a larger body size."
+  },
+  {
+    "code": "A12",
+    "name": "Deska z klepnięciem barku (plank shoulder taps)",
+    "group": "A",
+    "muscle": "Core, mięśnie skośne, barki, antyrotacja",
+    "enName": "plank shoulder taps",
+    "steps": [
+      "Przyjmij pozycję wysokiej deski, stopy nieco szerzej niż biodra dla stabilności.",
+      "Oderwij jedną dłoń i dotknij nią przeciwnego barku.",
+      "Wróć dłonią na podłogę i powtórz drugą ręką.",
+      "Najważniejsze: biodra nieruchome — nie kołysz nimi na boki."
+    ],
+    "safety": "Szeroki rozstaw stóp oznacza mniej rotacji i łatwiejsze ćwiczenie. Przy wrażliwych nadgarstkach oprzyj dłonie na książkach. Nie wykonuj przy bólu barku.",
+    "reps": {
+      "faza1": "2 × 8/stronę",
+      "faza2": "3 × 10/stronę",
+      "faza3": "3 × 12/stronę",
+      "faza4": "3-4 × 12-15/stronę"
+    },
+    "infographicPrompt": "Clean flat-vector fitness infographic, square format, showing a friendly plus-size adult demonstrating \"plank shoulder taps\" in 3 sequential steps (start position, mid-movement, end position), 45-degree angle, minimalist home-gym background, soft blue-and-white color palette, bold sans-serif captions in Polish labeling: nazwa ćwiczenia \"Deska z klepnięciem barku (plank shoulder taps)\", partia mięśniowa \"Core, mięśnie skośne, barki, antyrotacja\", oraz jedna wskazówka bezpieczeństwa: \"Szeroki rozstaw stóp oznacza mniej rotacji i łatwiejsze ćwiczenie. Przy wrażliwych nadgarstkach oprzyj dłonie na książkach. Nie wykonuj przy bólu barku.\". Numbered arrows indicating movement direction, dashed alignment guide lines on knees/spine, no spelling errors, high contrast, flat illustration style, no photorealism, inclusive and body-positive character design.",
+    "videoPrompt": "10-15 second instructional fitness demo video, static camera, 45-degree angle, a calm plus-size adult performing \"plank shoulder taps\" with correct form on a non-slip mat in a bright home setting, slow, controlled tempo with a brief pause at the point of peak muscle contraction, subtle on-screen Polish captions fade in: \"Deska z klepnięciem barku (plank shoulder taps)\", \"Core, mięśnie skośne, barki, antyrotacja\", and safety cue \"Szeroki rozstaw stóp oznacza mniej rotacji i łatwiejsze ćwiczenie. Przy wrażliwych nadgarstkach oprzyj dłonie na książkach. Nie wykonuj przy bólu barku.\", soft ambient background music, seamless loop, photorealistic, steady well-lit shot, encouraging non-judgmental tone suitable for beginners with a larger body size."
+  },
+  {
+    "code": "B14",
+    "name": "Wykrok w tył (reverse lunge)",
+    "group": "B",
+    "muscle": "Uda, pośladki, stabilizacja kolana",
+    "enName": "reverse lunge",
+    "steps": [
+      "Stań prosto, dłonie na biodrach lub przytrzymaj się krzesła dla równowagi.",
+      "Zrób duży krok w tył jedną nogą, opuszczając biodra aż tylne kolano prawie dotknie podłogi.",
+      "Przednie kolano nad kostką, tułów wyprostowany.",
+      "Odepchnij się przednią piętą i wróć do pozycji stojącej; powtórz na drugą nogę."
+    ],
+    "safety": "Wykrok w tył obciąża kolano mniej niż wykrok w przód — dobry wybór przy wrażliwych kolanach. Trzymaj się krzesła, jeśli balansujesz.",
+    "reps": {
+      "faza1": "2 × 8/nogę",
+      "faza2": "3 × 10/nogę",
+      "faza3": "3 × 12/nogę",
+      "faza4": "3-4 × 12-15/nogę"
+    },
+    "infographicPrompt": "Clean flat-vector fitness infographic, square format, showing a friendly plus-size adult demonstrating \"reverse lunge\" in 3 sequential steps (start position, mid-movement, end position), side angle, minimalist home-gym background, soft blue-and-white color palette, bold sans-serif captions in Polish labeling: nazwa ćwiczenia \"Wykrok w tył (reverse lunge)\", partia mięśniowa \"Uda, pośladki, stabilizacja kolana\", oraz jedna wskazówka bezpieczeństwa: \"Wykrok w tył obciąża kolano mniej niż wykrok w przód — dobry wybór przy wrażliwych kolanach. Trzymaj się krzesła, jeśli balansujesz.\". Numbered arrows indicating movement direction, dashed alignment guide lines on knees/spine, no spelling errors, high contrast, flat illustration style, no photorealism, inclusive and body-positive character design.",
+    "videoPrompt": "10-15 second instructional fitness demo video, static camera, side angle, a calm plus-size adult performing \"reverse lunge\" with correct form on a non-slip mat in a bright home setting, slow, controlled tempo with a brief pause at the point of peak muscle contraction, subtle on-screen Polish captions fade in: \"Wykrok w tył (reverse lunge)\", \"Uda, pośladki, stabilizacja kolana\", and safety cue \"Wykrok w tył obciąża kolano mniej niż wykrok w przód — dobry wybór przy wrażliwych kolanach. Trzymaj się krzesła, jeśli balansujesz.\", soft ambient background music, seamless loop, photorealistic, steady well-lit shot, encouraging non-judgmental tone suitable for beginners with a larger body size."
+  },
+  {
+    "code": "B15",
+    "name": "Przysiad bułgarski przy krześle (Bulgarian split squat)",
+    "group": "B",
+    "muscle": "Uda, pośladki, stabilizacja jednonóż",
+    "enName": "Bulgarian split squat with rear foot on a chair",
+    "steps": [
+      "Stań tyłem do krzesła, w odległości jednego dużego kroku.",
+      "Oprzyj podbicie tylnej stopy o siedzisko krzesła.",
+      "Zegnij przednią nogę, opuszczając biodra pionowo w dół; przednie kolano nad stopą.",
+      "Wróć, odpychając się przednią piętą. Zrób wszystkie powtórzenia, potem zmień nogę."
+    ],
+    "safety": "Ćwiczenie wymaga równowagi — na start trzymaj się ściany lub drugiego krzesła. Zejdź tylko tak nisko, jak pozwala biodro bez bólu. Pomiń przy ostrym bólu kolana.",
+    "reps": {
+      "faza1": "2 × 6/nogę",
+      "faza2": "2 × 8/nogę",
+      "faza3": "3 × 10/nogę",
+      "faza4": "3 × 10-12/nogę"
+    },
+    "infographicPrompt": "Clean flat-vector fitness infographic, square format, showing a friendly plus-size adult demonstrating \"Bulgarian split squat with rear foot on a chair\" in 3 sequential steps (start position, mid-movement, end position), side angle, minimalist home-gym background, soft blue-and-white color palette, bold sans-serif captions in Polish labeling: nazwa ćwiczenia \"Przysiad bułgarski przy krześle (Bulgarian split squat)\", partia mięśniowa \"Uda, pośladki, stabilizacja jednonóż\", oraz jedna wskazówka bezpieczeństwa: \"Ćwiczenie wymaga równowagi — na start trzymaj się ściany lub drugiego krzesła. Zejdź tylko tak nisko, jak pozwala biodro bez bólu. Pomiń przy ostrym bólu kolana.\". Numbered arrows indicating movement direction, dashed alignment guide lines on knees/spine, no spelling errors, high contrast, flat illustration style, no photorealism, inclusive and body-positive character design.",
+    "videoPrompt": "10-15 second instructional fitness demo video, static camera, side angle, a calm plus-size adult performing \"Bulgarian split squat with rear foot on a chair\" with correct form on a non-slip mat in a bright home setting, slow, controlled tempo with a brief pause at the point of peak muscle contraction, subtle on-screen Polish captions fade in: \"Przysiad bułgarski przy krześle (Bulgarian split squat)\", \"Uda, pośladki, stabilizacja jednonóż\", and safety cue \"Ćwiczenie wymaga równowagi — na start trzymaj się ściany lub drugiego krzesła. Zejdź tylko tak nisko, jak pozwala biodro bez bólu. Pomiń przy ostrym bólu kolana.\", soft ambient background music, seamless loop, photorealistic, steady well-lit shot, encouraging non-judgmental tone suitable for beginners with a larger body size."
+  },
+  {
+    "code": "B16",
+    "name": "Hydrant (fire hydrant)",
+    "group": "B",
+    "muscle": "Pośladki (mięsień pośladkowy średni), biodra",
+    "enName": "fire hydrant",
+    "steps": [
+      "Uklęknij podparta na czworakach, kolana pod biodrami, plecy proste.",
+      "Nie prostując kolana, unieś jedną nogę bokiem do wysokości biodra.",
+      "Zatrzymaj na moment, czując pracę z boku pośladka.",
+      "Opuść kontrolowanie; zrób serię, potem zmień nogę."
+    ],
+    "safety": "Nie przekręcaj tułowia za nogą — ruch wychodzi tylko z biodra. Napięty brzuch chroni dolny odcinek pleców.",
+    "reps": {
+      "faza1": "2 × 10/nogę",
+      "faza2": "3 × 12/nogę",
+      "faza3": "3 × 15/nogę",
+      "faza4": "3 × 15-20/nogę"
+    },
+    "infographicPrompt": "Clean flat-vector fitness infographic, square format, showing a friendly plus-size adult demonstrating \"fire hydrant\" in 3 sequential steps (start position, mid-movement, end position), side angle, minimalist home-gym background, soft blue-and-white color palette, bold sans-serif captions in Polish labeling: nazwa ćwiczenia \"Hydrant (fire hydrant)\", partia mięśniowa \"Pośladki (mięsień pośladkowy średni), biodra\", oraz jedna wskazówka bezpieczeństwa: \"Nie przekręcaj tułowia za nogą — ruch wychodzi tylko z biodra. Napięty brzuch chroni dolny odcinek pleców.\". Numbered arrows indicating movement direction, dashed alignment guide lines on knees/spine, no spelling errors, high contrast, flat illustration style, no photorealism, inclusive and body-positive character design.",
+    "videoPrompt": "10-15 second instructional fitness demo video, static camera, side angle, a calm plus-size adult performing \"fire hydrant\" with correct form on a non-slip mat in a bright home setting, slow, controlled tempo with a brief pause at the point of peak muscle contraction, subtle on-screen Polish captions fade in: \"Hydrant (fire hydrant)\", \"Pośladki (mięsień pośladkowy średni), biodra\", and safety cue \"Nie przekręcaj tułowia za nogą — ruch wychodzi tylko z biodra. Napięty brzuch chroni dolny odcinek pleców.\", soft ambient background music, seamless loop, photorealistic, steady well-lit shot, encouraging non-judgmental tone suitable for beginners with a larger body size."
+  },
+  {
+    "code": "C15",
+    "name": "Superman (unoszenie leżąc na brzuchu)",
+    "group": "C",
+    "muscle": "Prostowniki grzbietu, pośladki, tylna taśma mięśniowa",
+    "enName": "superman back extension",
+    "steps": [
+      "Połóż się na brzuchu, ręce wyciągnięte w przód, nogi wyprostowane.",
+      "Jednocześnie unieś ręce, klatkę i nogi kilka centymetrów nad podłogę.",
+      "Zatrzymaj się na 1-2 sekundy, patrząc w podłogę — szyja w przedłużeniu kręgosłupa.",
+      "Opuść wszystko kontrolowanie i powtórz."
+    ],
+    "safety": "Unoś tylko na tyle, by poczuć pracę pleców i pośladków, bez gwałtownego wyginania. Wariant łatwiejszy: unoś naprzemiennie rękę i przeciwną nogę. Ostrożnie przy bólu dolnego odcinka pleców.",
+    "reps": {
+      "faza1": "2 × 8",
+      "faza2": "3 × 10",
+      "faza3": "3 × 10 z przytrzymaniem 2 s",
+      "faza4": "3 × 12-15"
+    },
+    "infographicPrompt": "Clean flat-vector fitness infographic, square format, showing a friendly plus-size adult demonstrating \"superman back extension\" in 3 sequential steps (start position, mid-movement, end position), side angle, minimalist home-gym background, soft blue-and-white color palette, bold sans-serif captions in Polish labeling: nazwa ćwiczenia \"Superman (unoszenie leżąc na brzuchu)\", partia mięśniowa \"Prostowniki grzbietu, pośladki, tylna taśma mięśniowa\", oraz jedna wskazówka bezpieczeństwa: \"Unoś tylko na tyle, by poczuć pracę pleców i pośladków, bez gwałtownego wyginania. Wariant łatwiejszy: unoś naprzemiennie rękę i przeciwną nogę. Ostrożnie przy bólu dolnego odcinka pleców.\". Numbered arrows indicating movement direction, dashed alignment guide lines on knees/spine, no spelling errors, high contrast, flat illustration style, no photorealism, inclusive and body-positive character design.",
+    "videoPrompt": "10-15 second instructional fitness demo video, static camera, side angle, a calm plus-size adult performing \"superman back extension\" with correct form on a non-slip mat in a bright home setting, slow, controlled tempo with a brief pause at the point of peak muscle contraction, subtle on-screen Polish captions fade in: \"Superman (unoszenie leżąc na brzuchu)\", \"Prostowniki grzbietu, pośladki, tylna taśma mięśniowa\", and safety cue \"Unoś tylko na tyle, by poczuć pracę pleców i pośladków, bez gwałtownego wyginania. Wariant łatwiejszy: unoś naprzemiennie rękę i przeciwną nogę. Ostrożnie przy bólu dolnego odcinka pleców.\", soft ambient background music, seamless loop, photorealistic, steady well-lit shot, encouraging non-judgmental tone suitable for beginners with a larger body size."
+  },
+  {
+    "code": "C16",
+    "name": "Pompka szczupakowa (pike push-up)",
+    "group": "C",
+    "muscle": "Barki, górna część klatki, triceps",
+    "enName": "pike push-up",
+    "steps": [
+      "Z pozycji deski przejdź w „daszek\": biodra wysoko, ręce i nogi proste, ciało w kształcie odwróconego V.",
+      "Uginając łokcie, opuść czubek głowy w stronę podłogi między dłońmi.",
+      "Wypchnij się z powrotem do pozycji daszka.",
+      "Wariant łatwiejszy: dłonie oparte na blacie lub na siedzisku krzesła."
+    ],
+    "safety": "Im bliżej stopy przy dłoniach, tym więcej ciężaru na barkach — zacznij od wersji z rękami na podwyższeniu. Nie zjeżdżaj głową gwałtownie. Pomiń przy bólu barku lub nadgarstków.",
+    "reps": {
+      "faza1": "2 × 5",
+      "faza2": "3 × 6",
+      "faza3": "3 × 8",
+      "faza4": "3 × 8-10"
+    },
+    "infographicPrompt": "Clean flat-vector fitness infographic, square format, showing a friendly plus-size adult demonstrating \"pike push-up\" in 3 sequential steps (start position, mid-movement, end position), side angle, minimalist home-gym background, soft blue-and-white color palette, bold sans-serif captions in Polish labeling: nazwa ćwiczenia \"Pompka szczupakowa (pike push-up)\", partia mięśniowa \"Barki, górna część klatki, triceps\", oraz jedna wskazówka bezpieczeństwa: \"Im bliżej stopy przy dłoniach, tym więcej ciężaru na barkach — zacznij od wersji z rękami na podwyższeniu. Nie zjeżdżaj głową gwałtownie. Pomiń przy bólu barku lub nadgarstków.\". Numbered arrows indicating movement direction, dashed alignment guide lines on knees/spine, no spelling errors, high contrast, flat illustration style, no photorealism, inclusive and body-positive character design.",
+    "videoPrompt": "10-15 second instructional fitness demo video, static camera, side angle, a calm plus-size adult performing \"pike push-up\" with correct form on a non-slip mat in a bright home setting, slow, controlled tempo with a brief pause at the point of peak muscle contraction, subtle on-screen Polish captions fade in: \"Pompka szczupakowa (pike push-up)\", \"Barki, górna część klatki, triceps\", and safety cue \"Im bliżej stopy przy dłoniach, tym więcej ciężaru na barkach — zacznij od wersji z rękami na podwyższeniu. Nie zjeżdżaj głową gwałtownie. Pomiń przy bólu barku lub nadgarstków.\", soft ambient background music, seamless loop, photorealistic, steady well-lit shot, encouraging non-judgmental tone suitable for beginners with a larger body size."
+  },
+  {
+    "code": "D6",
+    "name": "Koci grzbiet (cat-cow)",
+    "group": "D",
+    "muscle": "Mobilność kręgosłupa, rozluźnienie pleców",
+    "enName": "cat-cow spinal mobilization",
+    "steps": [
+      "Uklęknij podparta na czworakach: dłonie pod barkami, kolana pod biodrami.",
+      "Z wydechem zaokrąglij plecy w górę, chowając brodę do klatki (koci grzbiet).",
+      "Z wdechem delikatnie ugnij plecy, unosząc klatkę i wzrok (pozycja krowy).",
+      "Płynnie przechodź między pozycjami w rytmie oddechu."
+    ],
+    "safety": "Ruch powolny, prowadzony oddechem, do wygodnego zakresu — nigdy do bólu. Świetne na rozgrzewkę i na rozluźnienie po treningu.",
+    "reps": {
+      "faza1": "2 min",
+      "faza2": "2 min",
+      "faza3": "2-3 min",
+      "faza4": "3 min"
+    },
+    "infographicPrompt": "Clean flat-vector fitness infographic, square format, showing a friendly plus-size adult demonstrating \"cat-cow spinal mobilization\" in 3 sequential steps (start position, mid-movement, end position), side angle, minimalist home-gym background, soft blue-and-white color palette, bold sans-serif captions in Polish labeling: nazwa ćwiczenia \"Koci grzbiet (cat-cow)\", partia mięśniowa \"Mobilność kręgosłupa, rozluźnienie pleców\", oraz jedna wskazówka bezpieczeństwa: \"Ruch powolny, prowadzony oddechem, do wygodnego zakresu — nigdy do bólu. Świetne na rozgrzewkę i na rozluźnienie po treningu.\". Numbered arrows indicating movement direction, dashed alignment guide lines on knees/spine, no spelling errors, high contrast, flat illustration style, no photorealism, inclusive and body-positive character design.",
+    "videoPrompt": "10-15 second instructional fitness demo video, static camera, side angle, a calm plus-size adult performing \"cat-cow spinal mobilization\" with correct form on a non-slip mat in a bright home setting, slow flowing tempo, moving with the breath and holding each position for several calm breaths, subtle on-screen Polish captions fade in: \"Koci grzbiet (cat-cow)\", \"Mobilność kręgosłupa, rozluźnienie pleców\", and safety cue \"Ruch powolny, prowadzony oddechem, do wygodnego zakresu — nigdy do bólu. Świetne na rozgrzewkę i na rozluźnienie po treningu.\", soft ambient background music, seamless loop, photorealistic, steady well-lit shot, encouraging non-judgmental tone suitable for beginners with a larger body size."
+  },
+  {
+    "code": "D7",
+    "name": "Pozycja dziecka (child's pose)",
+    "group": "D",
+    "muscle": "Rozciąganie pleców, bioder i barków, regeneracja",
+    "enName": "child's pose resting stretch",
+    "steps": [
+      "Uklęknij na macie, duże palce stóp złącz, kolana rozstaw na szerokość bioder.",
+      "Usiądź biodrami na piętach i połóż tułów między udami.",
+      "Wyciągnij ręce daleko w przód, opierając czoło o matę.",
+      "Oddychaj spokojnie w brzuch, z każdym wydechem bardziej się rozluźniając."
+    ],
+    "safety": "Jeśli siad na piętach jest niewygodny, podłóż poduszkę pod pośladki lub pod czoło. Przy bólu kolan wykonuj wersję na plecach, przyciągając kolana do klatki.",
+    "reps": {
+      "faza1": "1-2 min",
+      "faza2": "1-2 min",
+      "faza3": "2 min",
+      "faza4": "2-3 min"
+    },
+    "infographicPrompt": "Clean flat-vector fitness infographic, square format, showing a friendly plus-size adult demonstrating \"child's pose resting stretch\" in 3 sequential steps (start position, mid-movement, end position), side angle, minimalist home-gym background, soft blue-and-white color palette, bold sans-serif captions in Polish labeling: nazwa ćwiczenia \"Pozycja dziecka (child's pose)\", partia mięśniowa \"Rozciąganie pleców, bioder i barków, regeneracja\", oraz jedna wskazówka bezpieczeństwa: \"Jeśli siad na piętach jest niewygodny, podłóż poduszkę pod pośladki lub pod czoło. Przy bólu kolan wykonuj wersję na plecach, przyciągając kolana do klatki.\". Numbered arrows indicating movement direction, dashed alignment guide lines on knees/spine, no spelling errors, high contrast, flat illustration style, no photorealism, inclusive and body-positive character design.",
+    "videoPrompt": "10-15 second instructional fitness demo video, static camera, side angle, a calm plus-size adult performing \"child's pose resting stretch\" with correct form on a non-slip mat in a bright home setting, slow flowing tempo, moving with the breath and holding each position for several calm breaths, subtle on-screen Polish captions fade in: \"Pozycja dziecka (child's pose)\", \"Rozciąganie pleców, bioder i barków, regeneracja\", and safety cue \"Jeśli siad na piętach jest niewygodny, podłóż poduszkę pod pośladki lub pod czoło. Przy bólu kolan wykonuj wersję na plecach, przyciągając kolana do klatki.\", soft ambient background music, seamless loop, photorealistic, steady well-lit shot, encouraging non-judgmental tone suitable for beginners with a larger body size."
   }
 ]

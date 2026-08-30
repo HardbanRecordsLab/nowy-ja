@@ -212,3 +212,77 @@ Nazwy plików: `E1.png` / `E1.mp4`, `E2.png` / `E2.mp4`, ... — dokładnie ten 
 - [Opona – zastosowanie w treningu — PoTreningu.pl](https://potreningu.pl/artykuly/poprawa-kondycji/opona-zastosowanie-w-treningu-5465)
 - [Fitness z oponami samochodowymi — Semperit](https://www.semperit.com/pl/pl/car/tyre-knowledge/fitness-with-car-tyres/)
 - [Tire Workouts: The Best Exercises — Healthline](https://www.healthline.com/health/fitness/tire-workouts)
+
+
+---
+
+## 5. Batch 2 — popularne ćwiczenia, których nam brakowało (2026-08-30)
+
+**Status: wpięte do `exercises.json` (69 ćwiczeń łącznie) i do biblioteki.**
+Brakuje tylko plików `assets/exercises/<KOD>.mp4` / `.png` — do pobrania z darmowych
+banków (patrz niżej) albo wygenerowania z promptów AI (każde ćwiczenie ma je na
+stronie ćwiczenia). Jak plik trafi do `assets/exercises/`, aplikacja podłącza go
+automatycznie — ta sama logika co dla A1–E11.
+
+Zasada bez zmian: **60-dniowy program (cykl A→B→C→D→E→F→R, 4 fazy) się nie rusza.**
+Nowe ćwiczenia to biblioteka + opcje "Zamień" w trybie treningu + nowy filtr
+**Cardio** (grupa G — jak grupa E, poza rdzeniem programu).
+
+### Co uzupełniają
+
+- **Grupa G — Cardio / spalanie (bez sprzętu)** — realna luka: dotąd jedyne
+  "kardio" to bardzo łagodne D1/D4. G daje pełny zakres: od wersji o niskim
+  wpływie na stawy (G2, G4-marsz) po plyometrię dla chętnych (G6, G7).
+- **Plecy / ciągnięcie (grupa C)** — C15 Superman i C16 pompka szczupakowa
+  równoważą nadmiar "pchania" w grupie C (dotąd zero pracy prostowników grzbietu
+  poza C11/C13).
+- **Klasyki, które "każdy zna", a ich nie było**: rowerek, ptak-pies, deska
+  z klepnięciem barku, wykrok w tył, przysiad bułgarski, hydrant, koci grzbiet,
+  pozycja dziecka.
+
+### Tabela — kod, nazwa, hasło do wyszukania wideo (EN)
+
+| Kod | Nazwa | Grupa | Hasło EN (do banków wideo/zdjęć) |
+|-----|-------|-------|--------------------------------|
+| G1 | Pajacyki (jumping jacks) | Cardio | jumping jacks |
+| G2 | Pajacyki bez wyskoku (step jacks) | Cardio | low-impact step jacks |
+| G3 | Wspinaczka górska (mountain climbers) | Cardio | mountain climbers |
+| G4 | Bieg z wysokim unoszeniem kolan (high knees) | Cardio | high knees run in place |
+| G5 | Burpee bez wyskoku (walk-out burpee) | Cardio | step-back burpee without jump |
+| G6 | Przysiad z wyskokiem (jump squats) | Cardio | jump squats |
+| G7 | Łyżwiarz (skater hops) | Cardio | lateral skater hops |
+| A10 | Rowerek (bicycle crunch) | Brzuch/Biodra | bicycle crunch |
+| A11 | Ptak-pies (bird-dog) | Brzuch/Biodra | bird-dog exercise |
+| A12 | Deska z klepnięciem barku (plank shoulder taps) | Brzuch/Biodra | plank shoulder taps |
+| B14 | Wykrok w tył (reverse lunge) | Uda/Pośladki | reverse lunge |
+| B15 | Przysiad bułgarski przy krześle (Bulgarian split squat) | Uda/Pośladki | bulgarian split squat |
+| B16 | Hydrant (fire hydrant) | Uda/Pośladki | fire hydrant exercise |
+| C15 | Superman (leżąc na brzuchu) | Plecy/Ramiona | superman exercise back |
+| C16 | Pompka szczupakowa (pike push-up) | Barki/Klatka | pike push up |
+| D6 | Koci grzbiet (cat-cow) | Mobilność | cat cow stretch |
+| D7 | Pozycja dziecka (child's pose) | Mobilność | child's pose yoga |
+
+### Gdzie brać darmowe wideo/zdjęcia (royalty-free, użycie komercyjne, bez atrybucji)
+
+Na stronie każdego ćwiczenia (sekcja "Media ćwiczenia") są gotowe linki
+wyszukiwania dla tych źródeł, podstawione pod angielskie hasło ćwiczenia:
+
+| Serwis | Licencja | Uwagi |
+|--------|----------|-------|
+| **Pexels** (pexels.com/videos) | Pexels License — wolno komercyjnie, bez atrybucji, bez zgody modela wymaganej do publikacji | Największy wybór klipów "workout / exercise", 1080p+; też zdjęcia |
+| **Pixabay** (pixabay.com/videos) | Pixabay Content License — jw. | Sporo krótkich pętli ćwiczeń; jakość różna |
+| **Mixkit** (mixkit.co/free-stock-video) | Mixkit License — wolno komercyjnie, bez atrybucji; nie wolno redystrybuować samego klipu | Kategoria "Sport & Fitness", schludne ujęcia |
+| **Coverr** (coverr.co) | wolno komercyjnie, bez atrybucji | Mniej fitnessu, ale bywają trafienia |
+| **wger.de** (open-source baza ćwiczeń) | zdjęcia/wideo współdzielone na licencjach wolnych (CC) — sprawdzić przy konkretnym pliku | Wpisy po nazwie ćwiczenia; dobre jako źródło grafik ruchu |
+
+**Zasady doboru pod nasz styl:**
+- ujęcie statyczne, jedna osoba, cały ruch w kadrze, 5–15 s, najlepiej pętla;
+- neutralne, jasne tło (dom / studio), bez napisów i logo w klipie;
+- jak w promptach: mile widziana różnorodność sylwetek (body-positive), ale to
+  „mile widziane", nie twardy wymóg dla stocku;
+- format pionowy lub kwadratowy pasuje najlepiej do slotu w aplikacji (kadr
+  `object-fit: cover`), ale poziomy też zadziała.
+
+**Pobrany plik nazwij `<KOD>.mp4` (wideo) lub `<KOD>.png` (obraz/klatka)** i wrzuć
+do `assets/exercises/`. Nic więcej — fallback w aplikacji sam go wykryje.
+
