@@ -1996,5 +1996,971 @@
     },
     "infographicPrompt": "Clean flat-vector fitness infographic, square format, showing a friendly plus-size adult demonstrating \"frog hops squat jump forward\" in 3 sequential steps (start position, mid-movement, end position), side angle, minimalist home-gym background, soft blue-and-white color palette, bold sans-serif captions in Polish labeling: nazwa ćwiczenia \"Żabie podskoki (frog hops)\", partia mięśniowa \"Uda, pośladki, łydki, kardio\", oraz jedna wskazówka bezpieczeństwa: \"Wymaga miejsca i sprawnych kolan. Ląduj miękko, kolana nad palcami. Przy dolegliwościach kolan lub dużej masie ciała zostań przy zwykłym przysiadzie.\". Numbered arrows indicating movement direction, dashed alignment guide lines on knees/spine, no spelling errors, high contrast, flat illustration style, no photorealism, inclusive and body-positive character design.",
     "videoPrompt": "10-15 second instructional fitness demo video, static camera, side angle, a calm plus-size adult performing \"frog hops squat jump forward\" with correct form on a non-slip mat in a bright home setting, slow controlled tempo, subtle on-screen Polish captions fade in: \"Żabie podskoki (frog hops)\", \"Uda, pośladki, łydki, kardio\", and safety cue \"Wymaga miejsca i sprawnych kolan. Ląduj miękko, kolana nad palcami. Przy dolegliwościach kolan lub dużej masie ciała zostań przy zwykłym przysiadzie.\", soft ambient background music, seamless loop, photorealistic, steady well-lit shot, encouraging non-judgmental tone suitable for beginners with a larger body size."
+  },
+  {
+    "code": "A21",
+    "name": "Skręt łokieć-kolano stojąc",
+    "group": "A",
+    "muscle": "Brzuch",
+    "enName": "standing elbow to knee",
+    "level": "beginner",
+    "steps": [
+      "Ustaw się w pozycji startowej (grafika 1).",
+      "Wykonaj ruch kontrolowanie do pozycji końcowej (grafika 2), napinając brzuch.",
+      "Wróć powoli do startu — bez rozpędu i szarpania.",
+      "Oddychaj: wydech przy wysiłku, wdech przy powrocie."
+    ],
+    "safety": "Ruch kontrolowany, w pełnym, ale bezbolesnym zakresie. Kręgosłup neutralny, brzuch lekko napięty. Zmniejsz zakres lub liczbę powtórzeń, jeśli czujesz dyskomfort w stawach.",
+    "reps": {
+      "faza1": "2 × 10",
+      "faza2": "3 × 12",
+      "faza3": "3 × 15",
+      "faza4": "3-4 × 15-20"
+    },
+    "infographicPrompt": "Clean flat-vector fitness infographic, square format, showing a friendly plus-size adult demonstrating \"standing elbow to knee\" in 3 sequential steps, minimalist home-gym background, soft blue-and-white palette, bold Polish captions: nazwa ćwiczenia \"Skręt łokieć-kolano stojąc\", partia mięśniowa \"Brzuch\", wskazówka bezpieczeństwa: \"Ruch kontrolowany, w pełnym, ale bezbolesnym zakresie. Kręgosłup neutralny, brzuch lekko napięty. Zmniejsz zakres lub liczbę powtórzeń, jeśli czujesz dyskomfort w stawach.\". Numbered arrows, dashed alignment guides, flat illustration, no photorealism, inclusive body-positive design.",
+    "videoPrompt": "10-15 second instructional fitness demo video, static camera, a calm plus-size adult performing \"standing elbow to knee\" with correct form in a bright home setting, slow controlled tempo, Polish captions \"Skręt łokieć-kolano stojąc\", \"Brzuch\", safety cue \"Ruch kontrolowany, w pełnym, ale bezbolesnym zakresie. Kręgosłup neutralny, brzuch lekko napięty. Zmniejsz zakres lub liczbę powtórzeń, jeśli czujesz dyskomfort w stawach.\", soft music, seamless loop, photorealistic, encouraging non-judgmental tone."
+  },
+  {
+    "code": "A22",
+    "name": "Przyciąganie kolan leżąc (leg pull-in)",
+    "group": "A",
+    "muscle": "Brzuch",
+    "enName": "lying leg pull-in",
+    "level": "beginner",
+    "steps": [
+      "Ustaw się w pozycji startowej (grafika 1).",
+      "Wykonaj ruch kontrolowanie do pozycji końcowej (grafika 2), napinając brzuch.",
+      "Wróć powoli do startu — bez rozpędu i szarpania.",
+      "Oddychaj: wydech przy wysiłku, wdech przy powrocie."
+    ],
+    "safety": "Ruch kontrolowany, w pełnym, ale bezbolesnym zakresie. Kręgosłup neutralny, brzuch lekko napięty. Zmniejsz zakres lub liczbę powtórzeń, jeśli czujesz dyskomfort w stawach.",
+    "reps": {
+      "faza1": "2 × 10",
+      "faza2": "3 × 12",
+      "faza3": "3 × 15",
+      "faza4": "3-4 × 15-20"
+    },
+    "infographicPrompt": "Clean flat-vector fitness infographic, square format, showing a friendly plus-size adult demonstrating \"lying leg pull-in\" in 3 sequential steps, minimalist home-gym background, soft blue-and-white palette, bold Polish captions: nazwa ćwiczenia \"Przyciąganie kolan leżąc (leg pull-in)\", partia mięśniowa \"Brzuch\", wskazówka bezpieczeństwa: \"Ruch kontrolowany, w pełnym, ale bezbolesnym zakresie. Kręgosłup neutralny, brzuch lekko napięty. Zmniejsz zakres lub liczbę powtórzeń, jeśli czujesz dyskomfort w stawach.\". Numbered arrows, dashed alignment guides, flat illustration, no photorealism, inclusive body-positive design.",
+    "videoPrompt": "10-15 second instructional fitness demo video, static camera, a calm plus-size adult performing \"lying leg pull-in\" with correct form in a bright home setting, slow controlled tempo, Polish captions \"Przyciąganie kolan leżąc (leg pull-in)\", \"Brzuch\", safety cue \"Ruch kontrolowany, w pełnym, ale bezbolesnym zakresie. Kręgosłup neutralny, brzuch lekko napięty. Zmniejsz zakres lub liczbę powtórzeń, jeśli czujesz dyskomfort w stawach.\", soft music, seamless loop, photorealistic, encouraging non-judgmental tone."
+  },
+  {
+    "code": "A23",
+    "name": "Skłony skośne w bok leżąc",
+    "group": "A",
+    "muscle": "Brzuch",
+    "enName": "oblique crunch on the floor",
+    "level": "beginner",
+    "steps": [
+      "Ustaw się w pozycji startowej (grafika 1).",
+      "Wykonaj ruch kontrolowanie do pozycji końcowej (grafika 2), napinając brzuch.",
+      "Wróć powoli do startu — bez rozpędu i szarpania.",
+      "Oddychaj: wydech przy wysiłku, wdech przy powrocie."
+    ],
+    "safety": "Ruch kontrolowany, w pełnym, ale bezbolesnym zakresie. Kręgosłup neutralny, brzuch lekko napięty. Zmniejsz zakres lub liczbę powtórzeń, jeśli czujesz dyskomfort w stawach.",
+    "reps": {
+      "faza1": "2 × 10",
+      "faza2": "3 × 12",
+      "faza3": "3 × 15",
+      "faza4": "3-4 × 15-20"
+    },
+    "infographicPrompt": "Clean flat-vector fitness infographic, square format, showing a friendly plus-size adult demonstrating \"oblique crunch on the floor\" in 3 sequential steps, minimalist home-gym background, soft blue-and-white palette, bold Polish captions: nazwa ćwiczenia \"Skłony skośne w bok leżąc\", partia mięśniowa \"Brzuch\", wskazówka bezpieczeństwa: \"Ruch kontrolowany, w pełnym, ale bezbolesnym zakresie. Kręgosłup neutralny, brzuch lekko napięty. Zmniejsz zakres lub liczbę powtórzeń, jeśli czujesz dyskomfort w stawach.\". Numbered arrows, dashed alignment guides, flat illustration, no photorealism, inclusive body-positive design.",
+    "videoPrompt": "10-15 second instructional fitness demo video, static camera, a calm plus-size adult performing \"oblique crunch on the floor\" with correct form in a bright home setting, slow controlled tempo, Polish captions \"Skłony skośne w bok leżąc\", \"Brzuch\", safety cue \"Ruch kontrolowany, w pełnym, ale bezbolesnym zakresie. Kręgosłup neutralny, brzuch lekko napięty. Zmniejsz zakres lub liczbę powtórzeń, jeśli czujesz dyskomfort w stawach.\", soft music, seamless loop, photorealistic, encouraging non-judgmental tone."
+  },
+  {
+    "code": "A24",
+    "name": "Brzuszek z podkurczonymi nogami (tuck crunch)",
+    "group": "A",
+    "muscle": "Brzuch",
+    "enName": "tuck crunch",
+    "level": "beginner",
+    "steps": [
+      "Ustaw się w pozycji startowej (grafika 1).",
+      "Wykonaj ruch kontrolowanie do pozycji końcowej (grafika 2), napinając brzuch.",
+      "Wróć powoli do startu — bez rozpędu i szarpania.",
+      "Oddychaj: wydech przy wysiłku, wdech przy powrocie."
+    ],
+    "safety": "Ruch kontrolowany, w pełnym, ale bezbolesnym zakresie. Kręgosłup neutralny, brzuch lekko napięty. Zmniejsz zakres lub liczbę powtórzeń, jeśli czujesz dyskomfort w stawach.",
+    "reps": {
+      "faza1": "2 × 10",
+      "faza2": "3 × 12",
+      "faza3": "3 × 15",
+      "faza4": "3-4 × 15-20"
+    },
+    "infographicPrompt": "Clean flat-vector fitness infographic, square format, showing a friendly plus-size adult demonstrating \"tuck crunch\" in 3 sequential steps, minimalist home-gym background, soft blue-and-white palette, bold Polish captions: nazwa ćwiczenia \"Brzuszek z podkurczonymi nogami (tuck crunch)\", partia mięśniowa \"Brzuch\", wskazówka bezpieczeństwa: \"Ruch kontrolowany, w pełnym, ale bezbolesnym zakresie. Kręgosłup neutralny, brzuch lekko napięty. Zmniejsz zakres lub liczbę powtórzeń, jeśli czujesz dyskomfort w stawach.\". Numbered arrows, dashed alignment guides, flat illustration, no photorealism, inclusive body-positive design.",
+    "videoPrompt": "10-15 second instructional fitness demo video, static camera, a calm plus-size adult performing \"tuck crunch\" with correct form in a bright home setting, slow controlled tempo, Polish captions \"Brzuszek z podkurczonymi nogami (tuck crunch)\", \"Brzuch\", safety cue \"Ruch kontrolowany, w pełnym, ale bezbolesnym zakresie. Kręgosłup neutralny, brzuch lekko napięty. Zmniejsz zakres lub liczbę powtórzeń, jeśli czujesz dyskomfort w stawach.\", soft music, seamless loop, photorealistic, encouraging non-judgmental tone."
+  },
+  {
+    "code": "A25",
+    "name": "Zwijanie ciała (cocoons)",
+    "group": "A",
+    "muscle": "Brzuch",
+    "enName": "cocoons",
+    "level": "beginner",
+    "steps": [
+      "Ustaw się w pozycji startowej (grafika 1).",
+      "Wykonaj ruch kontrolowanie do pozycji końcowej (grafika 2), napinając brzuch.",
+      "Wróć powoli do startu — bez rozpędu i szarpania.",
+      "Oddychaj: wydech przy wysiłku, wdech przy powrocie."
+    ],
+    "safety": "Ruch kontrolowany, w pełnym, ale bezbolesnym zakresie. Kręgosłup neutralny, brzuch lekko napięty. Zmniejsz zakres lub liczbę powtórzeń, jeśli czujesz dyskomfort w stawach.",
+    "reps": {
+      "faza1": "2 × 10",
+      "faza2": "3 × 12",
+      "faza3": "3 × 15",
+      "faza4": "3-4 × 15-20"
+    },
+    "infographicPrompt": "Clean flat-vector fitness infographic, square format, showing a friendly plus-size adult demonstrating \"cocoons\" in 3 sequential steps, minimalist home-gym background, soft blue-and-white palette, bold Polish captions: nazwa ćwiczenia \"Zwijanie ciała (cocoons)\", partia mięśniowa \"Brzuch\", wskazówka bezpieczeństwa: \"Ruch kontrolowany, w pełnym, ale bezbolesnym zakresie. Kręgosłup neutralny, brzuch lekko napięty. Zmniejsz zakres lub liczbę powtórzeń, jeśli czujesz dyskomfort w stawach.\". Numbered arrows, dashed alignment guides, flat illustration, no photorealism, inclusive body-positive design.",
+    "videoPrompt": "10-15 second instructional fitness demo video, static camera, a calm plus-size adult performing \"cocoons\" with correct form in a bright home setting, slow controlled tempo, Polish captions \"Zwijanie ciała (cocoons)\", \"Brzuch\", safety cue \"Ruch kontrolowany, w pełnym, ale bezbolesnym zakresie. Kręgosłup neutralny, brzuch lekko napięty. Zmniejsz zakres lub liczbę powtórzeń, jeśli czujesz dyskomfort w stawach.\", soft music, seamless loop, photorealistic, encouraging non-judgmental tone."
+  },
+  {
+    "code": "A26",
+    "name": "Scyzoryk bokiem (side jackknife)",
+    "group": "A",
+    "muscle": "Brzuch",
+    "enName": "side jackknife",
+    "level": "beginner",
+    "steps": [
+      "Ustaw się w pozycji startowej (grafika 1).",
+      "Wykonaj ruch kontrolowanie do pozycji końcowej (grafika 2), napinając brzuch.",
+      "Wróć powoli do startu — bez rozpędu i szarpania.",
+      "Oddychaj: wydech przy wysiłku, wdech przy powrocie."
+    ],
+    "safety": "Ruch kontrolowany, w pełnym, ale bezbolesnym zakresie. Kręgosłup neutralny, brzuch lekko napięty. Zmniejsz zakres lub liczbę powtórzeń, jeśli czujesz dyskomfort w stawach.",
+    "reps": {
+      "faza1": "2 × 10",
+      "faza2": "3 × 12",
+      "faza3": "3 × 15",
+      "faza4": "3-4 × 15-20"
+    },
+    "infographicPrompt": "Clean flat-vector fitness infographic, square format, showing a friendly plus-size adult demonstrating \"side jackknife\" in 3 sequential steps, minimalist home-gym background, soft blue-and-white palette, bold Polish captions: nazwa ćwiczenia \"Scyzoryk bokiem (side jackknife)\", partia mięśniowa \"Brzuch\", wskazówka bezpieczeństwa: \"Ruch kontrolowany, w pełnym, ale bezbolesnym zakresie. Kręgosłup neutralny, brzuch lekko napięty. Zmniejsz zakres lub liczbę powtórzeń, jeśli czujesz dyskomfort w stawach.\". Numbered arrows, dashed alignment guides, flat illustration, no photorealism, inclusive body-positive design.",
+    "videoPrompt": "10-15 second instructional fitness demo video, static camera, a calm plus-size adult performing \"side jackknife\" with correct form in a bright home setting, slow controlled tempo, Polish captions \"Scyzoryk bokiem (side jackknife)\", \"Brzuch\", safety cue \"Ruch kontrolowany, w pełnym, ale bezbolesnym zakresie. Kręgosłup neutralny, brzuch lekko napięty. Zmniejsz zakres lub liczbę powtórzeń, jeśli czujesz dyskomfort w stawach.\", soft music, seamless loop, photorealistic, encouraging non-judgmental tone."
+  },
+  {
+    "code": "A27",
+    "name": "Brzuszek z nogami w pozycji żaby",
+    "group": "A",
+    "muscle": "Brzuch",
+    "enName": "frog sit-up",
+    "level": "intermediate",
+    "steps": [
+      "Ustaw się w pozycji startowej (grafika 1).",
+      "Wykonaj ruch kontrolowanie do pozycji końcowej (grafika 2), napinając brzuch.",
+      "Wróć powoli do startu — bez rozpędu i szarpania.",
+      "Oddychaj: wydech przy wysiłku, wdech przy powrocie."
+    ],
+    "safety": "Ruch kontrolowany, w pełnym, ale bezbolesnym zakresie. Kręgosłup neutralny, brzuch lekko napięty. Zmniejsz zakres lub liczbę powtórzeń, jeśli czujesz dyskomfort w stawach.",
+    "reps": {
+      "faza1": "2 × 8",
+      "faza2": "3 × 10",
+      "faza3": "3 × 12",
+      "faza4": "3-4 × 15"
+    },
+    "infographicPrompt": "Clean flat-vector fitness infographic, square format, showing a friendly plus-size adult demonstrating \"frog sit-up\" in 3 sequential steps, minimalist home-gym background, soft blue-and-white palette, bold Polish captions: nazwa ćwiczenia \"Brzuszek z nogami w pozycji żaby\", partia mięśniowa \"Brzuch\", wskazówka bezpieczeństwa: \"Ruch kontrolowany, w pełnym, ale bezbolesnym zakresie. Kręgosłup neutralny, brzuch lekko napięty. Zmniejsz zakres lub liczbę powtórzeń, jeśli czujesz dyskomfort w stawach.\". Numbered arrows, dashed alignment guides, flat illustration, no photorealism, inclusive body-positive design.",
+    "videoPrompt": "10-15 second instructional fitness demo video, static camera, a calm plus-size adult performing \"frog sit-up\" with correct form in a bright home setting, slow controlled tempo, Polish captions \"Brzuszek z nogami w pozycji żaby\", \"Brzuch\", safety cue \"Ruch kontrolowany, w pełnym, ale bezbolesnym zakresie. Kręgosłup neutralny, brzuch lekko napięty. Zmniejsz zakres lub liczbę powtórzeń, jeśli czujesz dyskomfort w stawach.\", soft music, seamless loop, photorealistic, encouraging non-judgmental tone."
+  },
+  {
+    "code": "A28",
+    "name": "Deska z uniesieniem bioder (butt-ups)",
+    "group": "A",
+    "muscle": "Brzuch",
+    "enName": "forearm plank hip pike",
+    "level": "beginner",
+    "steps": [
+      "Ustaw się w pozycji startowej (grafika 1).",
+      "Wykonaj ruch kontrolowanie do pozycji końcowej (grafika 2), napinając brzuch.",
+      "Wróć powoli do startu — bez rozpędu i szarpania.",
+      "Oddychaj: wydech przy wysiłku, wdech przy powrocie."
+    ],
+    "safety": "Ruch kontrolowany, w pełnym, ale bezbolesnym zakresie. Kręgosłup neutralny, brzuch lekko napięty. Zmniejsz zakres lub liczbę powtórzeń, jeśli czujesz dyskomfort w stawach.",
+    "reps": {
+      "faza1": "2 × 10",
+      "faza2": "3 × 12",
+      "faza3": "3 × 15",
+      "faza4": "3-4 × 15-20"
+    },
+    "infographicPrompt": "Clean flat-vector fitness infographic, square format, showing a friendly plus-size adult demonstrating \"forearm plank hip pike\" in 3 sequential steps, minimalist home-gym background, soft blue-and-white palette, bold Polish captions: nazwa ćwiczenia \"Deska z uniesieniem bioder (butt-ups)\", partia mięśniowa \"Brzuch\", wskazówka bezpieczeństwa: \"Ruch kontrolowany, w pełnym, ale bezbolesnym zakresie. Kręgosłup neutralny, brzuch lekko napięty. Zmniejsz zakres lub liczbę powtórzeń, jeśli czujesz dyskomfort w stawach.\". Numbered arrows, dashed alignment guides, flat illustration, no photorealism, inclusive body-positive design.",
+    "videoPrompt": "10-15 second instructional fitness demo video, static camera, a calm plus-size adult performing \"forearm plank hip pike\" with correct form in a bright home setting, slow controlled tempo, Polish captions \"Deska z uniesieniem bioder (butt-ups)\", \"Brzuch\", safety cue \"Ruch kontrolowany, w pełnym, ale bezbolesnym zakresie. Kręgosłup neutralny, brzuch lekko napięty. Zmniejsz zakres lub liczbę powtórzeń, jeśli czujesz dyskomfort w stawach.\", soft music, seamless loop, photorealistic, encouraging non-judgmental tone."
+  },
+  {
+    "code": "B21",
+    "name": "Mostek jednonóż (bez wspomagania)",
+    "group": "B",
+    "muscle": "Pośladki",
+    "enName": "single-leg glute bridge",
+    "level": "beginner",
+    "steps": [
+      "Ustaw się w pozycji startowej (grafika 1).",
+      "Wykonaj ruch kontrolowanie do pozycji końcowej (grafika 2), napinając pośladki.",
+      "Wróć powoli do startu — bez rozpędu i szarpania.",
+      "Oddychaj: wydech przy wysiłku, wdech przy powrocie."
+    ],
+    "safety": "Ruch kontrolowany, w pełnym, ale bezbolesnym zakresie. Kręgosłup neutralny, brzuch lekko napięty. Zmniejsz zakres lub liczbę powtórzeń, jeśli czujesz dyskomfort w stawach.",
+    "reps": {
+      "faza1": "2 × 10",
+      "faza2": "3 × 12",
+      "faza3": "3 × 15",
+      "faza4": "3-4 × 15-20"
+    },
+    "infographicPrompt": "Clean flat-vector fitness infographic, square format, showing a friendly plus-size adult demonstrating \"single-leg glute bridge\" in 3 sequential steps, minimalist home-gym background, soft blue-and-white palette, bold Polish captions: nazwa ćwiczenia \"Mostek jednonóż (bez wspomagania)\", partia mięśniowa \"Pośladki\", wskazówka bezpieczeństwa: \"Ruch kontrolowany, w pełnym, ale bezbolesnym zakresie. Kręgosłup neutralny, brzuch lekko napięty. Zmniejsz zakres lub liczbę powtórzeń, jeśli czujesz dyskomfort w stawach.\". Numbered arrows, dashed alignment guides, flat illustration, no photorealism, inclusive body-positive design.",
+    "videoPrompt": "10-15 second instructional fitness demo video, static camera, a calm plus-size adult performing \"single-leg glute bridge\" with correct form in a bright home setting, slow controlled tempo, Polish captions \"Mostek jednonóż (bez wspomagania)\", \"Pośladki\", safety cue \"Ruch kontrolowany, w pełnym, ale bezbolesnym zakresie. Kręgosłup neutralny, brzuch lekko napięty. Zmniejsz zakres lub liczbę powtórzeń, jeśli czujesz dyskomfort w stawach.\", soft music, seamless loop, photorealistic, encouraging non-judgmental tone."
+  },
+  {
+    "code": "B22",
+    "name": "Przysiad do krzesła (sit squat)",
+    "group": "B",
+    "muscle": "Przód uda",
+    "enName": "sit-to-chair squat",
+    "level": "beginner",
+    "steps": [
+      "Ustaw się w pozycji startowej (grafika 1).",
+      "Wykonaj ruch kontrolowanie do pozycji końcowej (grafika 2), napinając przód uda.",
+      "Wróć powoli do startu — bez rozpędu i szarpania.",
+      "Oddychaj: wydech przy wysiłku, wdech przy powrocie."
+    ],
+    "safety": "Ruch kontrolowany, w pełnym, ale bezbolesnym zakresie. Kręgosłup neutralny, brzuch lekko napięty. Zmniejsz zakres lub liczbę powtórzeń, jeśli czujesz dyskomfort w stawach.",
+    "reps": {
+      "faza1": "2 × 10",
+      "faza2": "3 × 12",
+      "faza3": "3 × 15",
+      "faza4": "3-4 × 15-20"
+    },
+    "infographicPrompt": "Clean flat-vector fitness infographic, square format, showing a friendly plus-size adult demonstrating \"sit-to-chair squat\" in 3 sequential steps, minimalist home-gym background, soft blue-and-white palette, bold Polish captions: nazwa ćwiczenia \"Przysiad do krzesła (sit squat)\", partia mięśniowa \"Przód uda\", wskazówka bezpieczeństwa: \"Ruch kontrolowany, w pełnym, ale bezbolesnym zakresie. Kręgosłup neutralny, brzuch lekko napięty. Zmniejsz zakres lub liczbę powtórzeń, jeśli czujesz dyskomfort w stawach.\". Numbered arrows, dashed alignment guides, flat illustration, no photorealism, inclusive body-positive design.",
+    "videoPrompt": "10-15 second instructional fitness demo video, static camera, a calm plus-size adult performing \"sit-to-chair squat\" with correct form in a bright home setting, slow controlled tempo, Polish captions \"Przysiad do krzesła (sit squat)\", \"Przód uda\", safety cue \"Ruch kontrolowany, w pełnym, ale bezbolesnym zakresie. Kręgosłup neutralny, brzuch lekko napięty. Zmniejsz zakres lub liczbę powtórzeń, jeśli czujesz dyskomfort w stawach.\", soft music, seamless loop, photorealistic, encouraging non-judgmental tone."
+  },
+  {
+    "code": "G11",
+    "name": "Wyskok z podkurczeniem kolan",
+    "group": "G",
+    "muscle": "Przód uda",
+    "enName": "knee tuck jump",
+    "level": "beginner",
+    "steps": [
+      "Ustaw się w pozycji startowej (grafika 1).",
+      "Wykonaj dynamiczny, sprężysty wyskok do pozycji z grafiki 2.",
+      "Ląduj miękko, uginając kolana i amortyzując całą stopą.",
+      "Zachowaj równy rytm; przerwij, gdy tracisz kontrolę nad techniką."
+    ],
+    "safety": "Ćwiczenie wysokiej intensywności — wchodź w nie dopiero, gdy wersje bez wyskoku są bezbolesne. Ląduj miękko, kolana nad palcami. Pomiń przy bólu kolan, bioder lub kręgosłupa oraz przy dużej nadwadze.",
+    "reps": {
+      "faza1": "2 × 8",
+      "faza2": "3 × 10",
+      "faza3": "3 × 12",
+      "faza4": "3-4 × 12-15"
+    },
+    "infographicPrompt": "Clean flat-vector fitness infographic, square format, showing a friendly plus-size adult demonstrating \"knee tuck jump\" in 3 sequential steps, minimalist home-gym background, soft blue-and-white palette, bold Polish captions: nazwa ćwiczenia \"Wyskok z podkurczeniem kolan\", partia mięśniowa \"Przód uda\", wskazówka bezpieczeństwa: \"Ćwiczenie wysokiej intensywności — wchodź w nie dopiero, gdy wersje bez wyskoku są bezbolesne. Ląduj miękko, kolana nad palcami. Pomiń przy bólu kolan, bioder lub kręgosłupa oraz przy dużej nadwadze.\". Numbered arrows, dashed alignment guides, flat illustration, no photorealism, inclusive body-positive design.",
+    "videoPrompt": "10-15 second instructional fitness demo video, static camera, a calm plus-size adult performing \"knee tuck jump\" with correct form in a bright home setting, slow controlled tempo, Polish captions \"Wyskok z podkurczeniem kolan\", \"Przód uda\", safety cue \"Ćwiczenie wysokiej intensywności — wchodź w nie dopiero, gdy wersje bez wyskoku są bezbolesne. Ląduj miękko, kolana nad palcami. Pomiń przy bólu kolan, bioder lub kręgosłupa oraz przy dużej nadwadze.\", soft music, seamless loop, photorealistic, encouraging non-judgmental tone."
+  },
+  {
+    "code": "G12",
+    "name": "Wyskok rakietowy (rocket jump)",
+    "group": "G",
+    "muscle": "Przód uda",
+    "enName": "rocket jump",
+    "level": "beginner",
+    "steps": [
+      "Ustaw się w pozycji startowej (grafika 1).",
+      "Wykonaj dynamiczny, sprężysty wyskok do pozycji z grafiki 2.",
+      "Ląduj miękko, uginając kolana i amortyzując całą stopą.",
+      "Zachowaj równy rytm; przerwij, gdy tracisz kontrolę nad techniką."
+    ],
+    "safety": "Ćwiczenie wysokiej intensywności — wchodź w nie dopiero, gdy wersje bez wyskoku są bezbolesne. Ląduj miękko, kolana nad palcami. Pomiń przy bólu kolan, bioder lub kręgosłupa oraz przy dużej nadwadze.",
+    "reps": {
+      "faza1": "2 × 8",
+      "faza2": "3 × 10",
+      "faza3": "3 × 12",
+      "faza4": "3-4 × 12-15"
+    },
+    "infographicPrompt": "Clean flat-vector fitness infographic, square format, showing a friendly plus-size adult demonstrating \"rocket jump\" in 3 sequential steps, minimalist home-gym background, soft blue-and-white palette, bold Polish captions: nazwa ćwiczenia \"Wyskok rakietowy (rocket jump)\", partia mięśniowa \"Przód uda\", wskazówka bezpieczeństwa: \"Ćwiczenie wysokiej intensywności — wchodź w nie dopiero, gdy wersje bez wyskoku są bezbolesne. Ląduj miękko, kolana nad palcami. Pomiń przy bólu kolan, bioder lub kręgosłupa oraz przy dużej nadwadze.\". Numbered arrows, dashed alignment guides, flat illustration, no photorealism, inclusive body-positive design.",
+    "videoPrompt": "10-15 second instructional fitness demo video, static camera, a calm plus-size adult performing \"rocket jump\" with correct form in a bright home setting, slow controlled tempo, Polish captions \"Wyskok rakietowy (rocket jump)\", \"Przód uda\", safety cue \"Ćwiczenie wysokiej intensywności — wchodź w nie dopiero, gdy wersje bez wyskoku są bezbolesne. Ląduj miękko, kolana nad palcami. Pomiń przy bólu kolan, bioder lub kręgosłupa oraz przy dużej nadwadze.\", soft music, seamless loop, photorealistic, encouraging non-judgmental tone."
+  },
+  {
+    "code": "G13",
+    "name": "Wyskok gwiazda (star jump)",
+    "group": "G",
+    "muscle": "Przód uda",
+    "enName": "star jump",
+    "level": "beginner",
+    "steps": [
+      "Ustaw się w pozycji startowej (grafika 1).",
+      "Wykonaj dynamiczny, sprężysty wyskok do pozycji z grafiki 2.",
+      "Ląduj miękko, uginając kolana i amortyzując całą stopą.",
+      "Zachowaj równy rytm; przerwij, gdy tracisz kontrolę nad techniką."
+    ],
+    "safety": "Ćwiczenie wysokiej intensywności — wchodź w nie dopiero, gdy wersje bez wyskoku są bezbolesne. Ląduj miękko, kolana nad palcami. Pomiń przy bólu kolan, bioder lub kręgosłupa oraz przy dużej nadwadze.",
+    "reps": {
+      "faza1": "2 × 8",
+      "faza2": "3 × 10",
+      "faza3": "3 × 12",
+      "faza4": "3-4 × 12-15"
+    },
+    "infographicPrompt": "Clean flat-vector fitness infographic, square format, showing a friendly plus-size adult demonstrating \"star jump\" in 3 sequential steps, minimalist home-gym background, soft blue-and-white palette, bold Polish captions: nazwa ćwiczenia \"Wyskok gwiazda (star jump)\", partia mięśniowa \"Przód uda\", wskazówka bezpieczeństwa: \"Ćwiczenie wysokiej intensywności — wchodź w nie dopiero, gdy wersje bez wyskoku są bezbolesne. Ląduj miękko, kolana nad palcami. Pomiń przy bólu kolan, bioder lub kręgosłupa oraz przy dużej nadwadze.\". Numbered arrows, dashed alignment guides, flat illustration, no photorealism, inclusive body-positive design.",
+    "videoPrompt": "10-15 second instructional fitness demo video, static camera, a calm plus-size adult performing \"star jump\" with correct form in a bright home setting, slow controlled tempo, Polish captions \"Wyskok gwiazda (star jump)\", \"Przód uda\", safety cue \"Ćwiczenie wysokiej intensywności — wchodź w nie dopiero, gdy wersje bez wyskoku są bezbolesne. Ląduj miękko, kolana nad palcami. Pomiń przy bólu kolan, bioder lub kręgosłupa oraz przy dużej nadwadze.\", soft music, seamless loop, photorealistic, encouraging non-judgmental tone."
+  },
+  {
+    "code": "G14",
+    "name": "Wykrok z wyskokiem (split jump)",
+    "group": "G",
+    "muscle": "Przód uda",
+    "enName": "split jump lunge",
+    "level": "beginner",
+    "steps": [
+      "Ustaw się w pozycji startowej (grafika 1).",
+      "Wykonaj dynamiczny, sprężysty wyskok do pozycji z grafiki 2.",
+      "Ląduj miękko, uginając kolana i amortyzując całą stopą.",
+      "Zachowaj równy rytm; przerwij, gdy tracisz kontrolę nad techniką."
+    ],
+    "safety": "Ćwiczenie wysokiej intensywności — wchodź w nie dopiero, gdy wersje bez wyskoku są bezbolesne. Ląduj miękko, kolana nad palcami. Pomiń przy bólu kolan, bioder lub kręgosłupa oraz przy dużej nadwadze.",
+    "reps": {
+      "faza1": "2 × 8",
+      "faza2": "3 × 10",
+      "faza3": "3 × 12",
+      "faza4": "3-4 × 12-15"
+    },
+    "infographicPrompt": "Clean flat-vector fitness infographic, square format, showing a friendly plus-size adult demonstrating \"split jump lunge\" in 3 sequential steps, minimalist home-gym background, soft blue-and-white palette, bold Polish captions: nazwa ćwiczenia \"Wykrok z wyskokiem (split jump)\", partia mięśniowa \"Przód uda\", wskazówka bezpieczeństwa: \"Ćwiczenie wysokiej intensywności — wchodź w nie dopiero, gdy wersje bez wyskoku są bezbolesne. Ląduj miękko, kolana nad palcami. Pomiń przy bólu kolan, bioder lub kręgosłupa oraz przy dużej nadwadze.\". Numbered arrows, dashed alignment guides, flat illustration, no photorealism, inclusive body-positive design.",
+    "videoPrompt": "10-15 second instructional fitness demo video, static camera, a calm plus-size adult performing \"split jump lunge\" with correct form in a bright home setting, slow controlled tempo, Polish captions \"Wykrok z wyskokiem (split jump)\", \"Przód uda\", safety cue \"Ćwiczenie wysokiej intensywności — wchodź w nie dopiero, gdy wersje bez wyskoku są bezbolesne. Ląduj miękko, kolana nad palcami. Pomiń przy bólu kolan, bioder lub kręgosłupa oraz przy dużej nadwadze.\", soft music, seamless loop, photorealistic, encouraging non-judgmental tone."
+  },
+  {
+    "code": "G15",
+    "name": "Uderzenia pięt o pośladki (butt kicks)",
+    "group": "G",
+    "muscle": "Przód uda",
+    "enName": "double leg butt kick",
+    "level": "beginner",
+    "steps": [
+      "Ustaw się w pozycji startowej (grafika 1).",
+      "Wykonaj dynamiczny, sprężysty wyskok do pozycji z grafiki 2.",
+      "Ląduj miękko, uginając kolana i amortyzując całą stopą.",
+      "Zachowaj równy rytm; przerwij, gdy tracisz kontrolę nad techniką."
+    ],
+    "safety": "Ćwiczenie wysokiej intensywności — wchodź w nie dopiero, gdy wersje bez wyskoku są bezbolesne. Ląduj miękko, kolana nad palcami. Pomiń przy bólu kolan, bioder lub kręgosłupa oraz przy dużej nadwadze.",
+    "reps": {
+      "faza1": "2 × 8",
+      "faza2": "3 × 10",
+      "faza3": "3 × 12",
+      "faza4": "3-4 × 12-15"
+    },
+    "infographicPrompt": "Clean flat-vector fitness infographic, square format, showing a friendly plus-size adult demonstrating \"double leg butt kick\" in 3 sequential steps, minimalist home-gym background, soft blue-and-white palette, bold Polish captions: nazwa ćwiczenia \"Uderzenia pięt o pośladki (butt kicks)\", partia mięśniowa \"Przód uda\", wskazówka bezpieczeństwa: \"Ćwiczenie wysokiej intensywności — wchodź w nie dopiero, gdy wersje bez wyskoku są bezbolesne. Ląduj miękko, kolana nad palcami. Pomiń przy bólu kolan, bioder lub kręgosłupa oraz przy dużej nadwadze.\". Numbered arrows, dashed alignment guides, flat illustration, no photorealism, inclusive body-positive design.",
+    "videoPrompt": "10-15 second instructional fitness demo video, static camera, a calm plus-size adult performing \"double leg butt kick\" with correct form in a bright home setting, slow controlled tempo, Polish captions \"Uderzenia pięt o pośladki (butt kicks)\", \"Przód uda\", safety cue \"Ćwiczenie wysokiej intensywności — wchodź w nie dopiero, gdy wersje bez wyskoku są bezbolesne. Ląduj miękko, kolana nad palcami. Pomiń przy bólu kolan, bioder lub kręgosłupa oraz przy dużej nadwadze.\", soft music, seamless loop, photorealistic, encouraging non-judgmental tone."
+  },
+  {
+    "code": "G16",
+    "name": "Skok w dal z miejsca",
+    "group": "G",
+    "muscle": "Przód uda",
+    "enName": "standing long jump",
+    "level": "beginner",
+    "steps": [
+      "Ustaw się w pozycji startowej (grafika 1).",
+      "Wykonaj dynamiczny, sprężysty wyskok do pozycji z grafiki 2.",
+      "Ląduj miękko, uginając kolana i amortyzując całą stopą.",
+      "Zachowaj równy rytm; przerwij, gdy tracisz kontrolę nad techniką."
+    ],
+    "safety": "Ćwiczenie wysokiej intensywności — wchodź w nie dopiero, gdy wersje bez wyskoku są bezbolesne. Ląduj miękko, kolana nad palcami. Pomiń przy bólu kolan, bioder lub kręgosłupa oraz przy dużej nadwadze.",
+    "reps": {
+      "faza1": "2 × 8",
+      "faza2": "3 × 10",
+      "faza3": "3 × 12",
+      "faza4": "3-4 × 12-15"
+    },
+    "infographicPrompt": "Clean flat-vector fitness infographic, square format, showing a friendly plus-size adult demonstrating \"standing long jump\" in 3 sequential steps, minimalist home-gym background, soft blue-and-white palette, bold Polish captions: nazwa ćwiczenia \"Skok w dal z miejsca\", partia mięśniowa \"Przód uda\", wskazówka bezpieczeństwa: \"Ćwiczenie wysokiej intensywności — wchodź w nie dopiero, gdy wersje bez wyskoku są bezbolesne. Ląduj miękko, kolana nad palcami. Pomiń przy bólu kolan, bioder lub kręgosłupa oraz przy dużej nadwadze.\". Numbered arrows, dashed alignment guides, flat illustration, no photorealism, inclusive body-positive design.",
+    "videoPrompt": "10-15 second instructional fitness demo video, static camera, a calm plus-size adult performing \"standing long jump\" with correct form in a bright home setting, slow controlled tempo, Polish captions \"Skok w dal z miejsca\", \"Przód uda\", safety cue \"Ćwiczenie wysokiej intensywności — wchodź w nie dopiero, gdy wersje bez wyskoku są bezbolesne. Ląduj miękko, kolana nad palcami. Pomiń przy bólu kolan, bioder lub kręgosłupa oraz przy dużej nadwadze.\", soft music, seamless loop, photorealistic, encouraging non-judgmental tone."
+  },
+  {
+    "code": "G17",
+    "name": "Wyskok bokiem (lateral bound)",
+    "group": "G",
+    "muscle": "Przywodziciele (pachwina)",
+    "enName": "lateral bound",
+    "level": "beginner",
+    "steps": [
+      "Ustaw się w pozycji startowej (grafika 1).",
+      "Wykonaj dynamiczny, sprężysty wyskok do pozycji z grafiki 2.",
+      "Ląduj miękko, uginając kolana i amortyzując całą stopą.",
+      "Zachowaj równy rytm; przerwij, gdy tracisz kontrolę nad techniką."
+    ],
+    "safety": "Ćwiczenie wysokiej intensywności — wchodź w nie dopiero, gdy wersje bez wyskoku są bezbolesne. Ląduj miękko, kolana nad palcami. Pomiń przy bólu kolan, bioder lub kręgosłupa oraz przy dużej nadwadze.",
+    "reps": {
+      "faza1": "2 × 8",
+      "faza2": "3 × 10",
+      "faza3": "3 × 12",
+      "faza4": "3-4 × 12-15"
+    },
+    "infographicPrompt": "Clean flat-vector fitness infographic, square format, showing a friendly plus-size adult demonstrating \"lateral bound\" in 3 sequential steps, minimalist home-gym background, soft blue-and-white palette, bold Polish captions: nazwa ćwiczenia \"Wyskok bokiem (lateral bound)\", partia mięśniowa \"Przywodziciele (pachwina)\", wskazówka bezpieczeństwa: \"Ćwiczenie wysokiej intensywności — wchodź w nie dopiero, gdy wersje bez wyskoku są bezbolesne. Ląduj miękko, kolana nad palcami. Pomiń przy bólu kolan, bioder lub kręgosłupa oraz przy dużej nadwadze.\". Numbered arrows, dashed alignment guides, flat illustration, no photorealism, inclusive body-positive design.",
+    "videoPrompt": "10-15 second instructional fitness demo video, static camera, a calm plus-size adult performing \"lateral bound\" with correct form in a bright home setting, slow controlled tempo, Polish captions \"Wyskok bokiem (lateral bound)\", \"Przywodziciele (pachwina)\", safety cue \"Ćwiczenie wysokiej intensywności — wchodź w nie dopiero, gdy wersje bez wyskoku są bezbolesne. Ląduj miękko, kolana nad palcami. Pomiń przy bólu kolan, bioder lub kręgosłupa oraz przy dużej nadwadze.\", soft music, seamless loop, photorealistic, encouraging non-judgmental tone."
+  },
+  {
+    "code": "D19",
+    "name": "Rozciąganie tyłu uda z nogą uniesioną",
+    "group": "D",
+    "muscle": "Tył uda — rozciąganie/mobilność",
+    "enName": "lying leg-up hamstring stretch",
+    "level": "beginner",
+    "steps": [
+      "Przyjmij pozycję pokazaną na grafice (1 → 2), rozciągającą tył uda.",
+      "Wchodź w rozciąganie powoli, z każdym wydechem odrobinę głębiej.",
+      "Utrzymaj napięcie na granicy komfortu — nigdy do bólu.",
+      "Jeśli ćwiczenie jest jednostronne, powtórz na drugą stronę."
+    ],
+    "safety": "Rozciągaj do uczucia napięcia, nie do bólu. Nie sprężynuj — ruch powolny i spokojny. Przy ostrym bólu przerwij.",
+    "reps": {
+      "faza1": "2 × 20 s",
+      "faza2": "2 × 25 s",
+      "faza3": "2 × 30 s",
+      "faza4": "2 × 30-40 s"
+    },
+    "infographicPrompt": "Clean flat-vector fitness infographic, square format, showing a friendly plus-size adult demonstrating \"90/90 hamstring stretch\" in 3 sequential steps, minimalist home-gym background, soft blue-and-white palette, bold Polish captions: nazwa ćwiczenia \"Rozciąganie tyłu uda 90/90\", partia mięśniowa \"Tył uda — rozciąganie/mobilność\", wskazówka bezpieczeństwa: \"Rozciągaj do uczucia napięcia, nie do bólu. Nie sprężynuj — ruch powolny i spokojny. Przy ostrym bólu przerwij.\". Numbered arrows, dashed alignment guides, flat illustration, no photorealism, inclusive body-positive design.",
+    "videoPrompt": "10-15 second instructional fitness demo video, static camera, a calm plus-size adult performing \"90/90 hamstring stretch\" with correct form in a bright home setting, slow controlled tempo, Polish captions \"Rozciąganie tyłu uda 90/90\", \"Tył uda — rozciąganie/mobilność\", safety cue \"Rozciągaj do uczucia napięcia, nie do bólu. Nie sprężynuj — ruch powolny i spokojny. Przy ostrym bólu przerwij.\", soft music, seamless loop, photorealistic, encouraging non-judgmental tone."
+  },
+  {
+    "code": "D21",
+    "name": "Siad rozkroczny — rozciąganie",
+    "group": "D",
+    "muscle": "Tył uda — rozciąganie/mobilność",
+    "enName": "seated straddle stretch",
+    "level": "beginner",
+    "steps": [
+      "Przyjmij pozycję pokazaną na grafice (1 → 2), rozciągającą tył uda.",
+      "Wchodź w rozciąganie powoli, z każdym wydechem odrobinę głębiej.",
+      "Utrzymaj napięcie na granicy komfortu — nigdy do bólu.",
+      "Jeśli ćwiczenie jest jednostronne, powtórz na drugą stronę."
+    ],
+    "safety": "Rozciągaj do uczucia napięcia, nie do bólu. Nie sprężynuj — ruch powolny i spokojny. Przy ostrym bólu przerwij.",
+    "reps": {
+      "faza1": "2 × 20 s",
+      "faza2": "2 × 25 s",
+      "faza3": "2 × 30 s",
+      "faza4": "2 × 30-40 s"
+    },
+    "infographicPrompt": "Clean flat-vector fitness infographic, square format, showing a friendly plus-size adult demonstrating \"seated straddle stretch\" in 3 sequential steps, minimalist home-gym background, soft blue-and-white palette, bold Polish captions: nazwa ćwiczenia \"Siad rozkroczny — rozciąganie\", partia mięśniowa \"Tył uda — rozciąganie/mobilność\", wskazówka bezpieczeństwa: \"Rozciągaj do uczucia napięcia, nie do bólu. Nie sprężynuj — ruch powolny i spokojny. Przy ostrym bólu przerwij.\". Numbered arrows, dashed alignment guides, flat illustration, no photorealism, inclusive body-positive design.",
+    "videoPrompt": "10-15 second instructional fitness demo video, static camera, a calm plus-size adult performing \"seated straddle stretch\" with correct form in a bright home setting, slow controlled tempo, Polish captions \"Siad rozkroczny — rozciąganie\", \"Tył uda — rozciąganie/mobilność\", safety cue \"Rozciągaj do uczucia napięcia, nie do bólu. Nie sprężynuj — ruch powolny i spokojny. Przy ostrym bólu przerwij.\", soft music, seamless loop, photorealistic, encouraging non-judgmental tone."
+  },
+  {
+    "code": "D22",
+    "name": "Rozciąganie zginaczy bioder stojąc",
+    "group": "D",
+    "muscle": "Przód uda — rozciąganie/mobilność",
+    "enName": "standing hip flexor stretch",
+    "level": "beginner",
+    "steps": [
+      "Przyjmij pozycję pokazaną na grafice (1 → 2), rozciągającą przód uda.",
+      "Wchodź w rozciąganie powoli, z każdym wydechem odrobinę głębiej.",
+      "Utrzymaj napięcie na granicy komfortu — nigdy do bólu.",
+      "Jeśli ćwiczenie jest jednostronne, powtórz na drugą stronę."
+    ],
+    "safety": "Rozciągaj do uczucia napięcia, nie do bólu. Nie sprężynuj — ruch powolny i spokojny. Przy ostrym bólu przerwij.",
+    "reps": {
+      "faza1": "2 × 20 s",
+      "faza2": "2 × 25 s",
+      "faza3": "2 × 30 s",
+      "faza4": "2 × 30-40 s"
+    },
+    "infographicPrompt": "Clean flat-vector fitness infographic, square format, showing a friendly plus-size adult demonstrating \"standing hip flexor stretch\" in 3 sequential steps, minimalist home-gym background, soft blue-and-white palette, bold Polish captions: nazwa ćwiczenia \"Rozciąganie zginaczy bioder stojąc\", partia mięśniowa \"Przód uda — rozciąganie/mobilność\", wskazówka bezpieczeństwa: \"Rozciągaj do uczucia napięcia, nie do bólu. Nie sprężynuj — ruch powolny i spokojny. Przy ostrym bólu przerwij.\". Numbered arrows, dashed alignment guides, flat illustration, no photorealism, inclusive body-positive design.",
+    "videoPrompt": "10-15 second instructional fitness demo video, static camera, a calm plus-size adult performing \"standing hip flexor stretch\" with correct form in a bright home setting, slow controlled tempo, Polish captions \"Rozciąganie zginaczy bioder stojąc\", \"Przód uda — rozciąganie/mobilność\", safety cue \"Rozciągaj do uczucia napięcia, nie do bólu. Nie sprężynuj — ruch powolny i spokojny. Przy ostrym bólu przerwij.\", soft music, seamless loop, photorealistic, encouraging non-judgmental tone."
+  },
+  {
+    "code": "D23",
+    "name": "Rozciąganie przodu uda leżąc na boku",
+    "group": "D",
+    "muscle": "Przód uda — rozciąganie/mobilność",
+    "enName": "side-lying quad stretch",
+    "level": "beginner",
+    "steps": [
+      "Przyjmij pozycję pokazaną na grafice (1 → 2), rozciągającą przód uda.",
+      "Wchodź w rozciąganie powoli, z każdym wydechem odrobinę głębiej.",
+      "Utrzymaj napięcie na granicy komfortu — nigdy do bólu.",
+      "Jeśli ćwiczenie jest jednostronne, powtórz na drugą stronę."
+    ],
+    "safety": "Rozciągaj do uczucia napięcia, nie do bólu. Nie sprężynuj — ruch powolny i spokojny. Przy ostrym bólu przerwij.",
+    "reps": {
+      "faza1": "2 × 20 s",
+      "faza2": "2 × 25 s",
+      "faza3": "2 × 30 s",
+      "faza4": "2 × 30-40 s"
+    },
+    "infographicPrompt": "Clean flat-vector fitness infographic, square format, showing a friendly plus-size adult demonstrating \"side-lying quad stretch\" in 3 sequential steps, minimalist home-gym background, soft blue-and-white palette, bold Polish captions: nazwa ćwiczenia \"Rozciąganie przodu uda leżąc na boku\", partia mięśniowa \"Przód uda — rozciąganie/mobilność\", wskazówka bezpieczeństwa: \"Rozciągaj do uczucia napięcia, nie do bólu. Nie sprężynuj — ruch powolny i spokojny. Przy ostrym bólu przerwij.\". Numbered arrows, dashed alignment guides, flat illustration, no photorealism, inclusive body-positive design.",
+    "videoPrompt": "10-15 second instructional fitness demo video, static camera, a calm plus-size adult performing \"side-lying quad stretch\" with correct form in a bright home setting, slow controlled tempo, Polish captions \"Rozciąganie przodu uda leżąc na boku\", \"Przód uda — rozciąganie/mobilność\", safety cue \"Rozciągaj do uczucia napięcia, nie do bólu. Nie sprężynuj — ruch powolny i spokojny. Przy ostrym bólu przerwij.\", soft music, seamless loop, photorealistic, encouraging non-judgmental tone."
+  },
+  {
+    "code": "D24",
+    "name": "Rozciąganie pośladka „figura 4\"",
+    "group": "D",
+    "muscle": "Pośladki — rozciąganie/mobilność",
+    "enName": "figure-four glute stretch",
+    "level": "beginner",
+    "steps": [
+      "Przyjmij pozycję pokazaną na grafice (1 → 2), rozciągającą pośladki.",
+      "Wchodź w rozciąganie powoli, z każdym wydechem odrobinę głębiej.",
+      "Utrzymaj napięcie na granicy komfortu — nigdy do bólu.",
+      "Jeśli ćwiczenie jest jednostronne, powtórz na drugą stronę."
+    ],
+    "safety": "Rozciągaj do uczucia napięcia, nie do bólu. Nie sprężynuj — ruch powolny i spokojny. Przy ostrym bólu przerwij.",
+    "reps": {
+      "faza1": "2 × 20 s",
+      "faza2": "2 × 25 s",
+      "faza3": "2 × 30 s",
+      "faza4": "2 × 30-40 s"
+    },
+    "infographicPrompt": "Clean flat-vector fitness infographic, square format, showing a friendly plus-size adult demonstrating \"figure-four glute stretch\" in 3 sequential steps, minimalist home-gym background, soft blue-and-white palette, bold Polish captions: nazwa ćwiczenia \"Rozciąganie pośladka „figura 4\"\", partia mięśniowa \"Pośladki — rozciąganie/mobilność\", wskazówka bezpieczeństwa: \"Rozciągaj do uczucia napięcia, nie do bólu. Nie sprężynuj — ruch powolny i spokojny. Przy ostrym bólu przerwij.\". Numbered arrows, dashed alignment guides, flat illustration, no photorealism, inclusive body-positive design.",
+    "videoPrompt": "10-15 second instructional fitness demo video, static camera, a calm plus-size adult performing \"figure-four glute stretch\" with correct form in a bright home setting, slow controlled tempo, Polish captions \"Rozciąganie pośladka „figura 4\"\", \"Pośladki — rozciąganie/mobilność\", safety cue \"Rozciągaj do uczucia napięcia, nie do bólu. Nie sprężynuj — ruch powolny i spokojny. Przy ostrym bólu przerwij.\", soft music, seamless loop, photorealistic, encouraging non-judgmental tone."
+  },
+  {
+    "code": "D25",
+    "name": "Kolano w poprzek ciała — rozciąganie pośladka",
+    "group": "D",
+    "muscle": "Pośladki — rozciąganie/mobilność",
+    "enName": "knee across body glute stretch",
+    "level": "beginner",
+    "steps": [
+      "Przyjmij pozycję pokazaną na grafice (1 → 2), rozciągającą pośladki.",
+      "Wchodź w rozciąganie powoli, z każdym wydechem odrobinę głębiej.",
+      "Utrzymaj napięcie na granicy komfortu — nigdy do bólu.",
+      "Jeśli ćwiczenie jest jednostronne, powtórz na drugą stronę."
+    ],
+    "safety": "Rozciągaj do uczucia napięcia, nie do bólu. Nie sprężynuj — ruch powolny i spokojny. Przy ostrym bólu przerwij.",
+    "reps": {
+      "faza1": "2 × 20 s",
+      "faza2": "2 × 25 s",
+      "faza3": "2 × 30 s",
+      "faza4": "2 × 30-40 s"
+    },
+    "infographicPrompt": "Clean flat-vector fitness infographic, square format, showing a friendly plus-size adult demonstrating \"knee across body glute stretch\" in 3 sequential steps, minimalist home-gym background, soft blue-and-white palette, bold Polish captions: nazwa ćwiczenia \"Kolano w poprzek ciała — rozciąganie pośladka\", partia mięśniowa \"Pośladki — rozciąganie/mobilność\", wskazówka bezpieczeństwa: \"Rozciągaj do uczucia napięcia, nie do bólu. Nie sprężynuj — ruch powolny i spokojny. Przy ostrym bólu przerwij.\". Numbered arrows, dashed alignment guides, flat illustration, no photorealism, inclusive body-positive design.",
+    "videoPrompt": "10-15 second instructional fitness demo video, static camera, a calm plus-size adult performing \"knee across body glute stretch\" with correct form in a bright home setting, slow controlled tempo, Polish captions \"Kolano w poprzek ciała — rozciąganie pośladka\", \"Pośladki — rozciąganie/mobilność\", safety cue \"Rozciągaj do uczucia napięcia, nie do bólu. Nie sprężynuj — ruch powolny i spokojny. Przy ostrym bólu przerwij.\", soft music, seamless loop, photorealistic, encouraging non-judgmental tone."
+  },
+  {
+    "code": "D26",
+    "name": "Rozciąganie pachwiny leżąc na boku",
+    "group": "D",
+    "muscle": "Przywodziciele (pachwina) — rozciąganie/mobilność",
+    "enName": "side-lying groin stretch",
+    "level": "beginner",
+    "steps": [
+      "Przyjmij pozycję pokazaną na grafice (1 → 2), rozciągającą przywodziciele (pachwina).",
+      "Wchodź w rozciąganie powoli, z każdym wydechem odrobinę głębiej.",
+      "Utrzymaj napięcie na granicy komfortu — nigdy do bólu.",
+      "Jeśli ćwiczenie jest jednostronne, powtórz na drugą stronę."
+    ],
+    "safety": "Rozciągaj do uczucia napięcia, nie do bólu. Nie sprężynuj — ruch powolny i spokojny. Przy ostrym bólu przerwij.",
+    "reps": {
+      "faza1": "2 × 20 s",
+      "faza2": "2 × 25 s",
+      "faza3": "2 × 30 s",
+      "faza4": "2 × 30-40 s"
+    },
+    "infographicPrompt": "Clean flat-vector fitness infographic, square format, showing a friendly plus-size adult demonstrating \"side-lying groin stretch\" in 3 sequential steps, minimalist home-gym background, soft blue-and-white palette, bold Polish captions: nazwa ćwiczenia \"Rozciąganie pachwiny leżąc na boku\", partia mięśniowa \"Przywodziciele (pachwina) — rozciąganie/mobilność\", wskazówka bezpieczeństwa: \"Rozciągaj do uczucia napięcia, nie do bólu. Nie sprężynuj — ruch powolny i spokojny. Przy ostrym bólu przerwij.\". Numbered arrows, dashed alignment guides, flat illustration, no photorealism, inclusive body-positive design.",
+    "videoPrompt": "10-15 second instructional fitness demo video, static camera, a calm plus-size adult performing \"side-lying groin stretch\" with correct form in a bright home setting, slow controlled tempo, Polish captions \"Rozciąganie pachwiny leżąc na boku\", \"Przywodziciele (pachwina) — rozciąganie/mobilność\", safety cue \"Rozciągaj do uczucia napięcia, nie do bólu. Nie sprężynuj — ruch powolny i spokojny. Przy ostrym bólu przerwij.\", soft music, seamless loop, photorealistic, encouraging non-judgmental tone."
+  },
+  {
+    "code": "D27",
+    "name": "Rozciąganie przywodzicieli (motyl)",
+    "group": "D",
+    "muscle": "Przywodziciele (pachwina) — rozciąganie/mobilność",
+    "enName": "butterfly groin stretch",
+    "level": "intermediate",
+    "steps": [
+      "Przyjmij pozycję pokazaną na grafice (1 → 2), rozciągającą przywodziciele (pachwina).",
+      "Wchodź w rozciąganie powoli, z każdym wydechem odrobinę głębiej.",
+      "Utrzymaj napięcie na granicy komfortu — nigdy do bólu.",
+      "Jeśli ćwiczenie jest jednostronne, powtórz na drugą stronę."
+    ],
+    "safety": "Rozciągaj do uczucia napięcia, nie do bólu. Nie sprężynuj — ruch powolny i spokojny. Przy ostrym bólu przerwij.",
+    "reps": {
+      "faza1": "2 × 20 s",
+      "faza2": "2 × 25 s",
+      "faza3": "2 × 30 s",
+      "faza4": "2 × 30-40 s"
+    },
+    "infographicPrompt": "Clean flat-vector fitness infographic, square format, showing a friendly plus-size adult demonstrating \"butterfly groin stretch\" in 3 sequential steps, minimalist home-gym background, soft blue-and-white palette, bold Polish captions: nazwa ćwiczenia \"Rozciąganie przywodzicieli (motyl)\", partia mięśniowa \"Przywodziciele (pachwina) — rozciąganie/mobilność\", wskazówka bezpieczeństwa: \"Rozciągaj do uczucia napięcia, nie do bólu. Nie sprężynuj — ruch powolny i spokojny. Przy ostrym bólu przerwij.\". Numbered arrows, dashed alignment guides, flat illustration, no photorealism, inclusive body-positive design.",
+    "videoPrompt": "10-15 second instructional fitness demo video, static camera, a calm plus-size adult performing \"butterfly groin stretch\" with correct form in a bright home setting, slow controlled tempo, Polish captions \"Rozciąganie przywodzicieli (motyl)\", \"Przywodziciele (pachwina) — rozciąganie/mobilność\", safety cue \"Rozciągaj do uczucia napięcia, nie do bólu. Nie sprężynuj — ruch powolny i spokojny. Przy ostrym bólu przerwij.\", soft music, seamless loop, photorealistic, encouraging non-judgmental tone."
+  },
+  {
+    "code": "D28",
+    "name": "Rozciąganie łydki (mięsień brzuchaty)",
+    "group": "D",
+    "muscle": "Łydki — rozciąganie/mobilność",
+    "enName": "standing gastrocnemius calf stretch",
+    "level": "beginner",
+    "steps": [
+      "Przyjmij pozycję pokazaną na grafice (1 → 2), rozciągającą łydki.",
+      "Wchodź w rozciąganie powoli, z każdym wydechem odrobinę głębiej.",
+      "Utrzymaj napięcie na granicy komfortu — nigdy do bólu.",
+      "Jeśli ćwiczenie jest jednostronne, powtórz na drugą stronę."
+    ],
+    "safety": "Rozciągaj do uczucia napięcia, nie do bólu. Nie sprężynuj — ruch powolny i spokojny. Przy ostrym bólu przerwij.",
+    "reps": {
+      "faza1": "2 × 20 s",
+      "faza2": "2 × 25 s",
+      "faza3": "2 × 30 s",
+      "faza4": "2 × 30-40 s"
+    },
+    "infographicPrompt": "Clean flat-vector fitness infographic, square format, showing a friendly plus-size adult demonstrating \"standing gastrocnemius calf stretch\" in 3 sequential steps, minimalist home-gym background, soft blue-and-white palette, bold Polish captions: nazwa ćwiczenia \"Rozciąganie łydki (mięsień brzuchaty)\", partia mięśniowa \"Łydki — rozciąganie/mobilność\", wskazówka bezpieczeństwa: \"Rozciągaj do uczucia napięcia, nie do bólu. Nie sprężynuj — ruch powolny i spokojny. Przy ostrym bólu przerwij.\". Numbered arrows, dashed alignment guides, flat illustration, no photorealism, inclusive body-positive design.",
+    "videoPrompt": "10-15 second instructional fitness demo video, static camera, a calm plus-size adult performing \"standing gastrocnemius calf stretch\" with correct form in a bright home setting, slow controlled tempo, Polish captions \"Rozciąganie łydki (mięsień brzuchaty)\", \"Łydki — rozciąganie/mobilność\", safety cue \"Rozciągaj do uczucia napięcia, nie do bólu. Nie sprężynuj — ruch powolny i spokojny. Przy ostrym bólu przerwij.\", soft music, seamless loop, photorealistic, encouraging non-judgmental tone."
+  },
+  {
+    "code": "D29",
+    "name": "Rozciąganie łydki i ścięgna Achillesa",
+    "group": "D",
+    "muscle": "Łydki — rozciąganie/mobilność",
+    "enName": "standing soleus achilles stretch",
+    "level": "beginner",
+    "steps": [
+      "Przyjmij pozycję pokazaną na grafice (1 → 2), rozciągającą łydki.",
+      "Wchodź w rozciąganie powoli, z każdym wydechem odrobinę głębiej.",
+      "Utrzymaj napięcie na granicy komfortu — nigdy do bólu.",
+      "Jeśli ćwiczenie jest jednostronne, powtórz na drugą stronę."
+    ],
+    "safety": "Rozciągaj do uczucia napięcia, nie do bólu. Nie sprężynuj — ruch powolny i spokojny. Przy ostrym bólu przerwij.",
+    "reps": {
+      "faza1": "2 × 20 s",
+      "faza2": "2 × 25 s",
+      "faza3": "2 × 30 s",
+      "faza4": "2 × 30-40 s"
+    },
+    "infographicPrompt": "Clean flat-vector fitness infographic, square format, showing a friendly plus-size adult demonstrating \"standing soleus achilles stretch\" in 3 sequential steps, minimalist home-gym background, soft blue-and-white palette, bold Polish captions: nazwa ćwiczenia \"Rozciąganie łydki i ścięgna Achillesa\", partia mięśniowa \"Łydki — rozciąganie/mobilność\", wskazówka bezpieczeństwa: \"Rozciągaj do uczucia napięcia, nie do bólu. Nie sprężynuj — ruch powolny i spokojny. Przy ostrym bólu przerwij.\". Numbered arrows, dashed alignment guides, flat illustration, no photorealism, inclusive body-positive design.",
+    "videoPrompt": "10-15 second instructional fitness demo video, static camera, a calm plus-size adult performing \"standing soleus achilles stretch\" with correct form in a bright home setting, slow controlled tempo, Polish captions \"Rozciąganie łydki i ścięgna Achillesa\", \"Łydki — rozciąganie/mobilność\", safety cue \"Rozciągaj do uczucia napięcia, nie do bólu. Nie sprężynuj — ruch powolny i spokojny. Przy ostrym bólu przerwij.\", soft music, seamless loop, photorealistic, encouraging non-judgmental tone."
+  },
+  {
+    "code": "D30",
+    "name": "Podwijanie miednicy stojąc",
+    "group": "D",
+    "muscle": "Dolny odcinek pleców — rozciąganie/mobilność",
+    "enName": "standing pelvic tilt",
+    "level": "beginner",
+    "steps": [
+      "Przyjmij pozycję pokazaną na grafice (1 → 2), rozciągającą dolny odcinek pleców.",
+      "Wchodź w rozciąganie powoli, z każdym wydechem odrobinę głębiej.",
+      "Utrzymaj napięcie na granicy komfortu — nigdy do bólu.",
+      "Jeśli ćwiczenie jest jednostronne, powtórz na drugą stronę."
+    ],
+    "safety": "Rozciągaj do uczucia napięcia, nie do bólu. Nie sprężynuj — ruch powolny i spokojny. Przy ostrym bólu przerwij.",
+    "reps": {
+      "faza1": "2 × 20 s",
+      "faza2": "2 × 25 s",
+      "faza3": "2 × 30 s",
+      "faza4": "2 × 30-40 s"
+    },
+    "infographicPrompt": "Clean flat-vector fitness infographic, square format, showing a friendly plus-size adult demonstrating \"standing pelvic tilt\" in 3 sequential steps, minimalist home-gym background, soft blue-and-white palette, bold Polish captions: nazwa ćwiczenia \"Podwijanie miednicy stojąc\", partia mięśniowa \"Dolny odcinek pleców — rozciąganie/mobilność\", wskazówka bezpieczeństwa: \"Rozciągaj do uczucia napięcia, nie do bólu. Nie sprężynuj — ruch powolny i spokojny. Przy ostrym bólu przerwij.\". Numbered arrows, dashed alignment guides, flat illustration, no photorealism, inclusive body-positive design.",
+    "videoPrompt": "10-15 second instructional fitness demo video, static camera, a calm plus-size adult performing \"standing pelvic tilt\" with correct form in a bright home setting, slow controlled tempo, Polish captions \"Podwijanie miednicy stojąc\", \"Dolny odcinek pleców — rozciąganie/mobilność\", safety cue \"Rozciągaj do uczucia napięcia, nie do bólu. Nie sprężynuj — ruch powolny i spokojny. Przy ostrym bólu przerwij.\", soft music, seamless loop, photorealistic, encouraging non-judgmental tone."
+  },
+  {
+    "code": "D31",
+    "name": "Skręt kręgosłupa siedząc",
+    "group": "D",
+    "muscle": "Środkowy odcinek pleców — rozciąganie/mobilność",
+    "enName": "seated spinal twist",
+    "level": "beginner",
+    "steps": [
+      "Przyjmij pozycję pokazaną na grafice (1 → 2), rozciągającą środkowy odcinek pleców.",
+      "Wchodź w rozciąganie powoli, z każdym wydechem odrobinę głębiej.",
+      "Utrzymaj napięcie na granicy komfortu — nigdy do bólu.",
+      "Jeśli ćwiczenie jest jednostronne, powtórz na drugą stronę."
+    ],
+    "safety": "Rozciągaj do uczucia napięcia, nie do bólu. Nie sprężynuj — ruch powolny i spokojny. Przy ostrym bólu przerwij.",
+    "reps": {
+      "faza1": "2 × 20 s",
+      "faza2": "2 × 25 s",
+      "faza3": "2 × 30 s",
+      "faza4": "2 × 30-40 s"
+    },
+    "infographicPrompt": "Clean flat-vector fitness infographic, square format, showing a friendly plus-size adult demonstrating \"seated spinal twist\" in 3 sequential steps, minimalist home-gym background, soft blue-and-white palette, bold Polish captions: nazwa ćwiczenia \"Skręt kręgosłupa siedząc\", partia mięśniowa \"Środkowy odcinek pleców — rozciąganie/mobilność\", wskazówka bezpieczeństwa: \"Rozciągaj do uczucia napięcia, nie do bólu. Nie sprężynuj — ruch powolny i spokojny. Przy ostrym bólu przerwij.\". Numbered arrows, dashed alignment guides, flat illustration, no photorealism, inclusive body-positive design.",
+    "videoPrompt": "10-15 second instructional fitness demo video, static camera, a calm plus-size adult performing \"seated spinal twist\" with correct form in a bright home setting, slow controlled tempo, Polish captions \"Skręt kręgosłupa siedząc\", \"Środkowy odcinek pleców — rozciąganie/mobilność\", safety cue \"Rozciągaj do uczucia napięcia, nie do bólu. Nie sprężynuj — ruch powolny i spokojny. Przy ostrym bólu przerwij.\", soft music, seamless loop, photorealistic, encouraging non-judgmental tone."
+  },
+  {
+    "code": "D32",
+    "name": "Rozciąganie środkowego odcinka pleców",
+    "group": "D",
+    "muscle": "Środkowy odcinek pleców — rozciąganie/mobilność",
+    "enName": "mid-back stretch",
+    "level": "beginner",
+    "steps": [
+      "Przyjmij pozycję pokazaną na grafice (1 → 2), rozciągającą środkowy odcinek pleców.",
+      "Wchodź w rozciąganie powoli, z każdym wydechem odrobinę głębiej.",
+      "Utrzymaj napięcie na granicy komfortu — nigdy do bólu.",
+      "Jeśli ćwiczenie jest jednostronne, powtórz na drugą stronę."
+    ],
+    "safety": "Rozciągaj do uczucia napięcia, nie do bólu. Nie sprężynuj — ruch powolny i spokojny. Przy ostrym bólu przerwij.",
+    "reps": {
+      "faza1": "2 × 20 s",
+      "faza2": "2 × 25 s",
+      "faza3": "2 × 30 s",
+      "faza4": "2 × 30-40 s"
+    },
+    "infographicPrompt": "Clean flat-vector fitness infographic, square format, showing a friendly plus-size adult demonstrating \"mid-back stretch\" in 3 sequential steps, minimalist home-gym background, soft blue-and-white palette, bold Polish captions: nazwa ćwiczenia \"Rozciąganie środkowego odcinka pleców\", partia mięśniowa \"Środkowy odcinek pleców — rozciąganie/mobilność\", wskazówka bezpieczeństwa: \"Rozciągaj do uczucia napięcia, nie do bólu. Nie sprężynuj — ruch powolny i spokojny. Przy ostrym bólu przerwij.\". Numbered arrows, dashed alignment guides, flat illustration, no photorealism, inclusive body-positive design.",
+    "videoPrompt": "10-15 second instructional fitness demo video, static camera, a calm plus-size adult performing \"mid-back stretch\" with correct form in a bright home setting, slow controlled tempo, Polish captions \"Rozciąganie środkowego odcinka pleców\", \"Środkowy odcinek pleców — rozciąganie/mobilność\", safety cue \"Rozciągaj do uczucia napięcia, nie do bólu. Nie sprężynuj — ruch powolny i spokojny. Przy ostrym bólu przerwij.\", soft music, seamless loop, photorealistic, encouraging non-judgmental tone."
+  },
+  {
+    "code": "D33",
+    "name": "Rozciąganie górnego odcinka pleców",
+    "group": "D",
+    "muscle": "Środkowy odcinek pleców — rozciąganie/mobilność",
+    "enName": "upper back rounding stretch",
+    "level": "beginner",
+    "steps": [
+      "Przyjmij pozycję pokazaną na grafice (1 → 2), rozciągającą środkowy odcinek pleców.",
+      "Wchodź w rozciąganie powoli, z każdym wydechem odrobinę głębiej.",
+      "Utrzymaj napięcie na granicy komfortu — nigdy do bólu.",
+      "Jeśli ćwiczenie jest jednostronne, powtórz na drugą stronę."
+    ],
+    "safety": "Rozciągaj do uczucia napięcia, nie do bólu. Nie sprężynuj — ruch powolny i spokojny. Przy ostrym bólu przerwij.",
+    "reps": {
+      "faza1": "2 × 20 s",
+      "faza2": "2 × 25 s",
+      "faza3": "2 × 30 s",
+      "faza4": "2 × 30-40 s"
+    },
+    "infographicPrompt": "Clean flat-vector fitness infographic, square format, showing a friendly plus-size adult demonstrating \"upper back rounding stretch\" in 3 sequential steps, minimalist home-gym background, soft blue-and-white palette, bold Polish captions: nazwa ćwiczenia \"Rozciąganie górnego odcinka pleców\", partia mięśniowa \"Środkowy odcinek pleców — rozciąganie/mobilność\", wskazówka bezpieczeństwa: \"Rozciągaj do uczucia napięcia, nie do bólu. Nie sprężynuj — ruch powolny i spokojny. Przy ostrym bólu przerwij.\". Numbered arrows, dashed alignment guides, flat illustration, no photorealism, inclusive body-positive design.",
+    "videoPrompt": "10-15 second instructional fitness demo video, static camera, a calm plus-size adult performing \"upper back rounding stretch\" with correct form in a bright home setting, slow controlled tempo, Polish captions \"Rozciąganie górnego odcinka pleców\", \"Środkowy odcinek pleców — rozciąganie/mobilność\", safety cue \"Rozciągaj do uczucia napięcia, nie do bólu. Nie sprężynuj — ruch powolny i spokojny. Przy ostrym bólu przerwij.\", soft music, seamless loop, photorealistic, encouraging non-judgmental tone."
+  },
+  {
+    "code": "D34",
+    "name": "Rozciąganie najszerszego grzbietu przy ścianie",
+    "group": "D",
+    "muscle": "Najszerszy grzbietu — rozciąganie/mobilność",
+    "enName": "lat stretch against wall",
+    "level": "beginner",
+    "steps": [
+      "Przyjmij pozycję pokazaną na grafice (1 → 2), rozciągającą najszerszy grzbietu.",
+      "Wchodź w rozciąganie powoli, z każdym wydechem odrobinę głębiej.",
+      "Utrzymaj napięcie na granicy komfortu — nigdy do bólu.",
+      "Jeśli ćwiczenie jest jednostronne, powtórz na drugą stronę."
+    ],
+    "safety": "Rozciągaj do uczucia napięcia, nie do bólu. Nie sprężynuj — ruch powolny i spokojny. Przy ostrym bólu przerwij.",
+    "reps": {
+      "faza1": "2 × 20 s",
+      "faza2": "2 × 25 s",
+      "faza3": "2 × 30 s",
+      "faza4": "2 × 30-40 s"
+    },
+    "infographicPrompt": "Clean flat-vector fitness infographic, square format, showing a friendly plus-size adult demonstrating \"lat stretch against wall\" in 3 sequential steps, minimalist home-gym background, soft blue-and-white palette, bold Polish captions: nazwa ćwiczenia \"Rozciąganie najszerszego grzbietu przy ścianie\", partia mięśniowa \"Najszerszy grzbietu — rozciąganie/mobilność\", wskazówka bezpieczeństwa: \"Rozciągaj do uczucia napięcia, nie do bólu. Nie sprężynuj — ruch powolny i spokojny. Przy ostrym bólu przerwij.\". Numbered arrows, dashed alignment guides, flat illustration, no photorealism, inclusive body-positive design.",
+    "videoPrompt": "10-15 second instructional fitness demo video, static camera, a calm plus-size adult performing \"lat stretch against wall\" with correct form in a bright home setting, slow controlled tempo, Polish captions \"Rozciąganie najszerszego grzbietu przy ścianie\", \"Najszerszy grzbietu — rozciąganie/mobilność\", safety cue \"Rozciągaj do uczucia napięcia, nie do bólu. Nie sprężynuj — ruch powolny i spokojny. Przy ostrym bólu przerwij.\", soft music, seamless loop, photorealistic, encouraging non-judgmental tone."
+  },
+  {
+    "code": "D35",
+    "name": "Rozciąganie barku w poprzek ciała",
+    "group": "D",
+    "muscle": "Barki — rozciąganie/mobilność",
+    "enName": "cross-body shoulder stretch",
+    "level": "beginner",
+    "steps": [
+      "Przyjmij pozycję pokazaną na grafice (1 → 2), rozciągającą barki.",
+      "Wchodź w rozciąganie powoli, z każdym wydechem odrobinę głębiej.",
+      "Utrzymaj napięcie na granicy komfortu — nigdy do bólu.",
+      "Jeśli ćwiczenie jest jednostronne, powtórz na drugą stronę."
+    ],
+    "safety": "Rozciągaj do uczucia napięcia, nie do bólu. Nie sprężynuj — ruch powolny i spokojny. Przy ostrym bólu przerwij.",
+    "reps": {
+      "faza1": "2 × 20 s",
+      "faza2": "2 × 25 s",
+      "faza3": "2 × 30 s",
+      "faza4": "2 × 30-40 s"
+    },
+    "infographicPrompt": "Clean flat-vector fitness infographic, square format, showing a friendly plus-size adult demonstrating \"cross-body shoulder stretch\" in 3 sequential steps, minimalist home-gym background, soft blue-and-white palette, bold Polish captions: nazwa ćwiczenia \"Rozciąganie barku w poprzek ciała\", partia mięśniowa \"Barki — rozciąganie/mobilność\", wskazówka bezpieczeństwa: \"Rozciągaj do uczucia napięcia, nie do bólu. Nie sprężynuj — ruch powolny i spokojny. Przy ostrym bólu przerwij.\". Numbered arrows, dashed alignment guides, flat illustration, no photorealism, inclusive body-positive design.",
+    "videoPrompt": "10-15 second instructional fitness demo video, static camera, a calm plus-size adult performing \"cross-body shoulder stretch\" with correct form in a bright home setting, slow controlled tempo, Polish captions \"Rozciąganie barku w poprzek ciała\", \"Barki — rozciąganie/mobilność\", safety cue \"Rozciągaj do uczucia napięcia, nie do bólu. Nie sprężynuj — ruch powolny i spokojny. Przy ostrym bólu przerwij.\", soft music, seamless loop, photorealistic, encouraging non-judgmental tone."
+  },
+  {
+    "code": "D36",
+    "name": "Krążenia barków",
+    "group": "D",
+    "muscle": "Barki — rozciąganie/mobilność",
+    "enName": "shoulder circles",
+    "level": "beginner",
+    "steps": [
+      "Przyjmij pozycję pokazaną na grafice (1 → 2), rozciągającą barki.",
+      "Wchodź w rozciąganie powoli, z każdym wydechem odrobinę głębiej.",
+      "Utrzymaj napięcie na granicy komfortu — nigdy do bólu.",
+      "Jeśli ćwiczenie jest jednostronne, powtórz na drugą stronę."
+    ],
+    "safety": "Rozciągaj do uczucia napięcia, nie do bólu. Nie sprężynuj — ruch powolny i spokojny. Przy ostrym bólu przerwij.",
+    "reps": {
+      "faza1": "2 × 20 s",
+      "faza2": "2 × 25 s",
+      "faza3": "2 × 30 s",
+      "faza4": "2 × 30-40 s"
+    },
+    "infographicPrompt": "Clean flat-vector fitness infographic, square format, showing a friendly plus-size adult demonstrating \"shoulder circles\" in 3 sequential steps, minimalist home-gym background, soft blue-and-white palette, bold Polish captions: nazwa ćwiczenia \"Krążenia barków\", partia mięśniowa \"Barki — rozciąganie/mobilność\", wskazówka bezpieczeństwa: \"Rozciągaj do uczucia napięcia, nie do bólu. Nie sprężynuj — ruch powolny i spokojny. Przy ostrym bólu przerwij.\". Numbered arrows, dashed alignment guides, flat illustration, no photorealism, inclusive body-positive design.",
+    "videoPrompt": "10-15 second instructional fitness demo video, static camera, a calm plus-size adult performing \"shoulder circles\" with correct form in a bright home setting, slow controlled tempo, Polish captions \"Krążenia barków\", \"Barki — rozciąganie/mobilność\", safety cue \"Rozciągaj do uczucia napięcia, nie do bólu. Nie sprężynuj — ruch powolny i spokojny. Przy ostrym bólu przerwij.\", soft music, seamless loop, photorealistic, encouraging non-judgmental tone."
+  },
+  {
+    "code": "D37",
+    "name": "Krążenia ramion „dookoła świata\"",
+    "group": "D",
+    "muscle": "Barki — rozciąganie/mobilność",
+    "enName": "around the world shoulder stretch",
+    "level": "beginner",
+    "steps": [
+      "Przyjmij pozycję pokazaną na grafice (1 → 2), rozciągającą barki.",
+      "Wchodź w rozciąganie powoli, z każdym wydechem odrobinę głębiej.",
+      "Utrzymaj napięcie na granicy komfortu — nigdy do bólu.",
+      "Jeśli ćwiczenie jest jednostronne, powtórz na drugą stronę."
+    ],
+    "safety": "Rozciągaj do uczucia napięcia, nie do bólu. Nie sprężynuj — ruch powolny i spokojny. Przy ostrym bólu przerwij.",
+    "reps": {
+      "faza1": "2 × 20 s",
+      "faza2": "2 × 25 s",
+      "faza3": "2 × 30 s",
+      "faza4": "2 × 30-40 s"
+    },
+    "infographicPrompt": "Clean flat-vector fitness infographic, square format, showing a friendly plus-size adult demonstrating \"around the world shoulder stretch\" in 3 sequential steps, minimalist home-gym background, soft blue-and-white palette, bold Polish captions: nazwa ćwiczenia \"Krążenia ramion „dookoła świata\"\", partia mięśniowa \"Barki — rozciąganie/mobilność\", wskazówka bezpieczeństwa: \"Rozciągaj do uczucia napięcia, nie do bólu. Nie sprężynuj — ruch powolny i spokojny. Przy ostrym bólu przerwij.\". Numbered arrows, dashed alignment guides, flat illustration, no photorealism, inclusive body-positive design.",
+    "videoPrompt": "10-15 second instructional fitness demo video, static camera, a calm plus-size adult performing \"around the world shoulder stretch\" with correct form in a bright home setting, slow controlled tempo, Polish captions \"Krążenia ramion „dookoła świata\"\", \"Barki — rozciąganie/mobilność\", safety cue \"Rozciągaj do uczucia napięcia, nie do bólu. Nie sprężynuj — ruch powolny i spokojny. Przy ostrym bólu przerwij.\", soft music, seamless loop, photorealistic, encouraging non-judgmental tone."
+  },
+  {
+    "code": "D38",
+    "name": "Rozciąganie klatki i przodu barku",
+    "group": "D",
+    "muscle": "Klatka piersiowa — rozciąganie/mobilność",
+    "enName": "chest and front shoulder stretch",
+    "level": "beginner",
+    "steps": [
+      "Przyjmij pozycję pokazaną na grafice (1 → 2), rozciągającą klatka piersiowa.",
+      "Wchodź w rozciąganie powoli, z każdym wydechem odrobinę głębiej.",
+      "Utrzymaj napięcie na granicy komfortu — nigdy do bólu.",
+      "Jeśli ćwiczenie jest jednostronne, powtórz na drugą stronę."
+    ],
+    "safety": "Rozciągaj do uczucia napięcia, nie do bólu. Nie sprężynuj — ruch powolny i spokojny. Przy ostrym bólu przerwij.",
+    "reps": {
+      "faza1": "2 × 20 s",
+      "faza2": "2 × 25 s",
+      "faza3": "2 × 30 s",
+      "faza4": "2 × 30-40 s"
+    },
+    "infographicPrompt": "Clean flat-vector fitness infographic, square format, showing a friendly plus-size adult demonstrating \"chest and front shoulder stretch\" in 3 sequential steps, minimalist home-gym background, soft blue-and-white palette, bold Polish captions: nazwa ćwiczenia \"Rozciąganie klatki i przodu barku\", partia mięśniowa \"Klatka piersiowa — rozciąganie/mobilność\", wskazówka bezpieczeństwa: \"Rozciągaj do uczucia napięcia, nie do bólu. Nie sprężynuj — ruch powolny i spokojny. Przy ostrym bólu przerwij.\". Numbered arrows, dashed alignment guides, flat illustration, no photorealism, inclusive body-positive design.",
+    "videoPrompt": "10-15 second instructional fitness demo video, static camera, a calm plus-size adult performing \"chest and front shoulder stretch\" with correct form in a bright home setting, slow controlled tempo, Polish captions \"Rozciąganie klatki i przodu barku\", \"Klatka piersiowa — rozciąganie/mobilność\", safety cue \"Rozciągaj do uczucia napięcia, nie do bólu. Nie sprężynuj — ruch powolny i spokojny. Przy ostrym bólu przerwij.\", soft music, seamless loop, photorealistic, encouraging non-judgmental tone."
+  },
+  {
+    "code": "D39",
+    "name": "Rozciąganie tricepsa nad głową",
+    "group": "D",
+    "muscle": "Triceps — rozciąganie/mobilność",
+    "enName": "overhead triceps stretch",
+    "level": "beginner",
+    "steps": [
+      "Przyjmij pozycję pokazaną na grafice (1 → 2), rozciągającą triceps.",
+      "Wchodź w rozciąganie powoli, z każdym wydechem odrobinę głębiej.",
+      "Utrzymaj napięcie na granicy komfortu — nigdy do bólu.",
+      "Jeśli ćwiczenie jest jednostronne, powtórz na drugą stronę."
+    ],
+    "safety": "Rozciągaj do uczucia napięcia, nie do bólu. Nie sprężynuj — ruch powolny i spokojny. Przy ostrym bólu przerwij.",
+    "reps": {
+      "faza1": "2 × 20 s",
+      "faza2": "2 × 25 s",
+      "faza3": "2 × 30 s",
+      "faza4": "2 × 30-40 s"
+    },
+    "infographicPrompt": "Clean flat-vector fitness infographic, square format, showing a friendly plus-size adult demonstrating \"overhead triceps stretch\" in 3 sequential steps, minimalist home-gym background, soft blue-and-white palette, bold Polish captions: nazwa ćwiczenia \"Rozciąganie tricepsa nad głową\", partia mięśniowa \"Triceps — rozciąganie/mobilność\", wskazówka bezpieczeństwa: \"Rozciągaj do uczucia napięcia, nie do bólu. Nie sprężynuj — ruch powolny i spokojny. Przy ostrym bólu przerwij.\". Numbered arrows, dashed alignment guides, flat illustration, no photorealism, inclusive body-positive design.",
+    "videoPrompt": "10-15 second instructional fitness demo video, static camera, a calm plus-size adult performing \"overhead triceps stretch\" with correct form in a bright home setting, slow controlled tempo, Polish captions \"Rozciąganie tricepsa nad głową\", \"Triceps — rozciąganie/mobilność\", safety cue \"Rozciągaj do uczucia napięcia, nie do bólu. Nie sprężynuj — ruch powolny i spokojny. Przy ostrym bólu przerwij.\", soft music, seamless loop, photorealistic, encouraging non-judgmental tone."
+  },
+  {
+    "code": "D40",
+    "name": "Rozciąganie bicepsa stojąc",
+    "group": "D",
+    "muscle": "Biceps — rozciąganie/mobilność",
+    "enName": "standing biceps stretch",
+    "level": "beginner",
+    "steps": [
+      "Przyjmij pozycję pokazaną na grafice (1 → 2), rozciągającą biceps.",
+      "Wchodź w rozciąganie powoli, z każdym wydechem odrobinę głębiej.",
+      "Utrzymaj napięcie na granicy komfortu — nigdy do bólu.",
+      "Jeśli ćwiczenie jest jednostronne, powtórz na drugą stronę."
+    ],
+    "safety": "Rozciągaj do uczucia napięcia, nie do bólu. Nie sprężynuj — ruch powolny i spokojny. Przy ostrym bólu przerwij.",
+    "reps": {
+      "faza1": "2 × 20 s",
+      "faza2": "2 × 25 s",
+      "faza3": "2 × 30 s",
+      "faza4": "2 × 30-40 s"
+    },
+    "infographicPrompt": "Clean flat-vector fitness infographic, square format, showing a friendly plus-size adult demonstrating \"standing biceps stretch\" in 3 sequential steps, minimalist home-gym background, soft blue-and-white palette, bold Polish captions: nazwa ćwiczenia \"Rozciąganie bicepsa stojąc\", partia mięśniowa \"Biceps — rozciąganie/mobilność\", wskazówka bezpieczeństwa: \"Rozciągaj do uczucia napięcia, nie do bólu. Nie sprężynuj — ruch powolny i spokojny. Przy ostrym bólu przerwij.\". Numbered arrows, dashed alignment guides, flat illustration, no photorealism, inclusive body-positive design.",
+    "videoPrompt": "10-15 second instructional fitness demo video, static camera, a calm plus-size adult performing \"standing biceps stretch\" with correct form in a bright home setting, slow controlled tempo, Polish captions \"Rozciąganie bicepsa stojąc\", \"Biceps — rozciąganie/mobilność\", safety cue \"Rozciągaj do uczucia napięcia, nie do bólu. Nie sprężynuj — ruch powolny i spokojny. Przy ostrym bólu przerwij.\", soft music, seamless loop, photorealistic, encouraging non-judgmental tone."
+  },
+  {
+    "code": "D41",
+    "name": "Krążenia nadgarstków",
+    "group": "D",
+    "muscle": "Przedramiona — rozciąganie/mobilność",
+    "enName": "wrist circles",
+    "level": "beginner",
+    "steps": [
+      "Przyjmij pozycję pokazaną na grafice (1 → 2), rozciągającą przedramiona.",
+      "Wchodź w rozciąganie powoli, z każdym wydechem odrobinę głębiej.",
+      "Utrzymaj napięcie na granicy komfortu — nigdy do bólu.",
+      "Jeśli ćwiczenie jest jednostronne, powtórz na drugą stronę."
+    ],
+    "safety": "Rozciągaj do uczucia napięcia, nie do bólu. Nie sprężynuj — ruch powolny i spokojny. Przy ostrym bólu przerwij.",
+    "reps": {
+      "faza1": "2 × 20 s",
+      "faza2": "2 × 25 s",
+      "faza3": "2 × 30 s",
+      "faza4": "2 × 30-40 s"
+    },
+    "infographicPrompt": "Clean flat-vector fitness infographic, square format, showing a friendly plus-size adult demonstrating \"wrist circles\" in 3 sequential steps, minimalist home-gym background, soft blue-and-white palette, bold Polish captions: nazwa ćwiczenia \"Krążenia nadgarstków\", partia mięśniowa \"Przedramiona — rozciąganie/mobilność\", wskazówka bezpieczeństwa: \"Rozciągaj do uczucia napięcia, nie do bólu. Nie sprężynuj — ruch powolny i spokojny. Przy ostrym bólu przerwij.\". Numbered arrows, dashed alignment guides, flat illustration, no photorealism, inclusive body-positive design.",
+    "videoPrompt": "10-15 second instructional fitness demo video, static camera, a calm plus-size adult performing \"wrist circles\" with correct form in a bright home setting, slow controlled tempo, Polish captions \"Krążenia nadgarstków\", \"Przedramiona — rozciąganie/mobilność\", safety cue \"Rozciągaj do uczucia napięcia, nie do bólu. Nie sprężynuj — ruch powolny i spokojny. Przy ostrym bólu przerwij.\", soft music, seamless loop, photorealistic, encouraging non-judgmental tone."
+  },
+  {
+    "code": "D42",
+    "name": "Najlepsze rozciąganie świata (world's greatest stretch)",
+    "group": "D",
+    "muscle": "Tył uda — rozciąganie/mobilność",
+    "enName": "world's greatest stretch",
+    "level": "intermediate",
+    "steps": [
+      "Przyjmij pozycję pokazaną na grafice (1 → 2), rozciągającą tył uda.",
+      "Wchodź w rozciąganie powoli, z każdym wydechem odrobinę głębiej.",
+      "Utrzymaj napięcie na granicy komfortu — nigdy do bólu.",
+      "Jeśli ćwiczenie jest jednostronne, powtórz na drugą stronę."
+    ],
+    "safety": "Rozciągaj do uczucia napięcia, nie do bólu. Nie sprężynuj — ruch powolny i spokojny. Przy ostrym bólu przerwij.",
+    "reps": {
+      "faza1": "2 × 20 s",
+      "faza2": "2 × 25 s",
+      "faza3": "2 × 30 s",
+      "faza4": "2 × 30-40 s"
+    },
+    "infographicPrompt": "Clean flat-vector fitness infographic, square format, showing a friendly plus-size adult demonstrating \"world's greatest stretch\" in 3 sequential steps, minimalist home-gym background, soft blue-and-white palette, bold Polish captions: nazwa ćwiczenia \"Najlepsze rozciąganie świata (world's greatest stretch)\", partia mięśniowa \"Tył uda — rozciąganie/mobilność\", wskazówka bezpieczeństwa: \"Rozciągaj do uczucia napięcia, nie do bólu. Nie sprężynuj — ruch powolny i spokojny. Przy ostrym bólu przerwij.\". Numbered arrows, dashed alignment guides, flat illustration, no photorealism, inclusive body-positive design.",
+    "videoPrompt": "10-15 second instructional fitness demo video, static camera, a calm plus-size adult performing \"world's greatest stretch\" with correct form in a bright home setting, slow controlled tempo, Polish captions \"Najlepsze rozciąganie świata (world's greatest stretch)\", \"Tył uda — rozciąganie/mobilność\", safety cue \"Rozciągaj do uczucia napięcia, nie do bólu. Nie sprężynuj — ruch powolny i spokojny. Przy ostrym bólu przerwij.\", soft music, seamless loop, photorealistic, encouraging non-judgmental tone."
+  },
+  {
+    "code": "D43",
+    "name": "Kolano do klatki (jednonóż)",
+    "group": "D",
+    "muscle": "Pośladki — rozciąganie/mobilność",
+    "enName": "single knee to chest stretch",
+    "level": "beginner",
+    "steps": [
+      "Przyjmij pozycję pokazaną na grafice (1 → 2), rozciągającą pośladki.",
+      "Wchodź w rozciąganie powoli, z każdym wydechem odrobinę głębiej.",
+      "Utrzymaj napięcie na granicy komfortu — nigdy do bólu.",
+      "Jeśli ćwiczenie jest jednostronne, powtórz na drugą stronę."
+    ],
+    "safety": "Rozciągaj do uczucia napięcia, nie do bólu. Nie sprężynuj — ruch powolny i spokojny. Przy ostrym bólu przerwij.",
+    "reps": {
+      "faza1": "2 × 20 s",
+      "faza2": "2 × 25 s",
+      "faza3": "2 × 30 s",
+      "faza4": "2 × 30-40 s"
+    },
+    "infographicPrompt": "Clean flat-vector fitness infographic, square format, showing a friendly plus-size adult demonstrating \"single knee to chest stretch\" in 3 sequential steps, minimalist home-gym background, soft blue-and-white palette, bold Polish captions: nazwa ćwiczenia \"Kolano do klatki (jednonóż)\", partia mięśniowa \"Pośladki — rozciąganie/mobilność\", wskazówka bezpieczeństwa: \"Rozciągaj do uczucia napięcia, nie do bólu. Nie sprężynuj — ruch powolny i spokojny. Przy ostrym bólu przerwij.\". Numbered arrows, dashed alignment guides, flat illustration, no photorealism, inclusive body-positive design.",
+    "videoPrompt": "10-15 second instructional fitness demo video, static camera, a calm plus-size adult performing \"single knee to chest stretch\" with correct form in a bright home setting, slow controlled tempo, Polish captions \"Kolano do klatki (jednonóż)\", \"Pośladki — rozciąganie/mobilność\", safety cue \"Rozciągaj do uczucia napięcia, nie do bólu. Nie sprężynuj — ruch powolny i spokojny. Przy ostrym bólu przerwij.\", soft music, seamless loop, photorealistic, encouraging non-judgmental tone."
+  },
+  {
+    "code": "D44",
+    "name": "Skłon boczny stojąc",
+    "group": "D",
+    "muscle": "Brzuch — rozciąganie/mobilność",
+    "enName": "standing side bend stretch",
+    "level": "beginner",
+    "steps": [
+      "Przyjmij pozycję pokazaną na grafice (1 → 2), rozciągającą brzuch.",
+      "Wchodź w rozciąganie powoli, z każdym wydechem odrobinę głębiej.",
+      "Utrzymaj napięcie na granicy komfortu — nigdy do bólu.",
+      "Jeśli ćwiczenie jest jednostronne, powtórz na drugą stronę."
+    ],
+    "safety": "Rozciągaj do uczucia napięcia, nie do bólu. Nie sprężynuj — ruch powolny i spokojny. Przy ostrym bólu przerwij.",
+    "reps": {
+      "faza1": "2 × 20 s",
+      "faza2": "2 × 25 s",
+      "faza3": "2 × 30 s",
+      "faza4": "2 × 30-40 s"
+    },
+    "infographicPrompt": "Clean flat-vector fitness infographic, square format, showing a friendly plus-size adult demonstrating \"standing side bend stretch\" in 3 sequential steps, minimalist home-gym background, soft blue-and-white palette, bold Polish captions: nazwa ćwiczenia \"Skłon boczny stojąc\", partia mięśniowa \"Brzuch — rozciąganie/mobilność\", wskazówka bezpieczeństwa: \"Rozciągaj do uczucia napięcia, nie do bólu. Nie sprężynuj — ruch powolny i spokojny. Przy ostrym bólu przerwij.\". Numbered arrows, dashed alignment guides, flat illustration, no photorealism, inclusive body-positive design.",
+    "videoPrompt": "10-15 second instructional fitness demo video, static camera, a calm plus-size adult performing \"standing side bend stretch\" with correct form in a bright home setting, slow controlled tempo, Polish captions \"Skłon boczny stojąc\", \"Brzuch — rozciąganie/mobilność\", safety cue \"Rozciągaj do uczucia napięcia, nie do bólu. Nie sprężynuj — ruch powolny i spokojny. Przy ostrym bólu przerwij.\", soft music, seamless loop, photorealistic, encouraging non-judgmental tone."
   }
 ]
