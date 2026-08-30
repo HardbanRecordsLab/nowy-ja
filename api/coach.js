@@ -5,7 +5,15 @@
 // na działanie apki.
 
 const GROQ_URL = 'https://api.groq.com/openai/v1/chat/completions';
-const MODEL = 'llama-3.3-70b-versatile';
+// Kolejność prób — pierwszy dostępny model wygrywa (Groq bywa, że wycofuje modele).
+const MODELS = [
+  process.env.GROQ_MODEL,
+  'llama-3.1-8b-instant',
+  'llama-3.3-70b-versatile',
+  'meta-llama/llama-4-scout-17b-16e-instruct',
+  'openai/gpt-oss-20b',
+  'gemma2-9b-it',
+].filter(Boolean);
 
 const GOAL_PL = {
   weight_loss: 'redukcja wagi', muscle_tone: 'ujędrnienie', mobility: 'mobilność',
@@ -65,33 +73,46 @@ module.exports = async (req, res) => {
   ].join('\n');
 
   const controller = new AbortController();
-  const to = setTimeout(() => controller.abort(), 9000);
+  const to = setTimeout(() => controller.abort(), 9500);
+  let lastErr = { error: 'groq', status: 0, detail: '' };
   try {
-    const r = await fetch(GROQ_URL, {
-      method: 'POST',
-      signal: controller.signal,
-      headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + key },
-      body: JSON.stringify({
-        model: MODEL,
-        temperature: 0.7,
-        max_tokens: 160,
-        messages: [
-          { role: 'system', content: SYSTEM },
-          { role: 'user', content: userMsg },
-        ],
-      }),
-    });
-    clearTimeout(to);
-    if (!r.ok) {
+    for (const model of MODELS) {
+      let r;
+      try {
+        r = await fetch(GROQ_URL, {
+          method: 'POST',
+          signal: controller.signal,
+          headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + key },
+          body: JSON.stringify({
+            model: model,
+            temperature: 0.7,
+            max_tokens: 160,
+            messages: [
+              { role: 'system', content: SYSTEM },
+              { role: 'user', content: userMsg },
+            ],
+          }),
+        });
+      } catch (e) {
+        lastErr = { error: 'fetch', status: 0, detail: String((e && e.message) || e).slice(0, 120) };
+        break;
+      }
+      if (r.ok) {
+        const data = await r.json();
+        let message = ((data.choices && data.choices[0] && data.choices[0].message && data.choices[0].message.content) || '').trim();
+        message = message.replace(/^["'\s]+|["'\s]+$/g, '').slice(0, 400);
+        clearTimeout(to);
+        if (!message) { res.status(502).json({ error: 'empty', model: model }); return; }
+        res.status(200).json({ message: message, model: model });
+        return;
+      }
       const t = await r.text().catch(() => '');
-      res.status(502).json({ error: 'groq', status: r.status, detail: t.slice(0, 200) });
-      return;
+      lastErr = { error: 'groq', status: r.status, detail: t.slice(0, 200), model: model };
+      // 404 / model_not_found / decommissioned -> spróbuj następny; inne błędy -> przerwij
+      if (!(r.status === 404 || /model_not_found|decommission|does not exist|deprecat/i.test(t))) break;
     }
-    const data = await r.json();
-    let message = ((data.choices && data.choices[0] && data.choices[0].message && data.choices[0].message.content) || '').trim();
-    message = message.replace(/^["'\s]+|["'\s]+$/g, '').slice(0, 400);
-    if (!message) { res.status(502).json({ error: 'empty' }); return; }
-    res.status(200).json({ message: message, model: MODEL });
+    clearTimeout(to);
+    res.status(502).json(lastErr);
   } catch (e) {
     clearTimeout(to);
     res.status(504).json({ error: 'timeout', detail: String((e && e.message) || e).slice(0, 120) });
