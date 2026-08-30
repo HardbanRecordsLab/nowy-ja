@@ -857,7 +857,7 @@ function viewToday(profile) {
 
     <section class="card">
       <h3 class="dash-card-title">${ico('sparkles')}AI Coach</h3>
-      <p class="muted" style="margin-bottom:0">${esc(coachTip(info, streak))}</p>
+      <p class="muted" id="ai-coach-msg" style="margin-bottom:0">${esc(aiCoachCached(profile) || coachTip(info, streak))}</p>
     </section>
 
     ${lastSession ? `<section class="card">
@@ -931,6 +931,47 @@ function coachTip(info, streak) {
   if (streak >= 3) return `Świetna passa: ${streak} dni z rzędu! Tak trzymaj, ale pamiętaj o dniach R.`;
   if (info.circuit) return 'Dziś obwód stacyjny — pilnuj przerw między stacjami, to część planu, nie strata czasu.';
   return 'Skup się dziś na technice, nie na tempie — to ona chroni Twoje stawy.';
+}
+
+// ---------- Trener AI (Groq przez /api/coach — opcjonalny, z fallbackiem) ----------
+function aiCoachKey(profile) {
+  return `forma60.coach.${profile.id}.${new Date().toISOString().slice(0, 10)}`;
+}
+function aiCoachCached(profile) {
+  try { return localStorage.getItem(aiCoachKey(profile)) || ''; } catch { return ''; }
+}
+function aiCoachEnabled() {
+  try { return localStorage.getItem('forma60.aiCoach') === '1'; } catch { return false; }
+}
+async function loadAICoach(profile) {
+  if (!profile || !navigator.onLine || !aiCoachEnabled()) return;
+  if (aiCoachCached(profile)) return;                 // już mamy na dziś
+  const day = Store.currentDayNumber(profile);
+  const info = effectiveDayInfo(profile, day);
+  const last = Store.getLastSession(profile);
+  const payload = {
+    goal: profile.goal, experience: profile.experience,
+    day, planDays: programLength(profile),
+    dayType: info.rest ? 'odpoczynek' : `${info.type} — ${info.typeName}`,
+    phaseName: info.phaseName, rest: !!info.rest, circuit: !!info.circuit,
+    streak: Store.currentStreak(profile),
+    completedCount: profile.progress.completedDays.length,
+    focusAreas: profile.focusAreas || [], limitations: profile.limitations || [],
+    lastSession: last ? { difficulty: last.difficulty, feeling: last.feeling, pain: last.pain } : null,
+  };
+  try {
+    const r = await fetch('/api/coach', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+    if (!r.ok) return;
+    const data = await r.json();
+    const msg = (data && data.message || '').trim();
+    if (!msg) return;
+    try { localStorage.setItem(aiCoachKey(profile), msg); } catch {}
+    const el = document.getElementById('ai-coach-msg');
+    if (el) el.textContent = msg;
+  } catch { /* offline / błąd API — zostaje wskazówka lokalna */ }
 }
 
 function painLabel(p) {
@@ -2464,6 +2505,14 @@ function viewSettings(profile) {
   </section>
 
   <section class="card">
+    <div class="progress-mini-row">
+      <span><strong>Trener AI (online)</strong></span>
+      <label class="switch"><input type="checkbox" data-action="toggle-ai-coach" ${aiCoachEnabled() ? 'checked' : ''}><span class="switch-track"></span></label>
+    </div>
+    <p class="muted small" style="margin-top:8px">Gdy włączone, raz dziennie wysyłamy na nasz serwer <strong>anonimowy skrót</strong> Twojego dnia (cel, poziom, typ treningu, faza, seria — <strong>bez imienia i danych osobowych</strong>) i pokazujemy krótką wskazówkę od modelu AI. Wyłączone = wskazówka układana lokalnie, nic nie opuszcza urządzenia.</p>
+  </section>
+
+  <section class="card">
     <h3>Twoje dane</h3>
     <form id="form-edit-profile" class="form">
       <label>Imię<input type="text" name="name" value="${esc(profile.name)}"></label>
@@ -3087,6 +3136,17 @@ document.addEventListener('change', async e => {
   if (e.target.dataset.action === 'toggle-voice-enabled') {
     Voice.setEnabled(e.target.checked);
   }
+  if (e.target.dataset.action === 'toggle-ai-coach') {
+    try { localStorage.setItem('forma60.aiCoach', e.target.checked ? '1' : '0'); } catch {}
+    if (e.target.checked) {
+      const profile = Store.getActiveProfile();
+      try { localStorage.removeItem(aiCoachKey(profile)); } catch {}
+      loadAICoach(profile);
+      toast('Trener AI włączony — wskazówka pojawi się na ekranie Dziś.');
+    } else {
+      toast('Trener AI wyłączony. Wskazówki układane lokalnie.');
+    }
+  }
   if (e.target.dataset.action === 'toggle-music-enabled') {
     Music.setEnabled(e.target.checked);
     if (activeWorkoutRunner) renderWorkoutBody(activeWorkoutRunner);
@@ -3186,6 +3246,9 @@ function bindDynamic(routeName, profile, arg) {
   }
   if (routeName === 'progress' && profile) {
     loadPhotosInto(profile);
+  }
+  if ((routeName === 'today' || !routeName) && profile) {
+    loadAICoach(profile);
   }
 }
 

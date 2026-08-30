@@ -1,4 +1,4 @@
-const CACHE = 'forma60-v58';
+const CACHE = 'forma60-v59';
 const CORE = [
   './app.html',
   './css/styles.css',
@@ -28,6 +28,7 @@ self.addEventListener('activate', e => {
 
 self.addEventListener('fetch', e => {
   if (e.request.method !== 'GET') return;
+  if (new URL(e.request.url).pathname.startsWith('/api/')) return; // funkcje serverless — zawsze sieć
   e.respondWith(
     caches.match(e.request).then(cached => {
       const network = fetch(e.request).then(resp => {
