@@ -219,10 +219,11 @@ Nazwy plików: `E1.png` / `E1.mp4`, `E2.png` / `E2.mp4`, ... — dokładnie ten 
 ## 5. Batch 2 — popularne ćwiczenia, których nam brakowało (2026-08-30)
 
 **Status: wpięte do `exercises.json` (69 ćwiczeń łącznie) i do biblioteki.**
-Brakuje tylko plików `assets/exercises/<KOD>.mp4` / `.png` — do pobrania z darmowych
-banków (patrz niżej) albo wygenerowania z promptów AI (każde ćwiczenie ma je na
-stronie ćwiczenia). Jak plik trafi do `assets/exercises/`, aplikacja podłącza go
-automatycznie — ta sama logika co dla A1–E11.
+Wideo/zdjęcia (royalty-free, Pexels License) pobrane i wpięte dla: **G1** (pajacyki),
+**G3** (wspinaczka górska), **G4** (high knees), **A10** (rowerek), **B14** (wykrok w tył),
+**D7** (pozycja dziecka). Pozostałe 11 czeka na materiał — każde ma na stronie ćwiczenia
+gotowe linki wyszukiwania w darmowych bankach + prompty AI; plik `assets/exercises/<KOD>.mp4`
+/ `.png` podłącza się automatycznie po wrzuceniu.
 
 Zasada bez zmian: **60-dniowy program (cykl A→B→C→D→E→F→R, 4 fazy) się nie rusza.**
 Nowe ćwiczenia to biblioteka + opcje "Zamień" w trybie treningu + nowy filtr
