@@ -35,9 +35,20 @@ const SYSTEM = [
 
 module.exports = async (req, res) => {
   res.setHeader('Cache-Control', 'no-store');
-  if (req.method !== 'POST') { res.status(405).json({ error: 'method' }); return; }
   const key = process.env.GROQ_API_KEY;
   if (!key) { res.status(503).json({ error: 'no-key' }); return; }
+
+  // Diagnostyka: GET ?debug=models -> lista modeli dostępnych dla klucza.
+  if (req.method === 'GET' && req.query && req.query.debug === 'models') {
+    try {
+      const mr = await fetch('https://api.groq.com/openai/v1/models', { headers: { Authorization: 'Bearer ' + key } });
+      const md = await mr.json();
+      res.status(mr.ok ? 200 : 502).json({ status: mr.status, ids: (md.data || []).map(m => m.id) });
+    } catch (e) { res.status(502).json({ error: String((e && e.message) || e) }); }
+    return;
+  }
+
+  if (req.method !== 'POST') { res.status(405).json({ error: 'method' }); return; }
 
   let body = req.body;
   try { if (typeof body === 'string') body = JSON.parse(body); } catch (e) { body = {}; }
@@ -78,20 +89,22 @@ module.exports = async (req, res) => {
   try {
     for (const model of MODELS) {
       let r;
+      const payload = {
+        model: model,
+        temperature: 0.6,
+        max_tokens: 512,
+        messages: [
+          { role: 'system', content: SYSTEM },
+          { role: 'user', content: userMsg },
+        ],
+      };
+      if (/gpt-oss|qwen3|deepseek|reasoning/i.test(model)) payload.reasoning_effort = 'low';
       try {
         r = await fetch(GROQ_URL, {
           method: 'POST',
           signal: controller.signal,
           headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + key },
-          body: JSON.stringify({
-            model: model,
-            temperature: 0.7,
-            max_tokens: 160,
-            messages: [
-              { role: 'system', content: SYSTEM },
-              { role: 'user', content: userMsg },
-            ],
-          }),
+          body: JSON.stringify(payload),
         });
       } catch (e) {
         lastErr = { error: 'fetch', status: 0, detail: String((e && e.message) || e).slice(0, 120) };
