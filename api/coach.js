@@ -6,13 +6,15 @@
 
 const GROQ_URL = 'https://api.groq.com/openai/v1/chat/completions';
 // Kolejność prób — pierwszy dostępny model wygrywa (Groq bywa, że wycofuje modele).
+// Lista dobrana pod modele faktycznie dostępne dla klucza tego projektu.
 const MODELS = [
   process.env.GROQ_MODEL,
-  'llama-3.1-8b-instant',
-  'llama-3.3-70b-versatile',
-  'meta-llama/llama-4-scout-17b-16e-instruct',
+  'openai/gpt-oss-120b',
+  'qwen/qwen3.8-27b',
   'openai/gpt-oss-20b',
-  'gemma2-9b-it',
+  'groq/compound-mini',
+  'llama-3.3-70b-versatile',
+  'llama-3.1-8b-instant',
 ].filter(Boolean);
 
 const GOAL_PL = {
@@ -114,10 +116,13 @@ module.exports = async (req, res) => {
         const data = await r.json();
         let message = ((data.choices && data.choices[0] && data.choices[0].message && data.choices[0].message.content) || '').trim();
         message = message.replace(/^["'\s]+|["'\s]+$/g, '').slice(0, 400);
-        clearTimeout(to);
-        if (!message) { res.status(502).json({ error: 'empty', model: model }); return; }
-        res.status(200).json({ message: message, model: model });
-        return;
+        if (message) {
+          clearTimeout(to);
+          res.status(200).json({ message: message, model: model });
+          return;
+        }
+        lastErr = { error: 'empty', model: model };
+        continue; // pusta odpowiedź (np. reasoning zjadł limit) -> następny model
       }
       const t = await r.text().catch(() => '');
       lastErr = { error: 'groq', status: r.status, detail: t.slice(0, 200), model: model };
