@@ -78,21 +78,35 @@ function parseConstraintText(text) {
   return constraints;
 }
 
-// Zbuduj listę kroków treningu (ćwiczenia sekwencyjne, albo stacje×rundy dla dni obwodowych).
-function buildWorkoutSteps(dayInfo, exByCode) {
+// Zbuduj listę kroków treningu: najpierw lekka rozgrzewka (przed KAŻDYM treningiem),
+// potem ćwiczenia sekwencyjne albo stacje×rundy dla dni obwodowych.
+function buildWorkoutSteps(dayInfo, exByCode, opts = {}) {
   if (dayInfo.rest) return [];
+
+  let main;
   if (dayInfo.circuit) {
     const rounds = firstInt(dayInfo.rounds, 1);
-    const steps = [];
+    main = [];
     for (let round = 1; round <= rounds; round++) {
       dayInfo.stations.forEach((code, idx) => {
         const ex = exByCode[code];
-        if (ex) steps.push({ exercise: ex, stationIndex: idx + 1, totalStations: dayInfo.stations.length, round, totalRounds: rounds });
+        if (ex) main.push({ exercise: ex, stationIndex: idx + 1, totalStations: dayInfo.stations.length, round, totalRounds: rounds });
       });
     }
-    return steps;
+  } else {
+    main = (dayInfo.exercises || []).map(code => exByCode[code]).filter(Boolean).map(ex => ({ exercise: ex }));
   }
-  return dayInfo.exercises.map(code => exByCode[code]).filter(Boolean).map(ex => ({ exercise: ex }));
+
+  let warm = [];
+  if (!opts.noWarmup) {
+    const seq = (opts.express && typeof WARMUP_SEQUENCE_EXPRESS !== 'undefined')
+      ? WARMUP_SEQUENCE_EXPRESS
+      : (typeof WARMUP_SEQUENCE !== 'undefined' ? WARMUP_SEQUENCE : []);
+    warm = seq.map(w => ({ exercise: exByCode[w.code], warmup: true, warmupSeconds: w.seconds }))
+      .filter(s => s.exercise);
+    warm.forEach((s, i) => { s.warmupIndex = i + 1; s.warmupTotal = warm.length; });
+  }
+  return warm.concat(main);
 }
 
 const STAGE = {
@@ -137,6 +151,18 @@ class WorkoutRunner {
     clearInterval(this._timer);
     const step = this.currentStep;
     if (!step) { this._setState({ stage: STAGE.FEEDBACK }); return; }
+
+    // Krok rozgrzewki — stały czas, zawsze 1 "seria", bez redukcji.
+    if (step.warmup) {
+      this._currentSpec = { sets: 1, isTimed: true, timedSeconds: step.warmupSeconds, label: 'rozgrzewka' };
+      this._setState({ currentSet: 1, totalSets: 1, isTimed: true, stage: STAGE.COUNTDOWN });
+      this._runCountdown(PREP_SECONDS, () => {
+        this._setState({ stage: STAGE.ACTIVE });
+        this._runCountdown(step.warmupSeconds, () => this._onSetCompleted());
+      });
+      return;
+    }
+
     const phase = this.dayInfo.phase;
     const spec = parseReps(step.exercise.reps['faza' + phase]);
     this._currentSpec = spec;
@@ -197,9 +223,9 @@ class WorkoutRunner {
   _onSetCompleted() {
     const step = this.currentStep;
     if (!step) return;
-    this.onLogSet(step.exercise.code, this.state.currentSet, this.state.totalSets);
+    if (!step.warmup) this.onLogSet(step.exercise.code, this.state.currentSet, this.state.totalSets);
 
-    if (!this.isCircuit && this.state.currentSet < this.state.totalSets) {
+    if (!this.isCircuit && !step.warmup && this.state.currentSet < this.state.totalSets) {
       this._setState({ currentSet: this.state.currentSet + 1, stage: STAGE.SET_REST });
       this._runCountdown(this.restSeconds, () => this._prepareStep());
       return;
@@ -213,6 +239,12 @@ class WorkoutRunner {
     if (nextIndex >= this.steps.length) { this._setState({ stage: STAGE.FEEDBACK }); return; }
     const next = this.steps[nextIndex];
     this._setState({ stepIndex: nextIndex });
+
+    // Rozgrzewka: płynne przejścia, bez długiego odpoczynku — wystarczy 3 s "przygotuj się".
+    if (current && current.warmup) {
+      this._prepareStep();
+      return;
+    }
 
     if (this.isCircuit && current && next.round !== current.round) {
       this._setState({ stage: STAGE.ROUND_REST });
@@ -229,14 +261,22 @@ class WorkoutRunner {
   skip() {
     clearInterval(this._timer);
     const step = this.currentStep;
-    if (step) this.onLogSet(step.exercise.code, 0, this.state.totalSets, true);
+    if (step && !step.warmup) this.onLogSet(step.exercise.code, 0, this.state.totalSets, true);
     this._advance();
+  }
+
+  skipWarmup() {
+    clearInterval(this._timer);
+    const firstMain = this.steps.findIndex(st => !st.warmup);
+    if (firstMain <= 0) return;
+    this._setState({ stepIndex: firstMain });
+    this._prepareStep();
   }
 
   swap(newExercise) {
     clearInterval(this._timer);
     const step = this.currentStep;
-    if (!step) return;
+    if (!step || step.warmup) return;
     this.steps[this.state.stepIndex] = { ...step, exercise: newExercise, swappedFrom: step.exercise.code };
     this._prepareStep();
   }

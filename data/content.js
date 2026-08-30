@@ -122,6 +122,28 @@ const WARMUP = [
 
 const COOLDOWN = 'Wykonaj sekwencję rozciągania opisaną jako ćwiczenie D2 („Rozciąganie całego ciała”) — 8-10 minut. Rozciągaj do uczucia delikatnego napięcia, nigdy do bólu.';
 
+// Lekka, spokojna rozgrzewka odtwarzana automatycznie PRZED KAŻDYM treningiem
+// w trybie prowadzonym ("Trening teraz"). Same ruchy dynamiczne i mobilność —
+// żadnego statycznego rozciągania i żadnego wysiłku. Kody odwołują się do ćwiczeń,
+// które mają już w aplikacji infografikę/wideo.
+const WARMUP_SEQUENCE = [
+  { code: 'D1', seconds: 45 },   // Marsz w miejscu (low impact)
+  { code: 'D8', seconds: 30 },   // Krążenia ramion
+  { code: 'A6', seconds: 30 },   // Krążenia biodrem stojąc
+  { code: 'D4', seconds: 40 },   // Przenoszenie ciężaru na boki (step touch)
+  { code: 'D3', seconds: 40 },   // Krążenia stawów (mobility flow)
+  { code: 'D5', seconds: 30 },   // Rotacje klatki piersiowej
+  { code: 'D41', seconds: 20 },  // Krążenia nadgarstków
+];
+// Skrócona rozgrzewka dla trybu ekspresowego (~1,5 min).
+const WARMUP_SEQUENCE_EXPRESS = [
+  { code: 'D1', seconds: 30 },
+  { code: 'D8', seconds: 20 },
+  { code: 'A6', seconds: 20 },
+  { code: 'D3', seconds: 30 },
+];
+const WARMUP_TOTAL_SECONDS = WARMUP_SEQUENCE.reduce((s, w) => s + w.seconds + 3, 0);
+
 const CIRCUIT_INFO = 'Wykonaj wskazane ćwiczenia jedno po drugim w formie obwodu (stacji), z przerwą 20-30 s między stacjami i 60-90 s między pełnymi rundami. Liczba powtórzeń/czasu dla każdego ćwiczenia — zgodnie z bieżącą fazą.';
 
 const MONITORING = {

@@ -82,12 +82,15 @@ function dashRing(pct, valueText, color = 'var(--dash-violet)') {
 }
 
 // Szacowany czas treningu — z liczby kroków (ćwiczenie/seria albo stacja×runda).
-function estimateWorkoutMinutes(dayInfo) {
+function estimateWorkoutMinutes(dayInfo, opts = {}) {
   if (dayInfo.rest) return 0;
-  const steps = buildWorkoutSteps(dayInfo, exByCode);
+  const steps = buildWorkoutSteps(dayInfo, exByCode, { noWarmup: true });
   if (!steps.length) return 0;
-  const perStep = dayInfo.circuit ? 80 : 165; // s: rozgrzewka bufor + praca + przerwa (×serie)
-  return Math.max(5, Math.round((steps.length * perStep) / 60));
+  const perStep = dayInfo.circuit ? 80 : 165; // s: praca + przerwa (×serie)
+  const warm = opts.express
+    ? (typeof WARMUP_SEQUENCE_EXPRESS !== 'undefined' ? WARMUP_SEQUENCE_EXPRESS.reduce((s, w) => s + w.seconds + 3, 0) : 0)
+    : (typeof WARMUP_TOTAL_SECONDS !== 'undefined' ? WARMUP_TOTAL_SECONDS : 0);
+  return Math.max(5, Math.round((steps.length * perStep + warm) / 60));
 }
 
 // Ile ćwiczeń dziś (bez mnożenia przez rundy/serie).
@@ -1051,8 +1054,9 @@ function viewDay(profile, day) {
   ${!info.rest ? viewConstraintPanel() : ''}
 
   ${!info.rest ? `<details class="card details-warmup">
-    <summary>Rozgrzewka i schłodzenie (przypomnienie)</summary>
-    <p class="muted small">Przed treningiem (5-8 min):</p>
+    <summary>Rozgrzewka i schłodzenie</summary>
+    <p class="muted small">🔥 <strong>Rozgrzewka (~4 min) odtwarza się automatycznie</strong> na początku każdego treningu w trybie prowadzonym — lekka, spokojna, prowadzona krok po kroku. Nic nie musisz robić wcześniej.</p>
+    <p class="muted small" style="margin-top:8px">Jeśli wolisz rozgrzać się po swojemu:</p>
     <ul class="tight">${WARMUP.map(w => `<li>${esc(w)}</li>`).join('')}</ul>
     <p class="muted small">Po treningu: ${esc(COOLDOWN)}</p>
   </details>` : ''}
@@ -1136,7 +1140,7 @@ function initWorkout(profile, day, opts = {}) {
   if (isExpress && !dayInfo.rest && !dayInfo.circuit) {
     dayInfo = { ...dayInfo, exercises: dayInfo.exercises.slice(0, EXPRESS_MAX_EXERCISES) };
   }
-  const steps = buildWorkoutSteps(dayInfo, exByCode);
+  const steps = buildWorkoutSteps(dayInfo, exByCode, { express: isExpress });
   const phaseDef = PHASES.find(p => p.id === dayInfo.phase) || PHASES[0];
   const restSeconds = firstIntFrom(phaseDef.restBetween, 45);
 
@@ -1228,18 +1232,28 @@ function announceWorkout(runner) {
   const stageOrStepChanged = runner._voiceStage !== s.stage || runner._voiceStepIndex !== s.stepIndex;
 
   if (stageOrStepChanged) {
-    if (s.stage === STAGE.ACTIVE && step) {
+    if (s.stage === STAGE.ACTIVE && step && step.warmup) {
+      let pre = '';
+      if (step.warmupIndex === 1 && !runner._openedVoice) {
+        pre = 'Zaczynamy od rozgrzewki, na spokojnie. ';
+        runner._openedVoice = true;
+      }
+      Voice.speak(`${pre}${step.exercise.name}. Spokojny, lekki ruch.`, prosody);
+    } else if (s.stage === STAGE.ACTIVE && step) {
       const reps = currentPhaseReps(step.exercise, runner.dayInfo.phase);
+      const mainSteps = runner.steps.filter(st => !st.warmup);
+      const isFirstMain = !runner._workoutOpened && !step.warmup;
       const isLastExercise = s.stepIndex === runner.steps.length - 1;
       const isLastSet = !runner.isCircuit && s.totalSets > 1 && s.currentSet === s.totalSets;
-      let moment;
+      let moment, pre = '';
+      if (isFirstMain) { pre = 'Rozgrzewka zakończona. Zaczynamy trening. '; runner._workoutOpened = true; }
       if (runner._justSkipped) { moment = 'skip'; runner._justSkipped = false; }
-      else if (s.stepIndex === 0 && s.currentSet === 1 && !runner._openedVoice) { moment = 'start'; runner._openedVoice = true; }
+      else if (isFirstMain) { moment = 'start'; runner._openedVoice = true; }
       else if (isLastExercise) moment = 'lastExercise';
       else if (isLastSet) moment = 'lastSet';
       else if (Math.random() < 0.5) moment = 'active';
       const tail = moment ? ` ${Voice.line(moment)}` : '';
-      Voice.speak(`${step.exercise.name}. ${reps}.${tail}`, prosody);
+      Voice.speak(`${pre}${step.exercise.name}. ${reps}.${tail}`, prosody);
     } else if ([STAGE.SET_REST, STAGE.STATION_REST, STAGE.ROUND_REST].includes(s.stage)) {
       const moment = runner._justSkipped ? 'skip' : 'rest';
       if (runner._justSkipped) runner._justSkipped = false;
@@ -1302,11 +1316,16 @@ function workoutActiveHtml(runner) {
   const ex = step.exercise;
 
   let headerLine, subLine = '';
-  if (step.stationIndex) {
+  if (step.warmup) {
+    headerLine = `ROZGRZEWKA ${step.warmupIndex} / ${step.warmupTotal}`;
+    subLine = 'Na spokojnie — to nie wysiłek, tylko przygotowanie ciała';
+  } else if (step.stationIndex) {
     headerLine = `STACJA ${step.stationIndex} / ${step.totalStations}`;
     subLine = `RUNDA ${step.round} / ${step.totalRounds}`;
   } else {
-    headerLine = `ĆWICZENIE ${s.stepIndex + 1} / ${runner.steps.length}`;
+    const mainIdx = s.stepIndex - (runner.steps.filter(st => st.warmup).length) + 1;
+    const mainTotal = runner.steps.filter(st => !st.warmup).length;
+    headerLine = `ĆWICZENIE ${Math.max(1, mainIdx)} / ${mainTotal}`;
   }
 
   let centerHtml = '';
@@ -1318,23 +1337,23 @@ function workoutActiveHtml(runner) {
     centerHtml = s.isTimed ? bigTimer(fmtSeconds(s.remainingSeconds)) : `<p class="workout-reps">${esc(currentPhaseReps(ex, runner.dayInfo.phase))}</p>`;
   }
 
-  const setsLine = !runner.isCircuit ? `<p class="workout-set-label">SERIA ${s.currentSet} / ${s.totalSets}</p>` : '';
+  const setsLine = (!runner.isCircuit && !step.warmup) ? `<p class="workout-set-label">SERIA ${s.currentSet} / ${s.totalSets}</p>` : '';
 
   const profile = Store.getActiveProfile();
-  const painCount = profile ? Store.getExercisePainCount(profile, ex.code) : 0;
+  const painCount = (profile && !step.warmup) ? Store.getExercisePainCount(profile, ex.code) : 0;
   const painSuggestion = painCount >= 2 ? `
     <div class="pain-suggestion">
       <span>⚠️ Zgłaszałaś/eś ból przy tym ćwiczeniu (${painCount}×). Rozważ zamiennik.</span>
       <button type="button" class="btn tiny primary" data-action="workout-swap" data-code="${ex.code}">Zamień</button>
     </div>` : '';
 
-  const constraintSuggestion = constraintSuggestionFor(runner, ex);
+  const constraintSuggestion = step.warmup ? '' : constraintSuggestionFor(runner, ex);
 
   return `
   <div class="workout-center">
     ${painSuggestion}
     ${constraintSuggestion}
-    <p class="workout-step-label">${headerLine}</p>
+    <p class="workout-step-label${step.warmup ? ' is-warmup' : ''}">${headerLine}</p>
     ${subLine ? `<p class="muted">${subLine}</p>` : ''}
     <h2 class="workout-exercise-name">${esc(ex.name.toUpperCase())}</h2>
     ${centerHtml}
@@ -1344,13 +1363,15 @@ function workoutActiveHtml(runner) {
     ${s.stage === STAGE.ACTIVE ? `
       <div class="btn-row">
         <button class="btn ghost" style="flex:1" data-action="workout-pause">${s.isPaused ? 'WZNÓW' : 'PAUZA'}</button>
-        <button class="btn primary" style="flex:1" data-action="workout-done">GOTOWE</button>
+        <button class="btn primary" style="flex:1" data-action="workout-done">${step.warmup ? 'DALEJ' : 'GOTOWE'}</button>
       </div>` : ''}
     <div class="btn-row">
-      <button class="btn ghost" style="flex:1" data-action="workout-skip">POMIŃ</button>
-      <button class="btn ghost" style="flex:1" data-action="workout-swap" data-code="${ex.code}">ZAMIEŃ</button>
+      <button class="btn ghost" style="flex:1" data-action="workout-skip">${step.warmup ? 'POMIŃ ĆWICZENIE' : 'POMIŃ'}</button>
+      ${step.warmup
+        ? `<button class="btn ghost" style="flex:1" data-action="workout-skip-warmup">POMIŃ ROZGRZEWKĘ</button>`
+        : `<button class="btn ghost" style="flex:1" data-action="workout-swap" data-code="${ex.code}">ZAMIEŃ</button>`}
     </div>
-    <button type="button" class="pain-report-link" data-action="workout-report-pain" data-code="${ex.code}">😣 Zgłoś ból przy tym ćwiczeniu</button>
+    ${step.warmup ? '' : `<button type="button" class="pain-report-link" data-action="workout-report-pain" data-code="${ex.code}">😣 Zgłoś ból przy tym ćwiczeniu</button>`}
   </div>`;
 }
 
@@ -2813,6 +2834,9 @@ document.addEventListener('click', async e => {
     case 'workout-skip':
       if (activeWorkoutRunner) activeWorkoutRunner._justSkipped = true;
       activeWorkoutRunner?.skip();
+      break;
+    case 'workout-skip-warmup':
+      activeWorkoutRunner?.skipWarmup();
       break;
     case 'workout-report-pain': {
       if (!profile) break;

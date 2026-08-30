@@ -471,6 +471,8 @@ a { color: inherit; text-decoration: none; }
 .workout-track-label { text-align: center; margin: -4px 0 6px; cursor: pointer; }
 .workout-center { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 20px 10px; }
 .workout-step-label { font-weight: 800; font-size: 1.1rem; letter-spacing: 0.5px; margin: 0; }
+.workout-step-label.is-warmup { color: var(--gold); }
+.workout-step-label.is-warmup::before { content: '🔥 '; }
 .workout-exercise-name { margin: 10px 0 20px; font-size: 1.6rem; }
 .workout-timer { font-size: 4.4rem; font-weight: 800; color: var(--navy); font-variant-numeric: tabular-nums; line-height: 1; }
 [data-theme="dark"] .workout-timer, [data-theme="auto"] .workout-timer { color: var(--gold); }
