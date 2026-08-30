@@ -47,6 +47,119 @@ function progressRingSVG(pct, { size = 60, stroke = 6, color = 'var(--navy)' } =
   </svg>`;
 }
 
+// ---------- Ikony (monoline, w stylu Lucide — zastępują emoji dla „pro" wyglądu) ----------
+const ICONS = {
+  home: '<path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/>',
+  calendar: '<path d="M8 2v4M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/>',
+  dumbbell: '<path d="M14.4 14.4 9.6 9.6"/><path d="M18.657 21.485a2 2 0 1 1-2.829-2.828l-1.767 1.768a2 2 0 1 1-2.829-2.829l6.364-6.364a2 2 0 1 1 2.829 2.829l-1.768 1.767a2 2 0 1 1 2.828 2.829z"/><path d="m21.5 21.5-1.4-1.4M3.9 3.9 2.5 2.5"/><path d="M6.404 12.768a2 2 0 1 1-2.829-2.829l1.768-1.767a2 2 0 1 1-2.828-2.829l2.828-2.828a2 2 0 1 1 2.829 2.828l1.767-1.768a2 2 0 1 1 2.829 2.829z"/>',
+  chart: '<path d="M16 7h6v6"/><path d="m22 7-8.5 8.5-5-5L2 17"/>',
+  grid: '<rect width="7" height="7" x="3" y="3" rx="1"/><rect width="7" height="7" x="14" y="3" rx="1"/><rect width="7" height="7" x="14" y="14" rx="1"/><rect width="7" height="7" x="3" y="14" rx="1"/>',
+  play: '<polygon points="6 3 20 12 6 21"/>',
+  zap: '<path d="M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z"/>',
+  flame: '<path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5"/>',
+  trophy: '<path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0z"/>',
+  pulse: '<path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/><path d="M3.22 12H9.5l.5-1 2 4.5 2-7 1.5 3.5h5.27"/>',
+  droplet: '<path d="M12 22a7 7 0 0 0 7-7c0-2-1-3.9-3-5.5s-3.5-4-4-6.5c-.5 2.5-2 4.9-4 6.5C6 11.1 5 13 5 15a7 7 0 0 0 7 7z"/>',
+  moon: '<path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/>',
+  utensils: '<path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/><path d="M7 2v20"/><path d="M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7"/>',
+  sparkles: '<path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .962 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.962 0z"/><path d="M20 3v4M22 5h-4"/>',
+  history: '<path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M12 7v5l4 2"/>',
+  book: '<path d="M12 7v14"/><path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"/>',
+  shield: '<path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/>',
+  arrow: '<path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>',
+  bed: '<path d="M2 4v16"/><path d="M2 8h18a2 2 0 0 1 2 2v10"/><path d="M2 17h20"/><path d="M6 8v9"/>',
+  activity: '<path d="M22 12h-4l-3 9L9 3l-3 9H2"/>',
+  clock: '<circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/>',
+};
+function ico(name, cls = '') {
+  return `<svg class="ico ${cls}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICONS[name] || ''}</svg>`;
+}
+
+// ---------- Pomocnicy kokpitu (Dziś / Postępy) ----------
+// Pierścień z liczbą w środku, w opakowaniu .dash-ring.
+function dashRing(pct, valueText, color = 'var(--dash-violet)') {
+  return `<span class="dash-ring">${progressRingSVG(pct, { size: 56, stroke: 6, color })}<span class="dash-ring-val">${esc(String(valueText))}</span></span>`;
+}
+
+// Szacowany czas treningu — z liczby kroków (ćwiczenie/seria albo stacja×runda).
+function estimateWorkoutMinutes(dayInfo) {
+  if (dayInfo.rest) return 0;
+  const steps = buildWorkoutSteps(dayInfo, exByCode);
+  if (!steps.length) return 0;
+  const perStep = dayInfo.circuit ? 80 : 165; // s: rozgrzewka bufor + praca + przerwa (×serie)
+  return Math.max(5, Math.round((steps.length * perStep) / 60));
+}
+
+// Ile ćwiczeń dziś (bez mnożenia przez rundy/serie).
+function dayExerciseCount(dayInfo) {
+  if (dayInfo.rest) return 0;
+  return (dayInfo.circuit ? dayInfo.stations : dayInfo.exercises || []).length;
+}
+
+const WEEKDAY_SHORT = ['Nd', 'Pn', 'Wt', 'Śr', 'Cz', 'Pt', 'So'];
+
+// Pasek 7 dni bieżącego "tygodnia programu" (blok 7 dni, w którym wypada dziś).
+function programWeekStrip(profile, today) {
+  const completed = new Set(profile.progress.completedDays);
+  const start = new Date(profile.startDate + 'T00:00:00');
+  const weekStart = today - ((today - 1) % 7);
+  let cells = '';
+  for (let d = weekStart; d < weekStart + 7 && d <= 60; d++) {
+    const info = getDayInfo(d);
+    const date = new Date(start);
+    date.setDate(date.getDate() + (d - 1));
+    let cls = 'is-future';
+    if (completed.has(d)) cls = 'is-done';
+    else if (d === today) cls = 'is-today';
+    else if (info.rest) cls = 'is-rest';
+    else if (d < today) cls = 'is-missed';
+    cells += `<a class="dash-day ${cls}" href="#/day/${d}" title="Dzień ${d}: ${esc(dayTypeLabel(info))}"><span>${WEEKDAY_SHORT[date.getDay()]}</span><b>${d}</b></a>`;
+  }
+  return `<nav class="dash-strip" aria-label="Tydzień programu">${cells}</nav>`;
+}
+
+// 7 słupków — ukończenia w ostatnich 7 dniach kalendarzowych (do karty serii).
+function last7CompletionSpark(profile) {
+  const sessions = profile.progress.sessions || [];
+  const byDay = new Set(sessions.map(s => new Date(s.completedAt).toISOString().slice(0, 10)));
+  let bars = '';
+  for (let i = 6; i >= 0; i--) {
+    const dt = new Date();
+    dt.setDate(dt.getDate() - i);
+    const on = byDay.has(dt.toISOString().slice(0, 10));
+    bars += `<i class="${on ? 'on' : ''}" style="height:${on ? 100 : 22}%"></i>`;
+  }
+  return `<span class="dash-spark">${bars}</span>`;
+}
+
+// Wykres słupkowy: minuty treningu w ostatnich 14 dniach (Postępy).
+function activityBars(profile) {
+  const sessions = profile.progress.sessions || [];
+  const days = [];
+  for (let i = 13; i >= 0; i--) {
+    const dt = new Date();
+    dt.setDate(dt.getDate() - i);
+    const key = dt.toISOString().slice(0, 10);
+    const mins = Math.round(
+      sessions.filter(s => new Date(s.completedAt).toISOString().slice(0, 10) === key)
+        .reduce((sum, s) => sum + (s.durationSeconds || 0), 0) / 60
+    );
+    days.push({ key, mins, label: WEEKDAY_SHORT[dt.getDay()] });
+  }
+  const max = Math.max(20, ...days.map(d => d.mins));
+  const total = days.reduce((s, d) => s + d.mins, 0);
+  const bars = days.map(d =>
+    `<div class="bar ${d.mins > 0 ? 'on' : ''}"><i style="height:${d.mins > 0 ? Math.max(8, Math.round((d.mins / max) * 100)) : 3}%"></i><span>${d.label}</span></div>`
+  ).join('');
+  return `
+  <section class="card">
+    <div class="dash-sec" style="margin:0 0 2px"><h3 class="dash-card-title">${ico('activity')}Aktywność — 14 dni</h3><span class="muted small">${total} min łącznie</span></div>
+    ${total > 0
+      ? `<div class="dash-bars">${bars}</div>`
+      : `<p class="muted small" style="margin:10px 0 2px">Ukończ trening, aby zobaczyć tu swój tygodniowy rytm.</p>`}
+  </section>`;
+}
+
 // ---------- Routing ----------
 function currentRoute() {
   const hash = location.hash.replace(/^#/, '') || '/today';
@@ -318,7 +431,11 @@ function render() {
     PoseCheck.stop();
   }
 
+  // Ciemny „kokpit" tylko na ekranach panelu użytkownika (Dziś / Postępy).
+  document.body.classList.toggle('view-dash', !!profile && (name === 'today' || name === 'progress'));
+
   if (!profile && name !== 'onboarding') {
+    document.body.classList.remove('view-dash');
     root.innerHTML = viewOnboarding();
     document.getElementById('nav').hidden = true;
     updateHeader(null);
@@ -326,6 +443,7 @@ function render() {
     return;
   }
   if (profile && !profile.safetyConsentAcceptedAt && name !== 'onboarding' && name !== 'safety') {
+    document.body.classList.remove('view-dash');
     root.innerHTML = viewSafety();
     document.getElementById('nav').hidden = true;
     updateHeader(profile);
@@ -611,80 +729,116 @@ function viewToday(profile) {
   const streak = Store.currentStreak(profile);
   const lastSession = Store.getLastSession(profile);
   const readinessScore = Store.computeReadiness(profile);
-  const readinessColor = readinessScore >= 70 ? 'var(--success)' : readinessScore >= 45 ? 'var(--gold)' : 'var(--danger)';
+  const readinessColor = readinessScore >= 70 ? 'var(--dash-green)' : readinessScore >= 45 ? 'var(--dash-amber)' : 'var(--dash-pink)';
+  const water = Store.getDailyLog(profile).water || 0;
+  const WATER_TARGET = 8;
+  const initial = (profile.name || '?').trim().charAt(0).toUpperCase() || '?';
+
+  const exCount = dayExerciseCount(info);
+  const estMin = estimateWorkoutMinutes(info);
+  const heroCls = info.rest ? 'is-rest' : done ? 'is-done' : '';
+  const heroTag = info.rest ? 'DZIŚ' : done ? 'DZIŚ — UKOŃCZONO' : 'NASTĘPNY TRENING';
+  const heroMeta = info.rest
+    ? 'Regeneracja jest częścią planu'
+    : `${exCount} ${exCount === 1 ? 'ćwiczenie' : exCount < 5 ? 'ćwiczenia' : 'ćwiczeń'} · ~${estMin} min`;
+  const heroCta = done ? 'Zobacz trening' : info.rest ? 'Zobacz dzień' : 'Rozpocznij';
+  const heroHref = `#/${done ? 'day' : 'workout'}/${day}`;
 
   return `
-  <section class="hero card">
-    <div class="hero-top">
-      <span class="pill">${esc(info.phaseName)}</span>
-      <span class="pill pill-outline">Dzień ${day} / 60</span>
-    </div>
-    <div class="hero-greeting">
-      <span class="hero-avatar">${esc((profile.name || '?').trim().charAt(0).toUpperCase() || '?')}</span>
-      <p class="muted" style="margin:0">Cześć, ${esc(profile.name)} 👋</p>
-    </div>
-    <h2>${esc(dayTypeLabel(info))}</h2>
-    <p class="muted">${esc(info.muscles)}</p>
-    ${done ? '<p class="done-badge">✓ Ukończono dzisiejszy trening</p>' : ''}
-    <a class="btn primary big" href="#/${done ? 'day' : 'workout'}/${day}">${done ? 'Zobacz trening' : (info.rest ? 'Zobacz dzień odpoczynku' : 'Rozpocznij trening')}</a>
-    ${!done && !info.rest ? `<a class="btn ghost big" href="#/workout/${day}-express">⚡ Nie mam siły na cały trening — 10 minut wystarczy</a>` : ''}
-  </section>
+  <div class="dash">
+    <header class="dash-head">
+      <div>
+        <h1 class="dash-hello">Cześć, ${esc(profile.name)} <span class="wave">👋</span></h1>
+        <p class="dash-sub">Dzień ${day} / 60 · ${esc(info.phaseName)}</p>
+      </div>
+      <a class="dash-avatar" href="#/settings" aria-label="Profil i ustawienia">${esc(initial)}</a>
+    </header>
 
-  <section class="stat-grid">
-    <a class="stat-card accent-flame" href="#/progress">
-      <span class="stat-card-icon">🔥</span>
-      <strong class="stat-card-value">${streak}</strong>
-      <span class="stat-card-label">${streak === 1 ? 'dzień serii' : 'dni serii'}</span>
-    </a>
-    <a class="stat-card accent-program" href="#/progress">
-      <span class="stat-ring-wrap">
-        ${progressRingSVG(pct, { color: 'var(--navy)' })}
-        <span class="stat-ring-value">${pct}%</span>
-      </span>
-      <span class="stat-card-label">${completedCount}/60 dni</span>
-    </a>
-    <a class="stat-card accent-readiness" href="#/progress">
-      <span class="stat-ring-wrap">
-        ${progressRingSVG(readinessScore, { color: readinessColor })}
-        <span class="stat-ring-value">${readinessScore}</span>
-      </span>
-      <span class="stat-card-label">gotowość</span>
-    </a>
-  </section>
+    ${programWeekStrip(profile, day)}
 
-  ${viewReadinessCard(profile)}
-  ${viewDailyLogCard(profile)}
-  ${viewDifficultySuggestion(profile)}
-  ${viewPhaseTrendSuggestion(profile)}
+    <section class="dash-hero ${heroCls}">
+      <div class="dash-hero-info">
+        <span class="dash-tag">${info.rest ? ico('bed') : done ? ico('trophy') : ico('dumbbell')}${heroTag}</span>
+        <h2>${esc(dayTypeLabel(info))}</h2>
+        <p class="dash-hero-meta">${heroMeta}</p>
+        <div class="dash-hero-actions">
+          <a class="dash-cta" href="${heroHref}">${ico('play')}${heroCta}</a>
+          ${!done && !info.rest ? `<a class="dash-cta-ghost" href="#/workout/${day}-express">${ico('zap')}10 min</a>` : ''}
+        </div>
+      </div>
+      <div class="dash-hero-ring">
+        ${progressRingSVG(pct, { size: 92, stroke: 7, color: '#fff' })}
+        <span class="dash-hero-ring-val"><b>${day}</b><span>/60</span></span>
+      </div>
+    </section>
 
-  <section class="card">
-    <h3 style="margin-top:0">🤖 AI Coach</h3>
-    <p class="muted" style="margin-bottom:0">${esc(coachTip(info, streak))}</p>
-  </section>
+    <div class="dash-sec"><h3>Statystyki</h3><a href="#/progress">Wszystko ${ico('arrow')}</a></div>
+    <section class="dash-stats">
+      <div class="dash-stat accent-streak">
+        <span class="dash-stat-label">${ico('flame')}Seria</span>
+        <span class="dash-stat-big">${streak}<small>${streak === 1 ? 'dzień' : 'dni'}</small></span>
+        ${last7CompletionSpark(profile)}
+      </div>
+      <div class="dash-stat accent-program">
+        <span class="dash-stat-label">${ico('trophy')}Program</span>
+        <div class="dash-stat-ringrow">
+          ${dashRing(pct, pct + '%', 'var(--dash-violet)')}
+          <span class="dash-stat-sub">${completedCount}/60<br>dni</span>
+        </div>
+      </div>
+      <div class="dash-stat accent-readiness">
+        <span class="dash-stat-label">${ico('pulse')}Gotowość</span>
+        <div class="dash-stat-ringrow">
+          ${dashRing(readinessScore, readinessScore, readinessColor)}
+          <span class="dash-stat-sub">dzisiejsza<br>ocena</span>
+        </div>
+      </div>
+      <div class="dash-stat accent-water">
+        <span class="dash-stat-label">${ico('droplet')}Woda dziś</span>
+        <span class="dash-glasses">${Array.from({ length: WATER_TARGET }, (_, i) => `<i class="${i < water ? 'full' : ''}"></i>`).join('')}</span>
+        <span class="dash-water-ctrl">
+          <button type="button" data-action="water-remove" aria-label="Mniej">−</button>
+          <b>${water}</b>
+          <button type="button" data-action="water-add" aria-label="Więcej">+</button>
+        </span>
+      </div>
+    </section>
 
-  ${lastSession ? `<section class="card">
-    <h3 style="margin-top:0">Ostatni trening</h3>
-    <p class="muted" style="margin-bottom:0">Dzień ${lastSession.day} · ${fmtSeconds(lastSession.durationSeconds || 0)} · trudność ${lastSession.difficulty}/5 · samopoczucie ${lastSession.feeling}/5${lastSession.pain && lastSession.pain !== 'none' ? ' · zgłoszono: ' + painLabel(lastSession.pain) : ''}</p>
-  </section>` : ''}
+    ${viewReadinessCard(profile)}
+    ${viewDailyLogCard(profile)}
+    ${viewDifficultySuggestion(profile)}
+    ${viewPhaseTrendSuggestion(profile)}
 
-  <section class="quick-links">
-    <a class="quick-link" href="#/schedule"><span class="qi">📅</span>Harmonogram</a>
-    <a class="quick-link" href="#/library"><span class="qi">📚</span>Biblioteka ćwiczeń</a>
-    <a class="quick-link" href="#/info"><span class="qi">🛡️</span>Bezpieczeństwo</a>
-    ${(profile.equipment || []).some(e => ['Opona', 'Plecak obciążony', 'Skakanka'].includes(e)) ? `<a class="quick-link" href="#/library"><span class="qi">🎒</span>Ćwiczenia bonus</a>` : ''}
-  </section>`;
+    <section class="card">
+      <h3 class="dash-card-title">${ico('sparkles')}AI Coach</h3>
+      <p class="muted" style="margin-bottom:0">${esc(coachTip(info, streak))}</p>
+    </section>
+
+    ${lastSession ? `<section class="card">
+      <h3 class="dash-card-title">${ico('history')}Ostatni trening</h3>
+      <p class="muted" style="margin-bottom:0">Dzień ${lastSession.day} · ${fmtSeconds(lastSession.durationSeconds || 0)} · trudność ${lastSession.difficulty}/5 · samopoczucie ${lastSession.feeling}/5${lastSession.pain && lastSession.pain !== 'none' ? ' · zgłoszono: ' + painLabel(lastSession.pain) : ''}</p>
+    </section>` : ''}
+
+    <nav class="dash-links" aria-label="Skróty">
+      <a href="#/schedule">${ico('calendar')}<span>Harmonogram</span></a>
+      <a href="#/library">${ico('book')}<span>Ćwiczenia</span></a>
+      <a href="#/info">${ico('shield')}<span>Bezpieczeństwo</span></a>
+    </nav>
+  </div>`;
 }
 
 function viewReadinessCard(profile) {
   const manual = Store.getReadinessInput(profile);
+  const seg = (action, sel) => `<div class="dash-seg">${[1, 2, 3, 4, 5].map(n =>
+    `<button type="button" class="${sel === n ? 'is-on' : ''}" data-action="${action}" data-value="${n}">${n}</button>`).join('')}</div>`;
   return `
   <section class="card">
-    <h3 style="margin:0 0 4px">Ustaw dzisiejszą gotowość</h3>
-    <p class="muted small" style="margin:0 0 10px">Wskaźnik w karcie powyżej uwzględni Twoją dzisiejszą odpowiedź — to nie diagnoza medyczna.</p>
-    <p class="muted small" style="margin-bottom:2px">Jak spałaś/eś?</p>
-    <div class="chip-row">${[1, 2, 3, 4, 5].map(n => `<button type="button" class="chip" data-action="set-readiness-sleep" data-value="${n}" style="${manual && manual.sleep === n ? 'background:var(--navy);color:#fff' : ''}">${n}</button>`).join('')}</div>
-    <p class="muted small" style="margin:8px 0 2px">Poziom zakwasów / zmęczenia?</p>
-    <div class="chip-row">${[1, 2, 3, 4, 5].map(n => `<button type="button" class="chip" data-action="set-readiness-soreness" data-value="${n}" style="${manual && manual.soreness === n ? 'background:var(--navy);color:#fff' : ''}">${n}</button>`).join('')}</div>
+    <h3 class="dash-card-title" style="margin:0 0 4px">${ico('moon')}Dzisiejsza gotowość</h3>
+    <p class="muted small" style="margin:0 0 6px">Wskaźnik „Gotowość" powyżej uwzględni Twoją odpowiedź — to nie diagnoza medyczna.</p>
+    <p class="dash-field-label">Jak spałaś/eś?</p>
+    ${seg('set-readiness-sleep', manual && manual.sleep)}
+    <p class="dash-field-label">Poziom zakwasów / zmęczenia?</p>
+    ${seg('set-readiness-soreness', manual && manual.soreness)}
   </section>`;
 }
 
@@ -693,8 +847,8 @@ function viewDifficultySuggestion(profile) {
   if (!s) return '';
   const label = s.direction === 'easier' ? 'Łatwiej' : 'Trudniej';
   return `
-  <section class="card" style="border-left:4px solid var(--gold)">
-    <h3 style="margin-top:0">💡 Sugestia dostosowania</h3>
+  <section class="card dash-hint">
+    <h3 class="dash-card-title" style="margin-top:0">${ico('sparkles')}Sugestia dostosowania</h3>
     <p class="muted" style="margin-bottom:10px">${esc(s.reason)}</p>
     <button type="button" class="btn small primary" data-action="apply-difficulty-suggestion" data-direction="${s.direction}">Ustaw poziom: ${label}</button>
   </section>`;
@@ -706,14 +860,9 @@ function viewDailyLogCard(profile) {
   const log = Store.getDailyLog(profile);
   return `
   <section class="card">
-    <h3 style="margin-top:0">🍽️ Dzień w pigułce</h3>
-    <p class="muted small" style="margin-bottom:2px">Jak dziś jadłaś/eś?</p>
-    <div class="chip-row">${Object.entries(EATING_LABELS).map(([v, l]) => `<button type="button" class="chip ${log.eating === v ? 'active' : ''}" data-action="set-eating" data-value="${v}">${l}</button>`).join('')}</div>
-    <p class="muted small" style="margin:10px 0 4px">Nawodnienie: ${log.water || 0} ${log.water === 1 ? 'szklanka' : 'szklanek'}</p>
-    <div class="chip-row">
-      <button type="button" class="btn small ghost" data-action="water-remove">− szklanka</button>
-      <button type="button" class="btn small primary" data-action="water-add">+ 💧 szklanka</button>
-    </div>
+    <h3 class="dash-card-title" style="margin-top:0">${ico('utensils')}Jak dziś jadłaś/eś?</h3>
+    <div class="dash-seg">${Object.entries(EATING_LABELS).map(([v, l]) =>
+      `<button type="button" class="${log.eating === v ? 'is-on' : ''}" data-action="set-eating" data-value="${v}">${l}</button>`).join('')}</div>
   </section>`;
 }
 
@@ -721,8 +870,8 @@ function viewPhaseTrendSuggestion(profile) {
   const t = Store.computePhaseTrend(profile);
   if (!t) return '';
   return `
-  <section class="card" style="border-left:4px solid var(--gold)">
-    <h3 style="margin-top:0">📈 Stały postęp — czas na wyższą fazę?</h3>
+  <section class="card dash-hint">
+    <h3 class="dash-card-title" style="margin-top:0">${ico('chart')}Stały postęp — czas na wyższą fazę?</h3>
     <p class="muted" style="margin-bottom:10px">${esc(t.reason)}</p>
     <div class="btn-row">
       <button type="button" class="btn small primary" data-action="apply-phase-trend" data-phase="${t.suggestedPhase}">Przejdź na „${esc(t.phaseName)}"</button>
@@ -1748,27 +1897,29 @@ function viewMonitoringGrid(profile) {
   const pct = Math.round((completedCount / 60) * 100);
   const streak = Store.currentStreak(profile);
   const readiness = Store.computeReadiness(profile);
-  const readinessColor = readiness >= 70 ? 'var(--success)' : readiness >= 45 ? 'var(--gold)' : 'var(--danger)';
+  const readinessColor = readiness >= 70 ? 'var(--dash-green)' : readiness >= 45 ? 'var(--dash-amber)' : 'var(--dash-pink)';
   const water = Store.getDailyLog(profile).water || 0;
   return `
-  <section class="stat-grid stat-grid-4">
-    <div class="stat-card accent-program">
-      <span class="stat-ring-wrap">${progressRingSVG(pct, { color: 'var(--navy)' })}<span class="stat-ring-value">${pct}%</span></span>
-      <span class="stat-card-label">program</span>
+  <section class="dash-stats">
+    <div class="dash-stat accent-program">
+      <span class="dash-stat-label">${ico('trophy')}Program</span>
+      <div class="dash-stat-ringrow">${dashRing(pct, pct + '%', 'var(--dash-violet)')}<span class="dash-stat-sub">${completedCount}/60<br>dni</span></div>
     </div>
-    <div class="stat-card accent-flame">
-      <span class="stat-card-icon">🔥</span>
-      <strong class="stat-card-value">${streak}</strong>
-      <span class="stat-card-label">${streak === 1 ? 'dzień serii' : 'dni serii'}</span>
+    <div class="dash-stat accent-streak">
+      <span class="dash-stat-label">${ico('flame')}Seria</span>
+      <span class="dash-stat-big">${streak}<small>${streak === 1 ? 'dzień' : 'dni'}</small></span>
+      ${last7CompletionSpark(profile)}
     </div>
-    <div class="stat-card accent-readiness">
-      <span class="stat-ring-wrap">${progressRingSVG(readiness, { color: readinessColor })}<span class="stat-ring-value">${readiness}</span></span>
-      <span class="stat-card-label">gotowość</span>
+    <div class="dash-stat accent-readiness">
+      <span class="dash-stat-label">${ico('pulse')}Gotowość</span>
+      <div class="dash-stat-ringrow">${dashRing(readiness, readiness, readinessColor)}<span class="dash-stat-sub">dzisiejsza<br>ocena</span></div>
     </div>
-    <div class="stat-card accent-water">
-      <span class="stat-card-icon">💧</span>
-      <strong class="stat-card-value">${water}</strong>
-      <span class="stat-card-label">${water === 1 ? 'szklanka dziś' : 'szklanek dziś'}</span>
+    <div class="dash-stat accent-water">
+      <span class="dash-stat-label">${ico('droplet')}Woda dziś</span>
+      <span class="dash-glasses">${Array.from({ length: 8 }, (_, i) => `<i class="${i < water ? 'full' : ''}"></i>`).join('')}</span>
+      <span class="dash-water-ctrl">
+        <button type="button" data-action="water-remove" aria-label="Mniej">−</button><b>${water}</b><button type="button" data-action="water-add" aria-label="Więcej">+</button>
+      </span>
     </div>
   </section>`;
 }
@@ -1791,7 +1942,7 @@ function viewProgramHeatmap(profile) {
   }
   return `
   <section class="card">
-    <h3 style="margin-top:0">Mapa programu</h3>
+    <h3 class="dash-card-title" style="margin-top:0">${ico('grid')}Mapa programu</h3>
     <div class="heatmap-grid">${cells}</div>
     <div class="heatmap-legend">
       <span><i class="heatmap-dot heatmap-done"></i>ukończony</span>
@@ -1876,9 +2027,18 @@ function viewProgress(profile) {
   const earnedCount = badges.filter(b => b.earned).length;
 
   return `
-  <h2 class="page-title">Postępy</h2>
+  <div class="dash">
+  <header class="dash-head">
+    <div>
+      <h1 class="dash-hello">Twoje postępy</h1>
+      <p class="dash-sub">Dzień ${Store.currentDayNumber(profile)} / 60 · ${completedCount} ukończonych treningów</p>
+    </div>
+    <a class="dash-avatar" href="#/settings" aria-label="Profil i ustawienia">${esc((profile.name || '?').trim().charAt(0).toUpperCase() || '?')}</a>
+  </header>
 
   ${viewMonitoringGrid(profile)}
+
+  ${activityBars(profile)}
 
   <section class="card" style="text-align:center">
     <div class="btn-row" style="justify-content:center">
@@ -1946,7 +2106,8 @@ function viewProgress(profile) {
     <button type="button" class="btn small primary" data-action="add-photo">+ Dodaj zdjęcie</button>
     <div id="photo-compare" style="margin-top:12px"></div>
     <div id="photo-grid" class="photo-grid" style="margin-top:12px"><p class="muted small">Ładowanie…</p></div>
-  </section>`;
+  </section>
+  </div>`;
 }
 
 function viewWeeklySummary(profile) {
