@@ -1,4 +1,4 @@
-const CACHE = 'forma60-v56';
+const CACHE = 'forma60-v57';
 const CORE = [
   './app.html',
   './css/styles.css',
@@ -8,6 +8,7 @@ const CORE = [
   './js/music.js',
   './js/workout.js',
   './js/poseCheck.js',
+  './js/planEngine.js',
   './js/app.js',
   './data/content.js',
   './data/exercises.json',

@@ -98,14 +98,36 @@ function dayExerciseCount(dayInfo) {
 
 const WEEKDAY_SHORT = ['Nd', 'Pn', 'Wt', 'Śr', 'Cz', 'Pt', 'So'];
 
+// ---------- Indywidualny plan (silnik) ----------
+// Długość programu: własny plan z silnika (profile.plan) albo klasyczne 60 dni.
+function programLength(profile) {
+  return profile && profile.plan && profile.plan.length ? profile.plan.length : 60;
+}
+
+// Generuje / odświeża plan, jeśli użytkownik wybrał własną długość i zmieniły się
+// dane wejściowe (cel, poziom, sprzęt, ograniczenia, priorytety, sesje/tydz.).
+function ensureUserPlan(profile) {
+  if (!profile || !profile.planDays || typeof PlanEngine === 'undefined') return;
+  if (!EXERCISES || !EXERCISES.length) return;
+  const sig = PlanEngine.signature(profile, profile.planDays);
+  if (profile.plan && profile.planSig === sig) return;
+  const g = PlanEngine.generate(profile, profile.planDays, EXERCISES);
+  Store.updateProfile(profile.id, { plan: g.plan, planSig: g.sig, planGeneratedAt: g.generatedAt });
+  profile.plan = g.plan;
+  profile.planSig = g.sig;
+  profile.planGeneratedAt = g.generatedAt;
+}
+
+
 // Pasek 7 dni bieżącego "tygodnia programu" (blok 7 dni, w którym wypada dziś).
 function programWeekStrip(profile, today) {
   const completed = new Set(profile.progress.completedDays);
   const start = new Date(profile.startDate + 'T00:00:00');
+  const total = programLength(profile);
   const weekStart = today - ((today - 1) % 7);
   let cells = '';
-  for (let d = weekStart; d < weekStart + 7 && d <= 60; d++) {
-    const info = getDayInfo(d);
+  for (let d = weekStart; d < weekStart + 7 && d <= total; d++) {
+    const info = effectiveDayInfo(profile, d);
     const date = new Date(start);
     date.setDate(date.getDate() + (d - 1));
     let cls = 'is-future';
@@ -221,6 +243,7 @@ async function boot() {
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('sw.js').catch(() => {});
   }
+  try { ensureUserPlan(Store.getActiveProfile()); } catch (e) { /* plan opcjonalny — nie blokuj apki */ }
   checkReminder();
   document.addEventListener('visibilitychange', () => { if (!document.hidden) checkReminder(); });
   render();
@@ -254,6 +277,15 @@ function checkReminder() {
     showReminderBanner(text);
   }
   Store.setReminderSettings({ ...r, lastNotifiedDate: today });
+}
+
+function toast(text) {
+  const el = document.createElement('div');
+  el.className = 'badge-toast';
+  el.innerHTML = `<div class="badge-toast-row"><span class="badge-toast-icon">✅</span><span>${esc(text)}</span></div>`;
+  document.body.appendChild(el);
+  setTimeout(() => el.classList.add('show'), 20);
+  setTimeout(() => { el.classList.remove('show'); setTimeout(() => el.remove(), 400); }, 3500);
 }
 
 function showBadgeToast(badges) {
@@ -411,6 +443,7 @@ function applyTheme(theme) {
 // ---------- Render root ----------
 function render() {
   const profile = Store.getActiveProfile();
+  try { ensureUserPlan(profile); } catch (e) { /* nie blokuj renderu */ }
   const root = document.getElementById('app');
   const { name, arg } = currentRoute();
 
@@ -487,7 +520,7 @@ function updateHeader(profile) {
   const dayEl = document.getElementById('sidebar-day');
   const avatarEl = document.getElementById('sidebar-avatar');
   if (nameEl) nameEl.textContent = profile ? profile.name : '';
-  if (dayEl) dayEl.textContent = profile ? `Dzień ${Math.min(Store.currentDayNumber(profile), 60)} / 60` : '';
+  if (dayEl) dayEl.textContent = profile ? `Dzień ${Math.min(Store.currentDayNumber(profile), programLength(profile))} / ${programLength(profile)}` : '';
   if (avatarEl) avatarEl.textContent = profile && profile.name ? profile.name[0].toUpperCase() : '?';
 }
 
@@ -523,6 +556,9 @@ const LIMITATION_OPTIONS = ['Kolana', 'Biodra', 'Kręgosłup / plecy', 'Barki', 
 const EXPERIENCE_LABELS = { beginner: 'Początkujący', intermediate: 'Średniozaawansowany', advanced: 'Zaawansowany' };
 const GOAL_LABELS = { weight_loss: 'Redukcja wagi', muscle_tone: 'Ujędrnienie', mobility: 'Mobilność', general_health: 'Ogólna kondycja', endurance: 'Wytrzymałość' };
 const DIFFICULTY_LABELS = { easier: 'Łatwiej', standard: 'Standardowo', harder: 'Trudniej' };
+// 0 = klasyczny, autorski program 60-dniowy. Pozostałe = plan generowany przez silnik
+// pod Twój profil (cel, sprzęt, ograniczenia, priorytety) na wybraną długość.
+const PLAN_LABELS = { 0: 'Klasyczny 60 dni', 7: '7 dni', 14: '2 tygodnie', 21: '3 tygodnie', 30: 'Miesiąc', 60: '2 miesiące (indyw.)', 90: '3 miesiące', 120: '4 miesiące', 150: '5 miesięcy', 180: 'Pół roku' };
 
 function chipRadio(name, value, label, checked) {
   const id = `f-${name}-${value}`.replace(/[^a-zA-Z0-9_-]/g, '');
@@ -578,6 +614,9 @@ function viewOnboarding() {
         <div class="chip-group">${[3, 4, 5, 6, 7].map(n => chipRadio('sessionsPerWeek', n, String(n), n === 6)).join('')}</div>
         <span class="onboard-field-label">Długość treningu</span>
         <div class="chip-group">${[20, 30, 35, 45, 60].map(n => chipRadio('sessionDurationMinutes', n, n + ' min', n === 35)).join('')}</div>
+        <span class="onboard-field-label">Plan na jak długo?</span>
+        <div class="chip-group">${Object.entries(PLAN_LABELS).map(([v, l]) => chipRadio('planDays', v, l, v === '0')).join('')}</div>
+        <p class="muted small" style="margin:6px 0 0">„Klasyczny 60 dni" to nasz autorski program. Każda inna opcja to plan generowany indywidualnie pod Twój profil na wybraną długość.</p>
       </div>
 
       <div class="onboard-step" data-step="4" hidden>
@@ -665,7 +704,8 @@ function bindOnboarding() {
       focusAreas: fd.getAll('focusAreas'),
       limitations: fd.getAll('limitations'),
       contraindicationsNote: fd.get('contraindicationsNote')?.trim() || '',
-      startDate: fd.get('startDate')
+      startDate: fd.get('startDate'),
+      planDays: Number(fd.get('planDays')) > 0 ? Number(fd.get('planDays')) : null,
     });
     navigate('/safety');
     render();
@@ -710,7 +750,9 @@ function bindSafety() {
 // Jeśli profil ma aktywne przyspieszenie fazy (patrz computePhaseTrend), stosujemy je do
 // dnia dzisiejszego i przyszłych — nie do dni już ukończonych, tych nie przepisujemy wstecz.
 function effectiveDayInfo(profile, day) {
-  const info = getDayInfo(day);
+  const info = (profile && profile.plan && profile.plan[day - 1])
+    ? { ...profile.plan[day - 1] }
+    : getDayInfo(day);
   if (info.rest) return info;
   const override = Store.getPhaseOverride(profile);
   if (override && override > info.phase && day >= Store.currentDayNumber(profile)) {
@@ -725,7 +767,8 @@ function viewToday(profile) {
   const info = effectiveDayInfo(profile, day);
   const done = profile.progress.completedDays.includes(day);
   const completedCount = profile.progress.completedDays.length;
-  const pct = Math.round((completedCount / 60) * 100);
+  const planN = programLength(profile);
+  const pct = Math.round((completedCount / planN) * 100);
   const streak = Store.currentStreak(profile);
   const lastSession = Store.getLastSession(profile);
   const readinessScore = Store.computeReadiness(profile);
@@ -749,7 +792,7 @@ function viewToday(profile) {
     <header class="dash-head">
       <div>
         <h1 class="dash-hello">Cześć, ${esc(profile.name)} <span class="wave">👋</span></h1>
-        <p class="dash-sub">Dzień ${day} / 60 · ${esc(info.phaseName)}</p>
+        <p class="dash-sub">Dzień ${day} / ${planN} · ${esc(info.phaseName)}</p>
       </div>
       <a class="dash-avatar" href="#/settings" aria-label="Profil i ustawienia">${esc(initial)}</a>
     </header>
@@ -768,7 +811,7 @@ function viewToday(profile) {
       </div>
       <div class="dash-hero-ring">
         ${progressRingSVG(pct, { size: 92, stroke: 7, color: '#fff' })}
-        <span class="dash-hero-ring-val"><b>${day}</b><span>/60</span></span>
+        <span class="dash-hero-ring-val"><b>${day}</b><span>/${planN}</span></span>
       </div>
     </section>
 
@@ -783,7 +826,7 @@ function viewToday(profile) {
         <span class="dash-stat-label">${ico('trophy')}Program</span>
         <div class="dash-stat-ringrow">
           ${dashRing(pct, pct + '%', 'var(--dash-violet)')}
-          <span class="dash-stat-sub">${completedCount}/60<br>dni</span>
+          <span class="dash-stat-sub">${completedCount}/${planN}<br>dni</span>
         </div>
       </div>
       <div class="dash-stat accent-readiness">
@@ -904,12 +947,13 @@ function generateIcsCalendar(profile) {
   const start = new Date(profile.startDate + 'T00:00:00');
   const stamp = new Date().toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
   const lines = ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//Nowa Ja//nowa-ja.vercel.app//PL', 'CALSCALE:GREGORIAN'];
-  for (let day = 1; day <= 60; day++) {
-    const info = getDayInfo(day);
+  const total = programLength(profile);
+  for (let day = 1; day <= total; day++) {
+    const info = effectiveDayInfo(profile, day);
     const d = new Date(start);
     d.setDate(d.getDate() + (day - 1));
     const dateStr = `${d.getFullYear()}${String(d.getMonth() + 1).padStart(2, '0')}${String(d.getDate()).padStart(2, '0')}`;
-    const summary = `Nowa Ja — dzień ${day}/60: ${dayTypeLabel(info)}`;
+    const summary = `Nowa Ja — dzień ${day}/${total}: ${dayTypeLabel(info)}`;
     lines.push('BEGIN:VEVENT');
     lines.push(`UID:nowaja-${profile.id}-day${day}@nowa-ja.vercel.app`);
     lines.push(`DTSTAMP:${stamp}`);
@@ -962,7 +1006,7 @@ function viewConstraintPanel() {
 }
 
 function viewDay(profile, day) {
-  if (!day || day < 1 || day > 60) return `<div class="empty-state"><p>Nieprawidłowy dzień.</p><a class="link" href="#/schedule">Wróć do harmonogramu</a></div>`;
+  if (!day || day < 1 || day > programLength(profile)) return `<div class="empty-state"><p>Nieprawidłowy dzień.</p><a class="link" href="#/schedule">Wróć do harmonogramu</a></div>`;
   const info = effectiveDayInfo(profile, day);
   const done = profile.progress.completedDays.includes(day);
   const checked = new Set(Store.getExerciseChecks(profile, day));
@@ -997,7 +1041,7 @@ function viewDay(profile, day) {
   <section class="card">
     <div class="hero-top">
       <span class="pill">${esc(info.phaseName)}</span>
-      <span class="pill pill-outline">Dzień ${day} / 60</span>
+      <span class="pill pill-outline">Dzień ${day} / ${programLength(profile)}</span>
     </div>
     <h2>${esc(dayTypeLabel(info))}</h2>
     <p class="muted">${esc(info.muscles)}</p>
@@ -1822,29 +1866,51 @@ function viewSchedule(profile) {
     <button type="button" class="chip ${scheduleViewMode === 'calendar' ? 'active' : ''}" data-action="set-schedule-view" data-mode="calendar">Kalendarz</button>
   </div>`;
 
+  const total = programLength(profile);
+  const title = `<h2 class="page-title">Harmonogram — ${total} dni</h2>`;
+
   if (scheduleViewMode === 'calendar') {
-    return `<h2 class="page-title">Harmonogram 60 dni</h2>${toggle}${viewCalendarMonth(profile)}`;
+    return `${title}${toggle}${viewCalendarMonth(profile)}`;
   }
 
-  const groups = PHASES.map(ph => {
-    const rows = [];
-    for (let d = ph.range[0]; d <= ph.range[1]; d++) {
-      const info = getDayInfo(d);
-      const isDone = completed.has(d);
-      rows.push(`
+  const today = Store.currentDayNumber(profile);
+  const dayRow = d => {
+    const info = effectiveDayInfo(profile, d);
+    const isDone = completed.has(d);
+    return `
       <a class="schedule-row ${isDone ? 'done' : ''}" href="#/day/${d}">
         <span class="sched-day">${d}</span>
         <span class="sched-type type-${info.type}">${info.type}</span>
         <span class="sched-label">${esc(dayTypeLabel(info))}</span>
         ${isDone ? '<span class="sched-check">✓</span>' : ''}
-      </a>`);
-    }
-    return `<details class="card" ${ph.id === phaseForDay(Store.currentDayNumber(profile)).id ? 'open' : ''}>
-      <summary>${esc(ph.name)} <span class="muted">(dni ${ph.range[0]}-${ph.range[1]})</span></summary>
-      <div class="schedule-list">${rows.join('')}</div>
-    </details>`;
-  });
-  return `<h2 class="page-title">Harmonogram 60 dni</h2>${toggle}${groups.join('')}`;
+      </a>`;
+  };
+
+  let groups;
+  if (profile.plan) {
+    // Własny plan — grupuj po tygodniach
+    const weeks = Math.ceil(total / 7);
+    groups = Array.from({ length: weeks }, (_, w) => {
+      const from = w * 7 + 1, to = Math.min(total, from + 6);
+      const rows = [];
+      for (let d = from; d <= to; d++) rows.push(dayRow(d));
+      const open = today >= from && today <= to;
+      return `<details class="card" ${open ? 'open' : ''}>
+        <summary>Tydzień ${w + 1} <span class="muted">(dni ${from}-${to})</span></summary>
+        <div class="schedule-list">${rows.join('')}</div>
+      </details>`;
+    });
+  } else {
+    groups = PHASES.map(ph => {
+      const rows = [];
+      for (let d = ph.range[0]; d <= ph.range[1]; d++) rows.push(dayRow(d));
+      return `<details class="card" ${ph.id === phaseForDay(today).id ? 'open' : ''}>
+        <summary>${esc(ph.name)} <span class="muted">(dni ${ph.range[0]}-${ph.range[1]})</span></summary>
+        <div class="schedule-list">${rows.join('')}</div>
+      </details>`;
+    });
+  }
+  return `${title}${toggle}${groups.join('')}`;
 }
 
 function viewCalendarMonth(profile) {
@@ -1870,11 +1936,11 @@ function viewCalendarMonth(profile) {
   for (let d = 1; d <= daysInMonth; d++) {
     const cellDate = new Date(year, month, d);
     const programDay = Math.floor((cellDate - start) / 86400000) + 1;
-    const inProgram = programDay >= 1 && programDay <= 60;
+    const inProgram = programDay >= 1 && programDay <= programLength(profile);
 
     if (!inProgram) { cells += `<div class="cal-cell outside"><span class="cal-daynum">${d}</span></div>`; continue; }
 
-    const info = getDayInfo(programDay);
+    const info = effectiveDayInfo(profile, programDay);
     let statusClass, dot;
     if (completed.has(programDay)) { statusClass = 'cal-done'; dot = '🟢'; }
     else if (cellDate.getTime() === startOfToday.getTime()) { statusClass = 'cal-today'; dot = '🔵'; }
@@ -1950,7 +2016,8 @@ function filterLibrary() {
 // ---------- Progress / Centrum ----------
 function viewMonitoringGrid(profile) {
   const completedCount = profile.progress.completedDays.length;
-  const pct = Math.round((completedCount / 60) * 100);
+  const planN = programLength(profile);
+  const pct = Math.round((completedCount / planN) * 100);
   const streak = Store.currentStreak(profile);
   const readiness = Store.computeReadiness(profile);
   const readinessColor = readiness >= 70 ? 'var(--dash-green)' : readiness >= 45 ? 'var(--dash-amber)' : 'var(--dash-pink)';
@@ -1959,7 +2026,7 @@ function viewMonitoringGrid(profile) {
   <section class="dash-stats">
     <div class="dash-stat accent-program">
       <span class="dash-stat-label">${ico('trophy')}Program</span>
-      <div class="dash-stat-ringrow">${dashRing(pct, pct + '%', 'var(--dash-violet)')}<span class="dash-stat-sub">${completedCount}/60<br>dni</span></div>
+      <div class="dash-stat-ringrow">${dashRing(pct, pct + '%', 'var(--dash-violet)')}<span class="dash-stat-sub">${completedCount}/${planN}<br>dni</span></div>
     </div>
     <div class="dash-stat accent-streak">
       <span class="dash-stat-label">${ico('flame')}Seria</span>
@@ -1985,9 +2052,10 @@ function viewMonitoringGrid(profile) {
 function viewProgramHeatmap(profile) {
   const completed = new Set(profile.progress.completedDays);
   const today = Store.currentDayNumber(profile);
+  const total = programLength(profile);
   let cells = '';
-  for (let day = 1; day <= 60; day++) {
-    const info = getDayInfo(day);
+  for (let day = 1; day <= total; day++) {
+    const info = effectiveDayInfo(profile, day);
     let cls;
     if (completed.has(day)) cls = 'done';
     else if (day === today) cls = 'today';
@@ -2087,7 +2155,7 @@ function viewProgress(profile) {
   <header class="dash-head">
     <div>
       <h1 class="dash-hello">Twoje postępy</h1>
-      <p class="dash-sub">Dzień ${Store.currentDayNumber(profile)} / 60 · ${completedCount} ukończonych treningów</p>
+      <p class="dash-sub">Dzień ${Store.currentDayNumber(profile)} / ${programLength(profile)} · ${completedCount} ukończonych treningów</p>
     </div>
     <a class="dash-avatar" href="#/settings" aria-label="Profil i ustawienia">${esc((profile.name || '?').trim().charAt(0).toUpperCase() || '?')}</a>
   </header>
@@ -2099,7 +2167,7 @@ function viewProgress(profile) {
   <section class="card" style="text-align:center">
     <div class="btn-row" style="justify-content:center">
       <button type="button" class="btn small ghost" data-action="share-progress">📤 Udostępnij postęp</button>
-      ${completedCount >= 60 ? `<button type="button" class="btn small primary" data-action="share-certificate">🏆 Pobierz certyfikat</button>` : ''}
+      ${completedCount >= programLength(profile) ? `<button type="button" class="btn small primary" data-action="share-certificate">🏆 Pobierz certyfikat</button>` : ''}
     </div>
   </section>
 
@@ -2351,15 +2419,27 @@ function viewSettings(profile) {
     <div class="profile-avatar">${esc(initial)}</div>
     <div class="profile-header-info">
       <h3 style="margin:0">${esc(profile.name)}</h3>
-      <p class="muted small" style="margin:2px 0 0">Dzień ${day} / 60 · ${esc(info.phaseName)}</p>
+      <p class="muted small" style="margin:2px 0 0">Dzień ${day} / ${programLength(profile)} · ${esc(info.phaseName)}</p>
     </div>
   </section>
   <section class="card">
     <div class="profile-stats-row">
       <div class="profile-stat"><strong>${completedCount}</strong><span>ukończone dni</span></div>
       <div class="profile-stat"><strong>${streak}</strong><span>seria dni</span></div>
-      <div class="profile-stat"><strong>${60 - completedCount}</strong><span>pozostało</span></div>
+      <div class="profile-stat"><strong>${Math.max(0, programLength(profile) - completedCount)}</strong><span>pozostało</span></div>
     </div>
+  </section>
+
+  <section class="card">
+    <h3 style="margin-top:0">Twój plan</h3>
+    <p class="muted small" style="margin:0 0 8px">${profile.plan
+      ? `Indywidualny plan na <strong>${programLength(profile)} dni</strong>, dobrany przez silnik do Twojego profilu (cel, poziom, sprzęt, ograniczenia, priorytety).`
+      : `Klasyczny autorski program <strong>60-dniowy</strong>. Wybierz inną opcję, aby silnik ułożył plan indywidualnie pod Twój profil.`}</p>
+    <div class="chip-row">${Object.entries(PLAN_LABELS).map(([v, l]) => {
+      const cur = (Number(v) === 0 && !profile.planDays) || Number(v) === (profile.planDays || 0);
+      return `<button type="button" class="chip ${cur ? 'active' : ''}" data-action="set-plan-days" data-days="${v}">${esc(l)}</button>`;
+    }).join('')}</div>
+    ${profile.plan ? `<button type="button" class="btn small ghost" style="margin-top:10px" data-action="regenerate-plan">↻ Wygeneruj plan od nowa</button>` : ''}
   </section>
 
   <section class="card">
@@ -2894,7 +2974,7 @@ document.addEventListener('click', async e => {
       const completedCount = profile.progress.completedDays.length;
       shareAchievementImage({
         title: 'Mój postęp w programie',
-        stat: `${completedCount}/60`,
+        stat: `${completedCount}/${programLength(profile)}`,
         subtitle: `dni ukończonych · seria ${streak} ${streak === 1 ? 'dzień' : 'dni'} z rzędu`,
       }, `nowa-ja-postep-dzien-${completedCount}.png`);
       break;
@@ -2944,6 +3024,29 @@ document.addEventListener('click', async e => {
         render();
       }
       break;
+    case 'set-plan-days': {
+      if (!profile) break;
+      const d = Number(target.dataset.days);
+      const cur = profile.planDays || 0;
+      if (d === cur) break;
+      const completed = profile.progress.completedDays.length;
+      if (completed > 0 && !confirm('Zmiana długości ułoży plan od nowa. Twoje ukończone dni i postępy zostają, ale kolejne dni będą inne. Kontynuować?')) break;
+      Store.setPlanLength(profile.id, d > 0 ? d : null);
+      render();
+      toast(d > 0 ? `Nowy plan na ${d} dni gotowy.` : 'Wróciłaś/eś do klasycznego programu 60-dniowego.');
+      break;
+    }
+    case 'regenerate-plan': {
+      if (!profile || !profile.planDays) break;
+      if (!confirm('Wygenerować plan od nowa? Zmieni się dobór ćwiczeń na kolejne dni.')) break;
+      Store.updateProfile(profile.id, { plan: null, planSig: null });
+      profile.plan = null; profile.planSig = null;
+      // wymuś inny wynik: drobna zmiana „ziarna" przez pole pomocnicze
+      Store.updateProfile(profile.id, { planReseed: (profile.planReseed || 0) + 1 });
+      render();
+      toast('Plan wygenerowany od nowa.');
+      break;
+    }
   }
 });
 
@@ -3046,7 +3149,7 @@ function bindDynamic(routeName, profile, arg) {
   if (routeName === 'workout') {
     const day = parseInt(arg, 10);
     const isExpress = /-express$/.test(arg || '');
-    if (day >= 1 && day <= 60) initWorkout(profile, day, { express: isExpress });
+    if (day >= 1 && day <= programLength(profile)) initWorkout(profile, day, { express: isExpress });
   }
   if (routeName === 'form-check') {
     bindFormCheck(arg);

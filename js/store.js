@@ -39,6 +39,7 @@ const Store = (() => {
       focusAreas: data.focusAreas || [],
       limitations: data.limitations || [],
       contraindicationsNote: data.contraindicationsNote || '',
+      planDays: data.planDays || null,
       safetyConsentAcceptedAt: null,
       startDate: data.startDate || new Date().toISOString().slice(0, 10),
       createdAt: Date.now(),
@@ -71,13 +72,33 @@ const Store = (() => {
     }
   }
 
+  function planLen(profile) {
+    return (profile && profile.plan && profile.plan.length) || (profile && profile.planDays) || 60;
+  }
+
+  // Ustaw długość indywidualnego planu (7..180) — czyści stary plan, żeby app.js
+  // przegenerował go silnikiem przy najbliższym renderze. null => klasyczne 60 dni.
+  function setPlanLength(profileId, days) {
+    const profiles = getProfiles();
+    const p = profiles.find(x => x.id === profileId);
+    if (!p) return;
+    if (days == null) {
+      delete p.planDays; delete p.plan; delete p.planSig; delete p.planGeneratedAt;
+    } else {
+      p.planDays = Math.max(7, Math.min(180, Number(days) || 30));
+      delete p.plan; delete p.planSig;
+    }
+    saveProfiles(profiles);
+  }
+
   function currentDayNumber(profile) {
     if (!profile || !profile.startDate) return 1;
     const start = new Date(profile.startDate + 'T00:00:00');
     const today = new Date();
     today.setHours(0, 0, 0, 0);
     const diffDays = Math.floor((today - start) / 86400000) + 1;
-    return Math.min(60, Math.max(1, diffDays));
+    const cap = (profile.plan && profile.plan.length) || profile.planDays || 60;
+    return Math.min(cap, Math.max(1, diffDays));
   }
 
   function toggleDayComplete(profileId, day) {
@@ -204,10 +225,10 @@ const Store = (() => {
     { id: 'streak_3', icon: '🔥', name: '3 dni z rzędu', desc: 'Utrzymaj serię 3 dni', check: p => currentStreak(p) >= 3 },
     { id: 'streak_7', icon: '🔥', name: 'Tydzień w ogniu', desc: 'Seria 7 dni z rzędu', check: p => currentStreak(p) >= 7 },
     { id: 'streak_14', icon: '⚡', name: '2 tygodnie nonstop', desc: 'Seria 14 dni z rzędu', check: p => currentStreak(p) >= 14 },
-    { id: 'quarter', icon: '🥉', name: '25% za Tobą', desc: 'Ukończ 15 dni programu', check: p => p.progress.completedDays.length >= 15 },
-    { id: 'half', icon: '🥈', name: 'Połowa drogi', desc: 'Ukończ 30 dni programu', check: p => p.progress.completedDays.length >= 30 },
-    { id: 'three_quarter', icon: '🥇', name: '75% za Tobą', desc: 'Ukończ 45 dni programu', check: p => p.progress.completedDays.length >= 45 },
-    { id: 'finisher', icon: '🏆', name: 'Program ukończony!', desc: 'Ukończ wszystkie 60 dni', check: p => p.progress.completedDays.length >= 60 },
+    { id: 'quarter', icon: '🥉', name: '25% za Tobą', desc: 'Ukończ 25% dni programu', check: p => p.progress.completedDays.length >= Math.ceil(planLen(p) * 0.25) },
+    { id: 'half', icon: '🥈', name: 'Połowa drogi', desc: 'Ukończ połowę dni programu', check: p => p.progress.completedDays.length >= Math.ceil(planLen(p) * 0.5) },
+    { id: 'three_quarter', icon: '🥇', name: '75% za Tobą', desc: 'Ukończ 75% dni programu', check: p => p.progress.completedDays.length >= Math.ceil(planLen(p) * 0.75) },
+    { id: 'finisher', icon: '🏆', name: 'Program ukończony!', desc: 'Ukończ cały program', check: p => p.progress.completedDays.length >= planLen(p) },
     { id: 'five_sessions', icon: '💪', name: '5 treningów', desc: 'Zapisz 5 sesji treningowych', check: p => (p.progress.sessions || []).length >= 5 },
     { id: 'ten_sessions', icon: '💪', name: '10 treningów', desc: 'Zapisz 10 sesji treningowych', check: p => (p.progress.sessions || []).length >= 10 },
     { id: 'first_measurement', icon: '📏', name: 'Pierwszy pomiar', desc: 'Zapisz pierwszy pomiar sylwetki', check: p => (p.progress.measurements || []).length >= 1 },
@@ -503,7 +524,7 @@ const Store = (() => {
   return {
     getProfiles, getActiveId, setActiveId, getActiveProfile,
     createProfile, updateProfile, deleteProfile, acceptSafetyConsent,
-    currentDayNumber, toggleDayComplete, setExerciseChecks, getExerciseChecks,
+    currentDayNumber, planLen, setPlanLength, toggleDayComplete, setExerciseChecks, getExerciseChecks,
     addMeasurement, addWeight, setWeightGoal, computeWeightGoalProgress, recordSession, getLastSession, currentStreak,
     getPersonalRecord, getAllPersonalRecords, recordPersonalBest,
     logExercisePain, getExercisePainCount,
