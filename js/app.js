@@ -1180,25 +1180,46 @@ function renderWorkoutBody(runner, day, profile) {
 function announceWorkout(runner) {
   const s = runner.state;
   const step = runner.currentStep;
+  const prosody = Voice.styleProsody();
   const stageOrStepChanged = runner._voiceStage !== s.stage || runner._voiceStepIndex !== s.stepIndex;
 
   if (stageOrStepChanged) {
     if (s.stage === STAGE.ACTIVE && step) {
       const reps = currentPhaseReps(step.exercise, runner.dayInfo.phase);
-      Voice.speak(`${step.exercise.name}. ${reps}.`);
+      const isLastExercise = s.stepIndex === runner.steps.length - 1;
+      const isLastSet = !runner.isCircuit && s.totalSets > 1 && s.currentSet === s.totalSets;
+      let moment;
+      if (runner._justSkipped) { moment = 'skip'; runner._justSkipped = false; }
+      else if (s.stepIndex === 0 && s.currentSet === 1 && !runner._openedVoice) { moment = 'start'; runner._openedVoice = true; }
+      else if (isLastExercise) moment = 'lastExercise';
+      else if (isLastSet) moment = 'lastSet';
+      else if (Math.random() < 0.5) moment = 'active';
+      const tail = moment ? ` ${Voice.line(moment)}` : '';
+      Voice.speak(`${step.exercise.name}. ${reps}.${tail}`, prosody);
     } else if ([STAGE.SET_REST, STAGE.STATION_REST, STAGE.ROUND_REST].includes(s.stage)) {
-      const phrase = Math.random() < 0.5 ? Voice.randomMotivation() : '';
-      Voice.speak(`${restLabel(s.stage)}. ${phrase}`.trim());
+      const moment = runner._justSkipped ? 'skip' : 'rest';
+      if (runner._justSkipped) runner._justSkipped = false;
+      Voice.speak(`${restLabel(s.stage)}. ${Voice.line(moment)}`, prosody);
     } else if (s.stage === STAGE.FEEDBACK) {
-      Voice.speak(runner.dayInfo.rest ? 'Dziś dzień odpoczynku. Odpocznij dobrze.' : 'Trening ukończony. Brawo, jesteś coraz silniejszy!');
+      Voice.speak(Voice.line(runner.dayInfo.rest ? 'restDay' : 'finish'), prosody);
     }
     runner._voiceStage = s.stage;
     runner._voiceStepIndex = s.stepIndex;
     runner._voiceSecond = null;
+    runner._voiceLast10 = null;
+  }
+
+  // Zryw na finiszu ćwiczenia czasowego — raz na serię, tylko dla dłuższych utrzymań.
+  if (s.stage === STAGE.ACTIVE && s.isTimed && s.totalSeconds >= 15 && s.remainingSeconds === 10) {
+    const key = `${s.stepIndex}:${s.currentSet}`;
+    if (runner._voiceLast10 !== key) {
+      runner._voiceLast10 = key;
+      Voice.speak(Voice.line('last10'), { ...prosody, interrupt: true });
+    }
   }
 
   if (s.stage === STAGE.COUNTDOWN && s.remainingSeconds > 0 && s.remainingSeconds <= 3 && s.remainingSeconds !== runner._voiceSecond) {
-    Voice.speak(String(s.remainingSeconds));
+    Voice.speak(s.remainingSeconds === 1 ? 'jeden. Start!' : String(s.remainingSeconds), prosody);
     runner._voiceSecond = s.remainingSeconds;
   }
 }
@@ -2412,7 +2433,13 @@ function viewVoiceSettings() {
     <div class="chip-row">
       <button class="chip ${style === 'gentle' ? 'active' : ''}" data-action="set-voice-style" data-style="gentle">Łagodny</button>
       <button class="chip ${style === 'tough' ? 'active' : ''}" data-action="set-voice-style" data-style="tough">Ostry</button>
+      <button class="chip ${style === 'hype' ? 'active' : ''}" data-action="set-voice-style" data-style="hype">Na maksa 🔥</button>
     </div>
+    <p class="muted small" style="margin-top:8px">${({
+      gentle: 'Ciepły, wspierający trener — spokojnie prowadzi przez trening.',
+      tough: 'Bez cukierkowania — krótko, konkretnie, do roboty.',
+      hype: 'Maksymalna energia — trener-hype rozkręca Cię na każdej serii.',
+    })[style] || ''}</p>
   </section>`;
 }
 
@@ -2669,6 +2696,7 @@ document.addEventListener('click', async e => {
       activeWorkoutRunner?.completeSetManually();
       break;
     case 'workout-skip':
+      if (activeWorkoutRunner) activeWorkoutRunner._justSkipped = true;
       activeWorkoutRunner?.skip();
       break;
     case 'workout-report-pain': {
@@ -2813,6 +2841,7 @@ document.addEventListener('click', async e => {
     case 'set-voice-style':
       Voice.setStyle(target.dataset.style);
       render();
+      if (Voice.isEnabled()) Voice.motivate('active'); // próbka nowego stylu
       break;
     case 'save-reminder': {
       const hour = Math.max(0, Math.min(23, Number(document.getElementById('reminder-hour').value) || 0));
